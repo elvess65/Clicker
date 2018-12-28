@@ -44,7 +44,7 @@ namespace clicker.datatables
 
                 public override string ToString()
                 {
-                    return string.Format("Type: {0}, Amount: {1}", Type, Amount);
+                    return string.Format("Type: {0}. Amount: {1}", Type, Amount);
                 }
             }
         }

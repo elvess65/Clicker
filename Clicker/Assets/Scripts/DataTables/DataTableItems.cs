@@ -9,6 +9,13 @@ namespace clicker.datatables
         void Start()
         {
             SetData(FindObjectOfType<LocalItemsDataEditor>().Data_Items);
+
+            account.Account acc = new account.Account();
+
+            foreach (Item item in m_Items.Values)
+                acc.Inventory.AddItem(ItemTypes.Stick, 10);
+
+            Debug.Log(acc.Inventory.ToString());
         }
 
         private static Dictionary<ItemTypes, Item> m_Items;
@@ -65,6 +72,9 @@ namespace clicker.datatables
             private int m_TicksToCreate;                        //Количество шагов для создания
             private List<ItemAmountContainer> m_RequiredItems;  //Количество предметов, необходимые для создания этого предмета
 
+            public ItemTypes Type => m_Type;
+            public int TicksToCreate => m_TicksToCreate;
+
             public Item(ItemTypes type, int ticksToCreate)
             {
                 m_Type = type;
@@ -105,15 +115,43 @@ namespace clicker.datatables
             private ItemTypes m_Type;
             private int m_Amount;
 
+            public ItemTypes Type => m_Type;
+            public int Amount => m_Amount;
+
+            /// <summary>
+            /// Определенное количество предмета
+            /// </summary>
             public ItemAmountContainer(ItemTypes type, int amount)
             {
                 m_Type = type;
                 m_Amount = amount;
             }
 
+            /// <summary>
+            /// Единица предмета
+            /// </summary>
+            public ItemAmountContainer(ItemTypes type)
+            {
+                m_Type = type;
+                m_Amount = 1;
+            }
+
+            public void AddAmount(int amount)
+            {
+                m_Amount += amount;
+            }
+
+            public void RemoveAmount(int amount)
+            {
+                m_Amount -= amount;
+
+                if (m_Amount < 0)
+                    m_Amount = 0;
+            }
+
             public override string ToString()
             {
-                return string.Format("Type: {0}, Amount: {1}", m_Type, m_Amount);
+                return string.Format("Type: {0}. Amount: {1}", m_Type, m_Amount);
             }
         }
         #endregion
