@@ -4,20 +4,8 @@ using UnityEngine;
 
 namespace clicker.datatables
 {
-    public class DataTableItems : MonoBehaviour
+    public static class DataTableItems
     {
-        void Start()
-        {
-            SetData(FindObjectOfType<LocalItemsDataEditor>().Data_Items);
-
-            account.Account acc = new account.Account();
-
-            foreach (Item item in m_Items.Values)
-                acc.Inventory.AddItem(ItemTypes.Stick, 10);
-
-            Debug.Log(acc.Inventory.ToString());
-        }
-
         private static Dictionary<ItemTypes, Item> m_Items;
 
         public static void SetData(LocalItemsDataEditor.ItemsData[] data)
