@@ -13,11 +13,19 @@ namespace clicker.general.ui.windows
         public UITabContent Tab_Materials;
         public UITabContent Tab_Weapons;
 
+        private void Start()
+        {
+            Show();
+        }
+
         protected override void Init()
         {
             if (!m_IsInitialized)
             {
+                Button_TabMaterials.onClick.AddListener(Button_TabMaterials_PressHandler);
+                Button_TabWeapons.onClick.AddListener(Button_TabWeapons_PressHandler);
 
+                Button_TabMaterials.onClick.Invoke();
             }
 
             base.Init();
@@ -25,12 +33,12 @@ namespace clicker.general.ui.windows
 
         void Button_TabMaterials_PressHandler()
         {
-
+            Tab_Materials.InitTab();
         }
 
         void Button_TabWeapons_PressHandler()
         {
-
+            Tab_Weapons.InitTab();
         }
     }
 }
