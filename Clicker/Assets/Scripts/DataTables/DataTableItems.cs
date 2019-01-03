@@ -70,7 +70,8 @@ namespace clicker.datatables
 
             public ItemTypes Type => m_Type;
             public int TicksToCreate => m_TicksToCreate;
-            
+            public ItemAmountContainer[] RequiredItems => m_RequiredItems.ToArray();
+
             public Item(ItemTypes type, int ticksToCreate, List<ItemFilterTypes> filterType)
             {
                 m_Type = type;

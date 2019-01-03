@@ -67,6 +67,7 @@ namespace clicker.items
             return 0;
         }
 
+
         /// <summary>
         /// Данные о предмете, который создаеться
         /// </summary>

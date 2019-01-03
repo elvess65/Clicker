@@ -35,8 +35,15 @@ namespace clicker.general
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 2);
         }
 
+
         void ItemCrafted_Handler(DataTableItems.ItemTypes type)
         {
+            //Отнять предметы, необходимые для создания
+            DataTableItems.Item itemData = DataTableItems.GetIemDataByType(type);
+            for (int i = 0; i < itemData.RequiredItems.Length; i++)
+                PlayerAccount.Inventory.RemoveItem(itemData.RequiredItems[i].Type, itemData.RequiredItems[i].Amount);
+
+            //Добавить созданный предмет
             PlayerAccount.Inventory.AddItem(type);
         }
     }

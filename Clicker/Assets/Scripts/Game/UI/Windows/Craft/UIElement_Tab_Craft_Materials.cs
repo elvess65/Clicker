@@ -12,6 +12,10 @@ namespace clicker.general.ui.windows
 
                 base.InitTab();
             }
+            else
+                UpdateTabState();
+
+            SubscribeForEvents();
         }
     }
 }

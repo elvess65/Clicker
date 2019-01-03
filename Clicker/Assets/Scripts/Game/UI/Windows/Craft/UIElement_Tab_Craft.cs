@@ -32,11 +32,12 @@ namespace clicker.general.ui.windows
                     DataTableItems.ItemTypes type = (DataTableItems.ItemTypes)i;
 
                     //Если предмет можно вывести в этой вкладке
-                    if (DataTableItems.GetIemDataByType(type).MatchFilter(FilterType))
+                    DataTableItems.Item itemData = DataTableItems.GetIemDataByType(type);
+                    if (itemData != null && itemData.MatchFilter(FilterType))
                     {
                         //Создать объект
                         UIElement_CraftItem item = Instantiate(GameManager.Instance.UIManager.WindowsManager.UIElement_CraftItemPrefab, ItemsParent);
-                        item.Init(type, GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(type), GameManager.Instance.CraftItemFactory.GetProgressForItem(type));
+                        item.Init(type, GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(type), GameManager.Instance.CraftItemFactory.GetProgressForItem(type), itemData.RequiredItems);
                         item.OnItemPress += Item_PressHanlder;
 
                         //Добавить объект в словарь для последующего доступа
@@ -44,11 +45,6 @@ namespace clicker.general.ui.windows
                             m_Items.Add(type, item);
                     }
                 }
-
-                //Подписаться на событие добавления тиков
-                GameManager.Instance.CraftItemFactory.OnTickToItemAdded += TickToItemAdded_Handler;
-                //Подписаться на событие создания предмета
-                GameManager.Instance.CraftItemFactory.OnItemCrafted += ItemCrafted_Handler;
 
                 base.InitTab();
             }
@@ -58,25 +54,101 @@ namespace clicker.general.ui.windows
         {
             base.DisposeOnWindowClose();
 
-            GameManager.Instance.CraftItemFactory.OnTickToItemAdded -= TickToItemAdded_Handler;
+            UnscribeFromEvents();
+        }
+
+        public override void DeactivateTabOnSelectOther()
+        {
+            base.DeactivateTabOnSelectOther();
+
+            UnscribeFromEvents();
         }
 
 
+        /// <summary>
+        /// Нажатие на UI предмета
+        /// </summary>
+        /// <param name="type">Тип предмета, на который было нажато</param>
         protected virtual void Item_PressHanlder(DataTableItems.ItemTypes type)
         {
-            GameManager.Instance.CraftItemFactory.AddTickToItem(type);
+            //Если можно - добавить тики определенному предметму
+            if (GameManager.Instance.PlayerAccount.Inventory.CanCraftItem(type))
+                GameManager.Instance.CraftItemFactory.AddTickToItem(type);
+            else
+                Debug.LogError("Cant craft item");
         }
 
+        /// <summary>
+        /// Обработчик события добавления тиков предмету
+        /// </summary>
+        /// <param name="type">Тип предмета, которому были добавлены тики</param>
+        /// <param name="progress">Текущий прогресс крафта</param>
         protected virtual void TickToItemAdded_Handler(DataTableItems.ItemTypes type, float progress)
         {
+            //Обновить состояние предмета с учетом нового прогресса
             if (m_Items.ContainsKey(type))
                 m_Items[type].UpdateProgress_AddTick(progress);
         }
 
-        protected virtual void ItemCrafted_Handler(DataTableItems.ItemTypes type)
+        /// <summary>
+        /// Обработчик события крафта предмета
+        /// </summary>
+        /// <param name="craftedItemType">Тип предмета, который был скрафчен</param>
+        protected virtual void ItemCrafted_Handler(DataTableItems.ItemTypes craftedItemType)
         {
-            if (m_Items.ContainsKey(type))
-                m_Items[type].UpdateProgress_Craft(GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(type));
+            //Обновить состояние предмета 
+            if (m_Items.ContainsKey(craftedItemType))
+                m_Items[craftedItemType].UpdateProgress_Craft(GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(craftedItemType));
+
+            //Пройтись по всем UI объектам и обновить количество предметов, а так же состояние требуемых для создания предметов
+            foreach (UIElement_CraftItem item in m_Items.Values)
+            {
+                //не обновлять предмет, который был создан
+                if (item.Type != craftedItemType)
+                    item.SetItemAmount(GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(item.Type));
+
+                //Состояние требуемых для создания предметов
+                item.UpdateRequireItemsState();
+            }
+        }
+
+        /// <summary>
+        /// Подписаться на события
+        /// </summary>
+        protected virtual void SubscribeForEvents()
+        {
+            //Подписаться на событие добавления тиков
+            GameManager.Instance.CraftItemFactory.OnTickToItemAdded += TickToItemAdded_Handler;
+            //Подписаться на событие создания предмета
+            GameManager.Instance.CraftItemFactory.OnItemCrafted += ItemCrafted_Handler;
+        }
+
+        /// <summary>
+        /// Отписаться от события 
+        /// </summary>
+        protected virtual void UnscribeFromEvents()
+        {
+            //Отписаться на событие добавления тиков
+            GameManager.Instance.CraftItemFactory.OnTickToItemAdded -= TickToItemAdded_Handler;
+            //Отписаться на событие создания предмета
+            GameManager.Instance.CraftItemFactory.OnItemCrafted -= ItemCrafted_Handler;
+        }
+
+
+        /// <summary>
+        /// Обновить состояние вкладки (обновить состояние UI объектов при повторном выделении вкладки)
+        /// </summary>
+        protected override void UpdateTabState()
+        {
+            foreach (UIElement_CraftItem item in m_Items.Values)
+            {
+                //Обновить количество предметов
+                item.SetItemAmount(GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(item.Type));
+                //Обновить прогресс предмета
+                item.SetItemProgress(GameManager.Instance.CraftItemFactory.GetProgressForItem(item.Type));
+                //Обновить состояние необходимых для создания предмета предметов
+                item.UpdateRequireItemsState();
+            }
         }
     }
 }

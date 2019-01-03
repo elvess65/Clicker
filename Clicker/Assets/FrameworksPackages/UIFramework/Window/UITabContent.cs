@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace FrameworkPackage.UI.Windows
+﻿namespace FrameworkPackage.UI.Windows
 {
     /// <summary>
     /// Вкладка окна
@@ -19,6 +15,18 @@ namespace FrameworkPackage.UI.Windows
         /// Очистка данных при вкладки при закритии окна
         /// </summary>
         public virtual void DisposeOnWindowClose()
+        { }
+
+        /// <summary>
+        /// Отключить вкладку, при активации другой вкладки
+        /// </summary>
+        public virtual void DeactivateTabOnSelectOther()
+        { }
+
+        /// <summary>
+        /// Обновить состояние вкладки
+        /// </summary>
+        protected virtual void UpdateTabState()
         { }
     }
 }

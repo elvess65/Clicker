@@ -668,7 +668,7 @@ MonoBehaviour:
     RequiredItems: []
   - Type: 3
     TickToCreate: 5
-    FilterTypes: 01000000
+    FilterTypes: 02000000
     RequiredItems:
     - Type: 1
       Amount: 2
@@ -719,6 +719,8 @@ MonoBehaviour:
   UIWindow_CraftPrefab: {fileID: 5655258588883614789, guid: f100762f972ad0a449d3e36a739a934e,
     type: 3}
   UIElement_CraftItemPrefab: {fileID: 7180971594246650665, guid: d16f980d99a48fe4ebc7b7c0f1b8498e,
+    type: 3}
+  UIElement_CraftRequireItemPrefab: {fileID: 942627447139561413, guid: 1660f9c374923cc468bca423d3a82234,
     type: 3}
 --- !u!114 &1961181559
 MonoBehaviour:

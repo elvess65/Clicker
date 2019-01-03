@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using clicker.datatables;
+using System.Collections.Generic;
 using System.Text;
 using static clicker.datatables.DataTableItems;
 
@@ -43,6 +44,40 @@ namespace clicker.account
             }
 
             /// <summary>
+            /// Есть ли достаточное количество указанного предмета
+            /// </summary>
+            /// <param name="type">Тип предмета</param>
+            /// <param name="amount">Запрашиваемое количество</param>
+            /// <returns>true если есть достаточное количество</returns>
+            public bool HasAmountOfItem(ItemTypes type, int amount)
+            {
+                if (m_Items.ContainsKey(type) && m_Items[type].Amount >= amount)
+                    return true;
+
+                return false;
+            }
+
+            /// <summary>
+            /// Можно ли создать предмет (Хватает ли у игрока предметов, необходимых для создания предмета)
+            /// </summary>
+            /// <param name="type">Тип предмета</param>
+            /// <returns>true если можно создать</returns>
+            public bool CanCraftItem(ItemTypes type)
+            {
+                int hasItemCount = 0;
+                DataTableItems.Item itemData = DataTableItems.GetIemDataByType(type);
+                for(int i = 0; i < itemData.RequiredItems.Length; i++)
+                {
+                    //Если есть достаточное количество предметов указанного типа
+                    if (HasAmountOfItem(itemData.RequiredItems[i].Type, itemData.RequiredItems[i].Amount))
+                        hasItemCount++;
+                }
+
+                return hasItemCount == itemData.RequiredItems.Length;
+            }
+
+
+            /// <summary>
             /// Добавить количество определенного предмета
             /// </summary>
             public void AddItem(ItemTypes type, int amount = 1)
@@ -67,6 +102,7 @@ namespace clicker.account
                         m_Items.Remove(type);
                 }
             }
+
 
             public override string ToString()
             {

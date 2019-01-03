@@ -10,5 +10,6 @@ namespace FrameworkPackage.UI.Windows
         public UIWindow_Base UIWindow_CraftPrefab;
         [Header("UIElements")]
         public UIElement_CraftItem UIElement_CraftItemPrefab;
+        public UIElement_CraftItem_RequireItem UIElement_CraftRequireItemPrefab;
     }
 }

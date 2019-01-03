@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using clicker.datatables;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace clicker.general.ui
@@ -16,8 +18,10 @@ namespace clicker.general.ui
         [Header("Images")]
         public Image Image_ItemIcon;
         public Image Image_Progress;
+        [Header("Required Items")]
+        public RectTransform RequiredItemsParent;
 
-        private datatables.DataTableItems.ItemTypes m_Type;
+        private DataTableItems.ItemTypes m_Type;
 
         private float m_CurTime;
         private float m_TotalTime = 0.2f;
@@ -28,26 +32,46 @@ namespace clicker.general.ui
         private bool m_ItemCrafted = false;
         private int m_AmountAfterCraft;
 
+        private Dictionary<DataTableItems.ItemTypes, UIElement_CraftItem_RequireItem> m_RequiredItems;
+
+        public DataTableItems.ItemTypes Type => m_Type;
+
         /// <summary>
         /// Инициализация
         /// </summary>
         /// <param name="type">Тип предмета</param>
         /// <param name="amount">Количество предметов</param>
         /// <param name="progress">Текущий прогресс создания</param>
-        public void Init(datatables.DataTableItems.ItemTypes type, int amount, float progress)
+        public void Init(DataTableItems.ItemTypes type, int amount, float progress, DataTableItems.ItemAmountContainer[] requiredItems)
         {
             //Тип предмета
             m_Type = type;
 
             //Имя и количество предметов
             Text_ItemName.text = type.ToString();
-            Text_Amount.text = amount.ToString();
+            SetItemAmount(amount);
 
             //Текущий прогресс создания
-            SetProgress(progress);
+            SetItemProgress(progress);
 
             //Подписаться на нажатие 
             GetComponent<Button>().onClick.AddListener(Button_PressHandler);
+
+            //Вывод необходимый для создания предметов
+            m_RequiredItems = new Dictionary<DataTableItems.ItemTypes, UIElement_CraftItem_RequireItem>();
+
+            if (requiredItems.Length == 0)
+                RequiredItemsParent.gameObject.SetActive(false);
+            else
+            {
+                for (int i = 0; i < requiredItems.Length; i++)
+                {
+                    UIElement_CraftItem_RequireItem item = Instantiate(GameManager.Instance.UIManager.WindowsManager.UIElement_CraftRequireItemPrefab, RequiredItemsParent);
+                    item.Init(requiredItems[i].Type, requiredItems[i].Amount);
+
+                    m_RequiredItems.Add(requiredItems[i].Type, item);
+                }
+            }
         }
 
         /// <summary>
@@ -67,6 +91,7 @@ namespace clicker.general.ui
         {
             //Пометить текущую анимацию как анимацию крафта (так де блокирует возможность нажататия до окончания анимации)
             m_ItemCrafted = true;
+
             //Запомнить новое количество предметов (для вывода после анимации)
             m_AmountAfterCraft = amount;
 
@@ -74,15 +99,33 @@ namespace clicker.general.ui
             StartAnimation(1);
         }
 
+        /// <summary>
+        /// Обновить состояние необходимых для создания предмета предметов 
+        /// </summary>
+        public void UpdateRequireItemsState()
+        {
+            foreach (UIElement_CraftItem_RequireItem item in m_RequiredItems.Values)
+                item.UpdateState();
+        }
+
+        /// <summary>
+        /// Обновить количество предмета
+        /// </summary>
+        /// <param name="amount">Количество предмета</param>
+        public void SetItemAmount(int amount)
+        {
+            Text_Amount.text = amount.ToString();
+        }
 
         /// <summary>
         /// Задать прогресс
         /// </summary>
         /// <param name="progress">Прогресс</param>
-        void SetProgress(float progress)
+        public void SetItemProgress(float progress)
         {
             Image_Progress.fillAmount = progress;
         }
+
 
         /// <summary>
         /// Начать анимацию прогресса
@@ -96,14 +139,14 @@ namespace clicker.general.ui
             m_IsAnimating = true;
         }
 
-        private void Update()
+        void Update()
         {
             if (m_IsAnimating)
             {
                 m_CurTime += Time.deltaTime;
 
                 float progress = Mathf.Lerp(m_CurProgress, m_TargetProgress, m_CurTime / m_TotalTime);
-                SetProgress(progress);
+                SetItemProgress(progress);
 
                 if (m_CurTime >= m_TotalTime)
                 {
@@ -116,10 +159,10 @@ namespace clicker.general.ui
                         m_ItemCrafted = false;
 
                         //Вывести новое количество предметов
-                        Text_Amount.text = m_AmountAfterCraft.ToString();
+                        SetItemAmount(m_AmountAfterCraft);
 
                         //Обнулить прогесс
-                        SetProgress(0);
+                        SetItemProgress(0);
                     }
                 }
             }
