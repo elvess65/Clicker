@@ -4,19 +4,14 @@ using UnityEngine.UI;
 
 namespace clicker.general.ui.windows
 {
-    public class UIWindow_Craft : UIWindow_Base
+    public class UIWindow_Craft : UIWindow_CloseButton
     {
         [Header("Buttons")]
         public Button Button_TabMaterials;
         public Button Button_TabWeapons;
-        [Header("Content")]
+        [Header("Tab Content")]
         public UITabContent Tab_Materials;
         public UITabContent Tab_Weapons;
-
-        private void Start()
-        {
-            Show();
-        }
 
         protected override void Init()
         {
@@ -29,6 +24,14 @@ namespace clicker.general.ui.windows
             }
 
             base.Init();
+        }
+
+        public override void Hide()
+        {
+            base.Hide();
+
+            Tab_Materials.DisposeOnWindowClose();
+            Tab_Weapons.DisposeOnWindowClose();
         }
 
         void Button_TabMaterials_PressHandler()

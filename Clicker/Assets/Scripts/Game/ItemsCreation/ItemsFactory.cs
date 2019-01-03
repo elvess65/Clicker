@@ -9,16 +9,23 @@ namespace clicker.items
     public class ItemsFactory : MonoBehaviour
     {
         public System.Action<ItemTypes, float> OnTickToItemAdded;
+        public System.Action<ItemTypes> OnItemCrafted;
 
         private const int m_TICK_STEP = 1;
 
         private Dictionary<ItemTypes, ItemCreationData> m_ProcessedItems;   
 
+        /// <summary>
+        /// Добавить тики указанному предмету
+        /// </summary>
+        /// <param name="type">Тип предмета, которому нужно добавить тики</param>
         public void AddTickToItem(ItemTypes type)
         {
+            //Создать словарь если еще не существует
             if (m_ProcessedItems == null)
                 m_ProcessedItems = new Dictionary<ItemTypes, ItemCreationData>();
 
+            //Если предмета еще нет в списке обрадатываемых - добавить
             if (!m_ProcessedItems.ContainsKey(type))
             {
                 ItemCreationData itemCreateData = new ItemCreationData(type, DataTableItems.GetIemDataByType(type).TicksToCreate);
@@ -29,19 +36,35 @@ namespace clicker.items
             ItemCreationData curItemCreationData = m_ProcessedItems[type];
             var resultData = curItemCreationData.AddTickToItem(m_TICK_STEP);
 
-            //Если предмет был создан - обнулить текущее количество тиков
+            //Если предмет был создан 
             if (resultData.isCreated)
+            {
+                //Обнулить текущее количество тиков (даже есть текущий шаг тиков превышает количество тиков для создания - за раз можно создать только один предмет)
                 curItemCreationData.ResetTicks();
 
-            OnTickToItemAdded?.Invoke(type, resultData.progress);
+                //Вызов события добавления предмета
+                OnItemCrafted?.Invoke(type);
+            }
+            else
+            {
+                //Вызов события добавления тиков
+                OnTickToItemAdded?.Invoke(type, resultData.progress);
+            }
 
-            Debug.Log(m_ProcessedItems[type].ToString());  
+            //Debug.Log(m_ProcessedItems[type].ToString());  
         }
 
-        private void Update()
+        /// <summary>
+        /// Получить текущий прогресс крафта указанного предмета
+        /// </summary>
+        /// <param name="type">Тип предмета</param>
+        /// <returns>Прогресс</returns>
+        public float GetProgressForItem(ItemTypes type)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-                AddTickToItem(ItemTypes.Stick);
+            if (m_ProcessedItems != null && m_ProcessedItems.ContainsKey(type))
+                return m_ProcessedItems[type].CurProgress;
+
+            return 0;
         }
 
         /// <summary>
@@ -54,10 +77,13 @@ namespace clicker.items
 
             private int m_CurTicks;     //Текущее количество тиков
 
+            public float CurProgress => Mathf.Clamp(m_CurTicks / (float)TicksToCreate, 0, 1); 
+
             public ItemCreationData(ItemTypes type, int ticksToCreate)
             {
                 Type = type;
                 TicksToCreate = ticksToCreate;
+
                 m_CurTicks = 0;
             }
 
@@ -73,11 +99,11 @@ namespace clicker.items
                 m_CurTicks += ticks;
                 if (m_CurTicks >= TicksToCreate)
                 {
+                    m_CurTicks = TicksToCreate;
                     result.isCreated = true;
-                    result.progress = 1;
                 }
-                else
-                    result.progress = m_CurTicks / (float)TicksToCreate;
+
+                result.progress = CurProgress;
                 
                 return result;
             }
@@ -94,7 +120,7 @@ namespace clicker.items
             {
                 StringBuilder strBuilder = new StringBuilder(50);
                 strBuilder.AppendFormat("Create item {0}. Cur Ticks: {1}. Ticks: {2}. Progress: {3}",
-                    Type, m_CurTicks, TicksToCreate, (m_CurTicks / (float)TicksToCreate));
+                                        Type, m_CurTicks, TicksToCreate, CurProgress);
 
                 return strBuilder.ToString();
             }

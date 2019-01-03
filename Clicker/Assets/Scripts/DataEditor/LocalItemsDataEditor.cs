@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using static clicker.datatables.DataTableItems;
 
@@ -16,6 +17,7 @@ namespace clicker.datatables
         {
             public ItemTypes Type;
             public int TickToCreate;
+            public List<ItemFilterTypes> FilterTypes;
             public ItemDataAmountContainer[] RequiredItems;
 
             public override string ToString()

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace FrameworkPackage.UI.Windows
 {
-    public class UIWindowsManager : MonoBehaviour
+    public partial class UIWindowsManager : MonoBehaviour
     {
         [Header("Parents")]
         public RectTransform FadeParent;

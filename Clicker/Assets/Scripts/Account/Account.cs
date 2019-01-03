@@ -1,7 +1,6 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using static clicker.datatables.DataTableItems;
+﻿using System.Collections.Generic;
 using System.Text;
+using static clicker.datatables.DataTableItems;
 
 namespace clicker.account
 {
@@ -76,6 +75,7 @@ namespace clicker.account
 
                 if (m_Items.Count > 0)
                 {
+                    strBuilder.Append("\n");
                     strBuilder.Append("Items:\n");
                     foreach (ItemAmountContainer itemAmountContainer in m_Items.Values)
                         strBuilder.AppendFormat(" - {0}\n", itemAmountContainer);

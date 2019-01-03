@@ -14,5 +14,11 @@ namespace FrameworkPackage.UI.Windows
             if (!m_IsInitialized)
                 Init();
         }
+
+        /// <summary>
+        /// Очистка данных при вкладки при закритии окна
+        /// </summary>
+        public virtual void DisposeOnWindowClose()
+        { }
     }
 }

@@ -18,7 +18,7 @@ namespace clicker.datatables
             for (int i = 0; i < data.Length; i++)
             {
                 //Создать предмет
-                Item item = new Item(data[i].Type, data[i].TickToCreate);
+                Item item = new Item(data[i].Type, data[i].TickToCreate, data[i].FilterTypes);
 
                 //Создать необходимые для создания предмета предметы
                 for (int j = 0; j < data[i].RequiredItems.Length; j++)
@@ -51,6 +51,13 @@ namespace clicker.datatables
             Max
         }
 
+        public enum ItemFilterTypes
+        {
+            Default,
+            Materials,
+            Weapons
+        }
+
         /// <summary>
         /// Представляет описание предмета (тип предмета и список предметов, необходимых для его создания)
         /// </summary>
@@ -58,23 +65,41 @@ namespace clicker.datatables
         {  
             private ItemTypes m_Type;                           //Тип предмета
             private int m_TicksToCreate;                        //Количество шагов для создания
+            private List<ItemFilterTypes> m_FilterTypes;        //Фильтр для определения типа предмета (для вывода во вкладках и использования)
             private List<ItemAmountContainer> m_RequiredItems;  //Количество предметов, необходимые для создания этого предмета
 
             public ItemTypes Type => m_Type;
             public int TicksToCreate => m_TicksToCreate;
-
-            public Item(ItemTypes type, int ticksToCreate)
+            
+            public Item(ItemTypes type, int ticksToCreate, List<ItemFilterTypes> filterType)
             {
                 m_Type = type;
                 m_TicksToCreate = ticksToCreate;
+                m_FilterTypes = new List<ItemFilterTypes>();
+
+                for (int i = 0; i < filterType.Count; i++)
+                    m_FilterTypes.Add(filterType[i]);
+
                 m_RequiredItems = new List<ItemAmountContainer>();
             }
 
+            /// <summary>
+            /// Добавить предметы, необходимые для создания предмета
+            /// </summary>
+            /// <param name="itemType">Тип необходимого предмета</param>
+            /// <param name="amount">Количество необходимого предмета</param>
             public void AddRequiredItem(ItemTypes itemType, int amount)
             {
                 ItemAmountContainer requiredItem = new ItemAmountContainer(itemType, amount);
                 m_RequiredItems.Add(requiredItem);
             }
+
+            /// <summary>
+            /// Принадлежит ли этот предмет указаному фильтру
+            /// </summary>
+            /// <param name="filterType">Тип фильтра</param>
+            /// <returns>true если принадлежит</returns>
+            public bool MatchFilter(ItemFilterTypes filterType) => m_FilterTypes.Contains(filterType);
 
             public override string ToString()
             {
@@ -98,7 +123,7 @@ namespace clicker.datatables
         /// <summary>
         /// Структура для сохранения количества предметов, определенного типа
         /// </summary>
-        public struct ItemAmountContainer
+        public class ItemAmountContainer
         {
             private ItemTypes m_Type;
             private int m_Amount;
