@@ -5,7 +5,7 @@ using static clicker.datatables.DataTableItems;
 
 namespace clicker.datatables
 {
-    public class DataTableWeapons 
+    public class DataTableWeapons
     {
         private static Dictionary<ItemTypes, Weapon> m_Weapons;
 
@@ -35,7 +35,7 @@ namespace clicker.datatables
             if (m_Weapons.ContainsKey(type))
                 return m_Weapons[type];
 
-            return null;
+            return m_Weapons[ItemTypes.Hand];
         }
 
         #region Data Structures

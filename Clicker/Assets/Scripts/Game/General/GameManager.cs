@@ -19,10 +19,7 @@ namespace clicker.general
         void Awake()
         {
             Instance = this;
-        }
 
-        void Start()
-        {
             DataTableItems.SetData(GetComponent<LocalItemsDataEditor>().Data_Items);
             DataTableWeapons.SetData(GetComponent<LocalWeaponsDataEditor>().Data_Weapons);
 
@@ -35,7 +32,6 @@ namespace clicker.general
             PlayerAccount = new account.Account();
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 2);
         }
-
 
         void ItemCrafted_Handler(DataTableItems.ItemTypes type)
         {

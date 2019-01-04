@@ -24,12 +24,22 @@ namespace clicker.account
         {
             private Dictionary<ItemTypes, ItemAmountContainer> m_Items;
 
+            public AccountWeapons WeaponState { get; private set; }
+
             public AccountInventory()
             {
+                WeaponState = new AccountWeapons();
+                WeaponState.OnWeaponBroken += WeaponBrokenHandler;
+
                 m_Items = new Dictionary<ItemTypes, ItemAmountContainer>();
 
                 //Добавить предмет по-умолчанию
-                m_Items.Add(ItemTypes.Hand, new ItemAmountContainer(ItemTypes.Hand));
+                AddItem(ItemTypes.Hand);
+            }
+
+            void WeaponBrokenHandler(ItemTypes type)
+            {
+                RemoveItem(type);
             }
 
             /// <summary>
@@ -83,8 +93,16 @@ namespace clicker.account
             public void AddItem(ItemTypes type, int amount = 1)
             {
                 if (!m_Items.ContainsKey(type))
+                {
                     m_Items.Add(type, new ItemAmountContainer(type, amount));
-                else 
+
+                    //Данные о добавленном предмете
+                    DataTableItems.Item itemData = DataTableItems.GetIemDataByType(type);
+                    //Если добаленный предмет - оружие
+                    if (itemData.MatchFilter(ItemFilterTypes.Weapons))
+                        WeaponState.AddWeapon(type);
+                }
+                else
                     m_Items[type].AddAmount(amount);
             }
 
@@ -99,7 +117,15 @@ namespace clicker.account
 
                     //Если больше нет этого предмета удалить его из списка
                     if (m_Items[type].Amount == 0)
+                    {
                         m_Items.Remove(type);
+
+                        //Данные об удаленном предмете
+                        DataTableItems.Item itemData = DataTableItems.GetIemDataByType(type);
+                        //Если удаленный предмет - оружие
+                        if (itemData.MatchFilter(ItemFilterTypes.Weapons))
+                            WeaponState.RemoveWeapon(type, amount);
+                    }
                 }
             }
 
@@ -118,6 +144,139 @@ namespace clicker.account
                 }
 
                 return strBuilder.ToString();
+            }
+
+
+            /// <summary>
+            /// Ведет учет стостояния оружия, которое есть у игрока. Количество оружия отслеживаеться интвентарем. 
+            /// Если оружие ломаеться или пропадает происходит обнуление сотосния (достаеться новое)
+            /// </summary>
+            public class AccountWeapons
+            {
+                public System.Action<ItemTypes> OnWeaponBroken;
+                public System.Action<ItemTypes, float> OnUseWeapon;
+
+                private Dictionary<ItemTypes, WeaponStateContainer> m_Weapons;
+
+                public AccountWeapons()
+                {
+                    m_Weapons = new Dictionary<ItemTypes, WeaponStateContainer>();
+
+                    //Добавить оружие по-умолчанию
+                    AddWeapon(ItemTypes.Hand);
+                }
+
+                public void AddWeapon(ItemTypes type)
+                {
+                    //Если оружие указанного типа еще нет
+                    if (!m_Weapons.ContainsKey(type))
+                        m_Weapons.Add(type, new WeaponStateContainer(DataTableWeapons.GetWeaponDataByType(type)));
+                }
+
+                public void RemoveWeapon(ItemTypes type, int amount)
+                {
+                    if (m_Weapons.ContainsKey(type))
+                        m_Weapons.Remove(type);
+                }
+
+                public bool UseWeapon(ItemTypes type)
+                {
+                    if (m_Weapons.ContainsKey(type))
+                    {
+                        //Сломалось ли оружие после использования
+                        if (m_Weapons[type].UseWeapon())
+                            OnUseWeapon?.Invoke(type, m_Weapons[type].CurDurabilityProgress);
+                        else
+                            OnWeaponBroken?.Invoke(type);
+
+                        return true;
+                    }
+
+                    return false;
+                }
+
+
+                public override string ToString()
+                {
+                    StringBuilder strBuilder = new StringBuilder(m_Weapons.Count * 5 + 20);
+
+                    strBuilder.AppendFormat("Account weapons: {0}", m_Weapons.Count);
+
+                    if (m_Weapons.Count > 0)
+                    {
+                        strBuilder.Append("\n");
+
+                        foreach (WeaponStateContainer weaponState in m_Weapons.Values)
+                            strBuilder.AppendFormat(" - {0}\n", weaponState.ToString());
+                    }
+
+                    return strBuilder.ToString();
+                }
+
+                /// <summary>
+                /// Структура для сохранения данных о текущем состоянии оружия и количестве оружия этого типа
+                /// </summary>
+                private class WeaponStateContainer
+                {
+                    private ItemTypes m_Type;
+                    private int m_CurDurability;
+                    private int m_Durability;
+
+                    /// <summary>
+                    /// Прогресс до того как оружие сломаеться
+                    /// </summary>
+                    public float CurDurabilityProgress => m_CurDurability / (float)m_Durability;
+
+                    public WeaponStateContainer(DataTableWeapons.Weapon weapon)
+                    {
+                        m_Type = weapon.Type;
+                        m_Durability = weapon.Durability;
+
+                        ResetDurability();
+                    }
+
+                    /// <summary>
+                    /// Использовать оружие (отнять прочность)
+                    /// </summary>
+                    /// <returns>true если после использования оружие еще целое</returns>
+                    public bool UseWeapon()
+                    {
+                        //Если прочность меньше 0 - оружие не может сломаться
+                        if (m_Durability < 0)
+                            return true;
+
+                        m_CurDurability--;
+                        if (m_CurDurability < 0)
+                            m_CurDurability = 0;
+
+                        if (m_CurDurability == 0)
+                        {
+                            ResetDurability();
+                            return false;
+                        }
+
+                        return true;
+                    }
+
+                    /// <summary>
+                    /// Вернуть данные о текущей прочности к изначальному состоянию
+                    /// </summary>
+                    void ResetDurability()
+                    {
+                        m_CurDurability = m_Durability;
+                    }
+
+
+                    public override string ToString()
+                    {
+                        StringBuilder strBuilder = new StringBuilder(50);
+
+                        strBuilder.AppendFormat("Weapon: {0}. CurDurability: {1}. Durability: {2}", m_Type, m_CurDurability, m_Durability);
+
+                        return strBuilder.ToString();
+                    }
+
+                }
             }
         }
     }
