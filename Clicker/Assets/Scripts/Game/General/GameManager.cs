@@ -24,6 +24,7 @@ namespace clicker.general
         void Start()
         {
             DataTableItems.SetData(GetComponent<LocalItemsDataEditor>().Data_Items);
+            DataTableWeapons.SetData(GetComponent<LocalWeaponsDataEditor>().Data_Weapons);
 
             UIManager = GetComponent<UIManager>();
 
