@@ -179,11 +179,16 @@ namespace clicker.account
                         m_Weapons.Remove(type);
                 }
 
+                /// <summary>
+                /// Использовать оружие (Отнять прочность)
+                /// </summary>
+                /// <param name="type">Тип оружия</param>
+                /// <returns>true если удалось использовать оружие</returns>
                 public bool UseWeapon(ItemTypes type)
                 {
                     if (m_Weapons.ContainsKey(type))
                     {
-                        //Сломалось ли оружие после использования
+                        //Если после использования оружие осталось целым
                         if (m_Weapons[type].UseWeapon())
                             OnUseWeapon?.Invoke(type, m_Weapons[type].CurDurabilityProgress);
                         else
