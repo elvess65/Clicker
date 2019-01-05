@@ -1,36 +1,52 @@
-﻿using clicker.datatables;
+﻿using clicker.account;
+using clicker.battle;
+using clicker.datatables;
 using clicker.general.ui;
+using clicker.items;
 using UnityEngine;
 
 namespace clicker.general
 {
-    [RequireComponent(typeof(UIManager))]
-    [RequireComponent(typeof(LocalItemsDataEditor))]
-    [RequireComponent(typeof(items.ItemsFactory))]
+    [RequireComponent(typeof(ItemsFactory))]
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance;
 
-        public items.ItemsFactory CraftItemFactory { get; private set; }
-        public UIManager UIManager { get; private set; }
+        public UIManager Manager_UI;
+        public BattleManager Manager_Battle;
 
-        public account.Account PlayerAccount;
+        public ItemsFactory CraftItemFactory { get; private set; }   
+        public Account PlayerAccount { get; private set; }
 
         void Awake()
         {
-            Instance = this;
-
+            //TODO: Переместить в раздел иницилазизации данных
             DataTableItems.SetData(GetComponent<LocalItemsDataEditor>().Data_Items);
             DataTableWeapons.SetData(GetComponent<LocalWeaponsDataEditor>().Data_Weapons);
 
-            UIManager = GetComponent<UIManager>();
+            Instance = this;
+        }
 
-            CraftItemFactory = GetComponent<items.ItemsFactory>();
+        void Start()
+        {
+            //TODO: Переместить в раздел иницилазизации данных
+            //Создать акканту
+            PlayerAccount = new Account();
+            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 2);
+
+            //Создание предметов
+            CraftItemFactory = GetComponent<ItemsFactory>();
             CraftItemFactory.OnItemCrafted += ItemCrafted_Handler;
 
-            //Создать акканту
-            PlayerAccount = new account.Account();
-            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 2);
+            //UI
+            Manager_UI.Init();
+
+            //Battle
+            DataTableItems.ItemTypes[] selectedWeapons = new DataTableItems.ItemTypes[2];
+            selectedWeapons[0] = DataTableItems.ItemTypes.Hand;
+            selectedWeapons[1] = DataTableItems.ItemTypes.Stone;
+
+            Manager_Battle.Init(selectedWeapons);
         }
 
         void ItemCrafted_Handler(DataTableItems.ItemTypes type)

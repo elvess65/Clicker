@@ -26,6 +26,8 @@ namespace clicker.account
 
             public AccountWeapons WeaponState { get; private set; }
 
+            private const ItemTypes m_DEFAULT_ITEM_1 = ItemTypes.Hand;
+
             public AccountInventory()
             {
                 WeaponState = new AccountWeapons();
@@ -34,7 +36,7 @@ namespace clicker.account
                 m_Items = new Dictionary<ItemTypes, ItemAmountContainer>();
 
                 //Добавить предмет по-умолчанию
-                AddItem(ItemTypes.Hand);
+                AddItem(m_DEFAULT_ITEM_1);
             }
 
             void WeaponBrokenHandler(ItemTypes type)
@@ -47,7 +49,7 @@ namespace clicker.account
             /// </summary>
             public int GetItemAmount(ItemTypes type)
             {
-                if (m_Items.ContainsKey(type))
+                if (m_Items.ContainsKey(type) && !type.Equals(m_DEFAULT_ITEM_1))
                     return m_Items[type].Amount;
 
                 return 0;
@@ -98,6 +100,7 @@ namespace clicker.account
 
                     //Данные о добавленном предмете
                     DataTableItems.Item itemData = DataTableItems.GetIemDataByType(type);
+
                     //Если добаленный предмет - оружие
                     if (itemData.MatchFilter(ItemFilterTypes.Weapons))
                         WeaponState.AddWeapon(type);
@@ -122,6 +125,7 @@ namespace clicker.account
 
                         //Данные об удаленном предмете
                         DataTableItems.Item itemData = DataTableItems.GetIemDataByType(type);
+
                         //Если удаленный предмет - оружие
                         if (itemData.MatchFilter(ItemFilterTypes.Weapons))
                             WeaponState.RemoveWeapon(type, amount);
@@ -163,7 +167,7 @@ namespace clicker.account
                     m_Weapons = new Dictionary<ItemTypes, WeaponStateContainer>();
 
                     //Добавить оружие по-умолчанию
-                    AddWeapon(ItemTypes.Hand);
+                    AddWeapon(m_DEFAULT_ITEM_1);
                 }
 
                 public void AddWeapon(ItemTypes type)

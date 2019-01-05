@@ -11,5 +11,7 @@ namespace FrameworkPackage.UI.Windows
         [Header("UIElements")]
         public UIElement_CraftItem UIElement_CraftItemPrefab;
         public UIElement_CraftItem_RequireItem UIElement_CraftRequireItemPrefab;
+        public UIElement_WeaponSlot UIElement_WeaponSlotPrefab;
+        public UIElement_WeaponSlotsController UIElement_WeaponSlotControllerPrefab;
     }
 }

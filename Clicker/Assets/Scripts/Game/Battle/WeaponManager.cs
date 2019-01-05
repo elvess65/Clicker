@@ -12,31 +12,38 @@ namespace clicker.battle
 
         private List<DataTableItems.ItemTypes> m_SelectedWeapons;
 
-        private void Start()
+        public void Init(DataTableItems.ItemTypes[] selectedWeapons)
         {
-            //Test
-            //Используемое оружие
+            //Заполнить список выбранного оружия
             m_SelectedWeapons = new List<DataTableItems.ItemTypes>();
-            m_SelectedWeapons.Add(DataTableItems.ItemTypes.Hand);
-            m_SelectedWeapons.Add(DataTableItems.ItemTypes.Stone);
+            for (int i = 0; i < selectedWeapons.Length; i++)
+                m_SelectedWeapons.Add(selectedWeapons[i]);
 
+            //Подписаться на события изменения состояния оружия
             GameManager.Instance.PlayerAccount.Inventory.WeaponState.OnUseWeapon += UseWeaponHandler;
             GameManager.Instance.PlayerAccount.Inventory.WeaponState.OnWeaponBroken += BrokeWeaponHandler;
 
-            SelectWeapon(1);
+            //UI
+            GameManager.Instance.Manager_UI.CreateWeaponSlots(selectedWeapons);
+            StartCoroutine(WaitFrameToSelectWeapon(1));
         }
 
-        private void Update()
+        /// <summary>
+        /// Выбрать оружие
+        /// </summary>
+        /// <param name="index">Индекс оружия из списка выбранного</param>
+        public void SelectWeapon(int index)
         {
-            //Test
-            if (Input.GetKeyDown(KeyCode.Space))
-                Debug.Log("Take damage: " + UseWeapon());
+            if (m_SelectedIndex == index)
+                return;
 
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-                SelectWeapon(0);
+            //Изменить индекс выделенного оружия
+            m_SelectedIndex = index;
 
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-                SelectWeapon(1);
+            //Обновить UI - выделение слота
+            GameManager.Instance.Manager_UI.WeaponSlotController.SelectItem(index);
+
+            Debug.Log("WeaponManager: SELECT WEAPON. Slot: " + m_SelectedIndex + ". Type: " + GetWeaponTypeByIndex(m_SelectedIndex) + " Amount: " + GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(GetWeaponTypeByIndex(m_SelectedIndex)));
         }
 
         /// <summary>
@@ -101,18 +108,6 @@ namespace clicker.battle
             }
         }
 
-
-        void SelectWeapon(int index)
-        {
-            if (m_SelectedIndex == index)
-                return;
-
-            m_SelectedIndex = index;
-
-            Debug.Log("WeaponManager: SELECT WEAPON. Slot: " + m_SelectedIndex + " Type: " + GetWeaponTypeByIndex(m_SelectedIndex) + " Amount: " + GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(GetWeaponTypeByIndex(m_SelectedIndex)));
-            //Обновить UI - выделение слота
-        }
-
         DataTableItems.ItemTypes GetWeaponTypeByIndex(int index)
         {
             try
@@ -123,6 +118,26 @@ namespace clicker.battle
             { }
 
             return DataTableItems.ItemTypes.Hand;
+        }
+
+        IEnumerator WaitFrameToSelectWeapon(int index)
+        {
+            yield return null;
+            SelectWeapon(index);
+        }
+
+
+        void Update()
+        {
+            //Test
+            if (Input.GetKeyDown(KeyCode.Space))
+                Debug.Log("Take damage: " + UseWeapon());
+
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+                SelectWeapon(0);
+
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+                SelectWeapon(1);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using clicker.datatables;
+using FrameworkPackage.UI.Windows;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,9 +9,9 @@ namespace clicker.general.ui
     /// <summary>
     /// UI объекта, который отображает информацию о предмете
     /// </summary>
-    public class UIElement_CraftItem : MonoBehaviour
+    public class UIElement_CraftItem : UIElement_ClickableItem
     {
-        public System.Action<datatables.DataTableItems.ItemTypes> OnItemPress;
+        public System.Action<DataTableItems.ItemTypes> OnItemPress;
 
         [Header("Texts")]
         public Text Text_ItemName;
@@ -54,9 +55,6 @@ namespace clicker.general.ui
             //Текущий прогресс создания
             SetItemProgress(progress);
 
-            //Подписаться на нажатие 
-            GetComponent<Button>().onClick.AddListener(Button_PressHandler);
-
             //Вывод необходимый для создания предметов
             m_RequiredItems = new Dictionary<DataTableItems.ItemTypes, UIElement_CraftItem_RequireItem>();
 
@@ -66,12 +64,14 @@ namespace clicker.general.ui
             {
                 for (int i = 0; i < requiredItems.Length; i++)
                 {
-                    UIElement_CraftItem_RequireItem item = Instantiate(GameManager.Instance.UIManager.WindowsManager.UIElement_CraftRequireItemPrefab, RequiredItemsParent);
+                    UIElement_CraftItem_RequireItem item = Instantiate(GameManager.Instance.Manager_UI.WindowsManager.UIElement_CraftRequireItemPrefab, RequiredItemsParent);
                     item.Init(requiredItems[i].Type, requiredItems[i].Amount);
 
                     m_RequiredItems.Add(requiredItems[i].Type, item);
                 }
             }
+
+            base.Init();
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace clicker.general.ui
         }
 
 
-        void Button_PressHandler()
+        protected override void Button_PressHandler()
         {
             if (m_ItemCrafted)
                 return;

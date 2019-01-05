@@ -6,6 +6,9 @@ using static clicker.datatables.DataTableItems;
 
 namespace clicker.items
 {
+    /// <summary>
+    /// Отвечает за крафт предметов
+    /// </summary>
     public class ItemsFactory : MonoBehaviour
     {
         public System.Action<ItemTypes, float> OnTickToItemAdded;

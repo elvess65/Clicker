@@ -36,7 +36,7 @@ namespace clicker.general.ui.windows
                     if (itemData != null && itemData.MatchFilter(FilterType))
                     {
                         //Создать объект
-                        UIElement_CraftItem item = Instantiate(GameManager.Instance.UIManager.WindowsManager.UIElement_CraftItemPrefab, ItemsParent);
+                        UIElement_CraftItem item = Instantiate(GameManager.Instance.Manager_UI.WindowsManager.UIElement_CraftItemPrefab, ItemsParent);
                         item.Init(type, GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(type), GameManager.Instance.CraftItemFactory.GetProgressForItem(type), itemData.RequiredItems);
                         item.OnItemPress += Item_PressHanlder;
 
