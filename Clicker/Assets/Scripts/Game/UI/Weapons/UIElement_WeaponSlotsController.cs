@@ -40,8 +40,58 @@ namespace clicker.general.ui
                 ShowSelection(m_WeaponSlots[index].ItemRectTransform);
             }
             catch
+            { }
+        }
+
+        /// <summary>
+        /// Обновить прогресс прочности указанного типа оружия
+        /// </summary>
+        /// <param name="type">Тип</param>
+        /// <param name="progress">Прочность</param>
+        public void UpdateItemDurability(DataTableItems.ItemTypes type, float progress)
+        {
+            for (int i = 0; i < m_WeaponSlots.Count; i++)
             {
-                ShowSelection(m_WeaponSlots[0].ItemRectTransform);
+                if (m_WeaponSlots[i].Type.Equals(type))
+                {
+                    m_WeaponSlots[i].SetDurability(progress);
+                    break;
+                }
+            } 
+        }
+
+        /// <summary>
+        /// Обновить количество указаннонр предмета
+        /// </summary>
+        /// <param name="type">Тип</param>
+        /// <param name="amount">Количество</param>
+        public void UpdateItemAmount(DataTableItems.ItemTypes type, int amount)
+        {
+            for (int i = 0; i < m_WeaponSlots.Count; i++)
+            {
+                if (m_WeaponSlots[i].Type.Equals(type))
+                {
+                    m_WeaponSlots[i].SetAmount(amount);
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Заменить тип оружия в ячейке
+        /// </summary>
+        /// <param name="sourceType">Тип оружия, которое нужно заменить</param>
+        /// <param name="targetType">Тип оружия на которое следует заменить</param>
+        /// <param name="amount">Количество нового типа оружия</param>
+        public void ReplaceWeapon(DataTableItems.ItemTypes sourceType, DataTableItems.ItemTypes targetType, int amount)
+        {
+            for (int i = 0; i < m_WeaponSlots.Count; i++)
+            {
+                if (m_WeaponSlots[i].Type.Equals(sourceType))
+                {
+                    m_WeaponSlots[i].SetWeapon(targetType, amount);
+                    break;
+                }
             }
         }
 
@@ -51,9 +101,9 @@ namespace clicker.general.ui
             Image_Selection.transform.position = rTransform.position;
         }
 
-        void Item_PressHandler(int itemIndex)
+        void Item_PressHandler(int index)
         {
-            GameManager.Instance.Manager_Battle.SelectedWeaponManager.SelectWeapon(itemIndex);
+            GameManager.Instance.Manager_Battle.SelectedWeaponManager.SelectWeapon(index);
         }
     }
 }
