@@ -515,6 +515,8 @@ MonoBehaviour:
     type: 3}
   UIElement_WeaponSlotControllerPrefab: {fileID: 5768915630613340754, guid: 27f24643d8ad76e4f9412dc15de2115c,
     type: 3}
+  UIElement_AddWeaponSlotPrefab: {fileID: 8583836997032392517, guid: 4d7648bd690e2dd4589dd8f1a13dd309,
+    type: 3}
 --- !u!4 &1215804869
 Transform:
   m_ObjectHideFlags: 0

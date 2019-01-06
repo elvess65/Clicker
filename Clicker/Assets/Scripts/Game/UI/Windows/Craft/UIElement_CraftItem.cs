@@ -13,6 +13,9 @@ namespace clicker.general.ui
     public class UIElement_CraftItem : UIElement_ClickableItem, IDragHandler, IPointerDownHandler, IPointerUpHandler
     {
         public System.Action<DataTableItems.ItemTypes> OnItemPress;
+        public System.Action<PointerEventData, DataTableItems.ItemTypes> OnPoinerDownEvent;
+        public System.Action<PointerEventData, DataTableItems.ItemTypes> OnDragEvent;
+        public System.Action<PointerEventData, DataTableItems.ItemTypes> OnPointerUpEvent;
 
         [Header("Texts")]
         public Text Text_ItemName;
@@ -128,6 +131,33 @@ namespace clicker.general.ui
         }
 
 
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            if (m_CanDrag)
+                OnPoinerDownEvent?.Invoke(eventData, Type);
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            if (m_CanDrag)
+                OnDragEvent?.Invoke(eventData, Type);
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            if (m_CanDrag)
+                OnPointerUpEvent?.Invoke(eventData, Type);
+        }
+
+
+        protected override void Button_PressHandler()
+        {
+            if (m_ItemCrafted)
+                return;
+
+            OnItemPress?.Invoke(Type);
+        }
+
         /// <summary>
         /// Начать анимацию прогресса
         /// </summary>
@@ -167,37 +197,6 @@ namespace clicker.general.ui
                     }
                 }
             }
-        }
-
-
-        protected override void Button_PressHandler()
-        {
-            if (m_ItemCrafted)
-                return;
-
-            OnItemPress?.Invoke(Type);
-        }
-
-        public System.Action<PointerEventData, DataTableItems.ItemTypes> OnPoinerDownEvent;
-        public System.Action<PointerEventData, DataTableItems.ItemTypes> OnDragEvent;
-        public System.Action<PointerEventData, DataTableItems.ItemTypes> OnPointerUpEvent;
-
-        public void OnPointerDown(PointerEventData eventData)
-        {
-            if (m_CanDrag)
-                OnPoinerDownEvent?.Invoke(eventData, Type);
-        }
-
-        public void OnDrag(PointerEventData eventData)
-        {
-            if (m_CanDrag)
-                OnDragEvent?.Invoke(eventData, Type);
-        }
-
-        public void OnPointerUp(PointerEventData eventData)
-        {
-            if (m_CanDrag)
-                OnPointerUpEvent?.Invoke(eventData, Type);
         }
     }
 }

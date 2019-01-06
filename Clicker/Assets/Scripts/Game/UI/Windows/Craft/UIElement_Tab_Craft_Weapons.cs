@@ -19,8 +19,14 @@ namespace clicker.general.ui.windows
                 base.InitTab();
 
                 //Создать панель оружия
-                m_WeaponSlotsController = GameManager.Instance.Manager_UI.CreateWeaponSlots(GameManager.Instance.Manager_Battle.SelectedWeaponManager.SelectedWeapons.ToArray(),
-                    WeaponSlotsParent, false, false);
+                m_WeaponSlotsController = 
+                    GameManager.Instance.Manager_UI.CreateWeaponSlots(GameManager.Instance.Manager_Battle.SelectedWeaponManager.SelectedWeapons.ToArray(),
+                                                                      WeaponSlotsParent, 
+                                                                      false, 
+                                                                      false);
+
+                //Создать кнопку добавления слотов оружия
+                GameManager.Instance.Manager_UI.CreateAddWeaponSlotButton(m_WeaponSlotsController.AddSlotParent);
 
                 //Задать каждому предмету во вкладке события перетягивания
                 foreach (UIElement_CraftItem item in m_Items.Values)
@@ -35,14 +41,46 @@ namespace clicker.general.ui.windows
 
             SubscribeForEvents();
         }
+
         protected override void ItemCrafted_Handler(DataTableItems.ItemTypes craftedItemType)
         {
             base.ItemCrafted_Handler(craftedItemType);
 
-            //Обновить локальный UI количества оружия 
-            m_WeaponSlotsController.UpdateItemAmount(craftedItemType, GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(craftedItemType));
+            //Обновить UI количества оружия
+            m_WeaponSlotsController.UpdateWeaponState(GameManager.Instance.Manager_Battle.SelectedWeaponManager.SelectedWeapons.ToArray());
         }
 
+        protected override void UpdateTabState()
+        {
+            base.UpdateTabState();
+
+            m_WeaponSlotsController.UpdateWeaponState(GameManager.Instance.Manager_Battle.SelectedWeaponManager.SelectedWeapons.ToArray());
+        }
+
+        protected override void SubscribeForEvents()
+        {
+            base.SubscribeForEvents();
+
+            //Подписатья на событие добавления оружия
+            GameManager.Instance.Manager_Battle.SelectedWeaponManager.OnAddWeapon += UpdateWeaponState;
+        }
+
+        protected override void UnscribeFromEvents()
+        {
+            base.UnscribeFromEvents();
+
+            //Подписатья на событие добавления оружия
+            GameManager.Instance.Manager_Battle.SelectedWeaponManager.OnAddWeapon -= UpdateWeaponState;
+        }
+
+
+        /// <summary>
+        /// Обновить состояния оружия
+        /// </summary>
+        void UpdateWeaponState(DataTableItems.ItemTypes[] selectedWeaponTypes)
+        {
+            m_WeaponSlotsController.UpdateWeaponState(selectedWeaponTypes);
+        }
 
         void PointerDown_Handler(PointerEventData eventData, DataTableItems.ItemTypes type)
         {
@@ -60,9 +98,6 @@ namespace clicker.general.ui.windows
                 {
                     //Добавить оружие в ячейку выбранного оружия
                     GameManager.Instance.Manager_Battle.SelectedWeaponManager.AddWeapon(item.Index, type);
-
-                    //Обновить UI окна
-                    m_WeaponSlotsController.ReplaceWeaponInSlot(item.Index, type);
 
                     break;
                 }

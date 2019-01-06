@@ -159,6 +159,7 @@ namespace clicker.account
             {
                 public System.Action<ItemTypes> OnWeaponBroken;
                 public System.Action<ItemTypes, float> OnUseWeapon;
+                public System.Action<ItemTypes> OnRemoveWeapon;
 
                 private Dictionary<ItemTypes, WeaponStateContainer> m_Weapons;
 
@@ -180,7 +181,11 @@ namespace clicker.account
                 public void RemoveWeapon(ItemTypes type, int amount)
                 {
                     if (m_Weapons.ContainsKey(type))
+                    {
                         m_Weapons.Remove(type);
+
+                        OnRemoveWeapon?.Invoke(type);
+                    }
                 }
 
                 /// <summary>

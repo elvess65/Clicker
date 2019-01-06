@@ -113,8 +113,8 @@ namespace clicker.general.ui.windows
                 item.UpdateRequireItemsState();
             }
 
-            //Обновить UI количества оружия 
-            GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemAmount(craftedItemType, GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(craftedItemType));
+            //Обновить UI количества оружия
+            GameManager.Instance.Manager_UI.WeaponSlotController.UpdateWeaponState(GameManager.Instance.Manager_Battle.SelectedWeaponManager.SelectedWeapons.ToArray());
         }
 
         /// <summary>
@@ -124,6 +124,7 @@ namespace clicker.general.ui.windows
         {
             //Подписаться на событие добавления тиков
             GameManager.Instance.CraftItemFactory.OnTickToItemAdded += TickToItemAdded_Handler;
+
             //Подписаться на событие создания предмета
             GameManager.Instance.CraftItemFactory.OnItemCrafted += ItemCrafted_Handler;
         }

@@ -1,4 +1,5 @@
 ﻿using clicker.datatables;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -11,41 +12,35 @@ namespace clicker.general.ui
     /// </summary>
     public class UIElement_WeaponSlotsController : MonoBehaviour
     {
-        public RectTransform SlotPranet;
+        public RectTransform SlotParent;
+        public RectTransform AddSlotParent;
         public Image Image_Selection;
 
         public List<UIElement_WeaponSlot> WeaponSlots { get; private set; }
+
+        private int m_SelectedSlotIndex = 0;
 
         public void Init(DataTableItems.ItemTypes[] selectedWeaponTypes, bool allowClickable)
         {
             Image_Selection.enabled = false;
             WeaponSlots = new List<UIElement_WeaponSlot>();
 
+            //Создать слоты оружия
+            for (int i = 0; i < selectedWeaponTypes.Length; i++)
+                CreateWeaponSlot(selectedWeaponTypes[i], i, allowClickable); 
+        }
+
+
+        /// <summary>
+        /// Обновить состояния оружия
+        /// </summary>
+        public void UpdateWeaponState(DataTableItems.ItemTypes[] selectedWeaponTypes)
+        {
             for (int i = 0; i < selectedWeaponTypes.Length; i++)
             {
                 var amountAndDurData = GetAmountAndDurabilityForWeapon(selectedWeaponTypes[i]);
-
-                UIElement_WeaponSlot item = Instantiate(GameManager.Instance.Manager_UI.WindowsManager.UIElement_WeaponSlotPrefab, SlotPranet);
-                item.Init(selectedWeaponTypes[i], i, amountAndDurData.amount, amountAndDurData.durabilityProgress);
-                item.OnWeaponSlotPress += Item_PressHandler;
-                item.EnableButton(allowClickable);
-
-                WeaponSlots.Add(item);
+                WeaponSlots[i].SetWeapon(selectedWeaponTypes[i], amountAndDurData.amount, amountAndDurData.durabilityProgress);
             }
-        }
-
-        /// <summary>
-        /// Выделить слот с оружием либо первый слот (в случае ошибки)
-        /// </summary>
-        /// <param name="index">Индекс слота</param>
-        public void SelectItem(int index)
-        {
-            try
-            {
-                ShowSelection(WeaponSlots[index].ItemRectTransform);
-            }
-            catch
-            { }
         }
 
         /// <summary>
@@ -62,7 +57,7 @@ namespace clicker.general.ui
                     WeaponSlots[i].SetDurability(progress);
                     break;
                 }
-            } 
+            }
         }
 
         /// <summary>
@@ -82,38 +77,29 @@ namespace clicker.general.ui
             }
         }
 
-        /// <summary>
-        /// Заменить тип оружия в ячейке определенного типа (Когда закончилось оружия и нужно заменить на другое)
-        /// </summary>
-        /// <param name="sourceType">Тип оружия, которое нужно заменить</param>
-        /// <param name="targetType">Тип оружия на которое следует заменить</param>
-        /// <param name="amount">Количество нового типа оружия</param>
-        public void ReplaceWeapon(DataTableItems.ItemTypes sourceType, DataTableItems.ItemTypes targetType)
-        {
-            for (int i = 0; i < WeaponSlots.Count; i++)
-            {
-                if (WeaponSlots[i].Type.Equals(sourceType))
-                {
-                    var amountAndDurData = GetAmountAndDurabilityForWeapon(targetType);
 
-                    WeaponSlots[i].SetWeapon(targetType, amountAndDurData.amount, amountAndDurData.durabilityProgress);
-                    break;
-                }
+        /// <summary>
+        /// Выделить слот с оружием либо первый слот (в случае ошибки)
+        /// </summary>
+        /// <param name="index">Индекс слота</param>
+        public void SelectItem(int index)
+        {
+            try
+            {
+                ShowSelection(WeaponSlots[index].ItemRectTransform);
+                m_SelectedSlotIndex = index;
             }
+            catch
+            { }
         }
 
         /// <summary>
-        /// Заменить тип оружия в конкретной ячейке (При выборе оружия)
+        /// Добавить слот оружия
         /// </summary>
-        /// <param name="index">Индекс ячейки</param>
-        /// <param name="type">Тип оружия</param>
-        public void ReplaceWeaponInSlot(int index, DataTableItems.ItemTypes type)
+        public void AddSlot(DataTableItems.ItemTypes type, bool allowClickable)
         {
-            var amountAndDurData = GetAmountAndDurabilityForWeapon(type);
-
-            WeaponSlots[index].SetWeapon(type, amountAndDurData.amount, amountAndDurData.durabilityProgress);
-
-            Debug.Log(ToString());
+            CreateWeaponSlot(type, WeaponSlots.Count, allowClickable);
+            StartCoroutine(WaitFrameToSelectWeapon(m_SelectedSlotIndex));
         }
 
         public override string ToString()
@@ -132,6 +118,18 @@ namespace clicker.general.ui
         }
 
 
+        void CreateWeaponSlot(DataTableItems.ItemTypes type, int slotIndex, bool allowClickable)
+        {
+            var amountAndDurData = GetAmountAndDurabilityForWeapon(type);
+
+            UIElement_WeaponSlot item = Instantiate(GameManager.Instance.Manager_UI.WindowsManager.UIElement_WeaponSlotPrefab, SlotParent);
+            item.Init(type, slotIndex, amountAndDurData.amount, amountAndDurData.durabilityProgress);
+            item.OnWeaponSlotPress += Item_PressHandler;
+            item.EnableButton(allowClickable);
+
+            WeaponSlots.Add(item);
+        }
+
         void ShowSelection(RectTransform rTransform)
         {
             if (!Image_Selection.enabled)
@@ -149,6 +147,12 @@ namespace clicker.general.ui
         {
             return (GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(type),
                     GameManager.Instance.PlayerAccount.Inventory.WeaponState.GetDurabilityProgress(type));
+        }
+
+        IEnumerator WaitFrameToSelectWeapon(int index)
+        {
+            yield return null;
+            ShowSelection(WeaponSlots[index].ItemRectTransform);
         }
     }
 }
