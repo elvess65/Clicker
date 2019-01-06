@@ -26,7 +26,8 @@ namespace clicker.general.ui.windows
                                                                       false);
 
                 //Создать кнопку добавления слотов оружия
-                GameManager.Instance.Manager_UI.CreateAddWeaponSlotButton(m_WeaponSlotsController.AddSlotParent);
+                UIElement_AddWeaponSlot addSlotButton = GameManager.Instance.Manager_UI.CreateAddWeaponSlotButton(m_WeaponSlotsController.AddSlotParent);
+                addSlotButton.OnItemClick += AddSlotButton_PressHandler;
 
                 //Задать каждому предмету во вкладке события перетягивания
                 foreach (UIElement_CraftItem item in m_Items.Values)
@@ -63,14 +64,20 @@ namespace clicker.general.ui.windows
 
             //Подписатья на событие добавления оружия
             GameManager.Instance.Manager_Battle.SelectedWeaponManager.OnAddWeapon += UpdateWeaponState;
+
+            //Подписатья на событие добавления слота
+            GameManager.Instance.Manager_Battle.SelectedWeaponManager.OnAddSlot += AddSlot_Handler;
         }
 
         protected override void UnscribeFromEvents()
         {
             base.UnscribeFromEvents();
 
-            //Подписатья на событие добавления оружия
+            //Отписаться от событие добавления оружия
             GameManager.Instance.Manager_Battle.SelectedWeaponManager.OnAddWeapon -= UpdateWeaponState;
+
+            //Отписаться от событие добавления слота
+            GameManager.Instance.Manager_Battle.SelectedWeaponManager.OnAddSlot -= AddSlot_Handler;
         }
 
 
@@ -81,6 +88,28 @@ namespace clicker.general.ui.windows
         {
             m_WeaponSlotsController.UpdateWeaponState(selectedWeaponTypes);
         }
+
+
+        /// <summary>
+        /// Добавить слот
+        /// </summary>
+        void AddSlot_Handler(DataTableItems.ItemTypes type)
+        {
+            m_WeaponSlotsController.AddSlot(type);
+        }
+
+        void AddSlotButton_PressHandler(RectTransform buttonTransform)
+        {
+            GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot--;
+            buttonTransform.GetComponent<UIElement_AddWeaponSlot>().UpdateProgress(GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot, 
+                GameManager.Instance.Manager_Battle.SelectedWeaponManager.TotalAddSlot);
+            if (GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot <= 0)
+            {
+                GameManager.Instance.Manager_Battle.SelectedWeaponManager.AddSlot();
+                buttonTransform.gameObject.SetActive(false);
+            }
+        }
+
 
         void PointerDown_Handler(PointerEventData eventData, DataTableItems.ItemTypes type)
         {

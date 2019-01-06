@@ -43,7 +43,7 @@ namespace clicker.general
 
             //Battle
             DataTableItems.ItemTypes[] selectedWeapons = new DataTableItems.ItemTypes[2];
-            selectedWeapons[0] = DataTableItems.ItemTypes.Hand;
+            selectedWeapons[0] = Account.AccountInventory.DEFAULT_ITEM;
             selectedWeapons[1] = DataTableItems.ItemTypes.Stone;
 
             Manager_Battle.Init(selectedWeapons);

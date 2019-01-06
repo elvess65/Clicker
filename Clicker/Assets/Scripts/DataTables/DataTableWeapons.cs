@@ -35,7 +35,7 @@ namespace clicker.datatables
             if (m_Weapons.ContainsKey(type))
                 return m_Weapons[type];
 
-            return m_Weapons[ItemTypes.Hand];
+            return m_Weapons[account.Account.AccountInventory.DEFAULT_ITEM];
         }
 
         #region Data Structures

@@ -26,7 +26,7 @@ namespace clicker.account
 
             public AccountWeapons WeaponState { get; private set; }
 
-            private const ItemTypes m_DEFAULT_ITEM_1 = ItemTypes.Hand;
+            public const ItemTypes DEFAULT_ITEM = ItemTypes.Hand;
 
             public AccountInventory()
             {
@@ -36,7 +36,7 @@ namespace clicker.account
                 m_Items = new Dictionary<ItemTypes, ItemAmountContainer>();
 
                 //Добавить предмет по-умолчанию
-                AddItem(m_DEFAULT_ITEM_1);
+                AddItem(DEFAULT_ITEM);
             }
 
             void WeaponBrokenHandler(ItemTypes type)
@@ -49,7 +49,7 @@ namespace clicker.account
             /// </summary>
             public int GetItemAmount(ItemTypes type)
             {
-                if (m_Items.ContainsKey(type) && !type.Equals(m_DEFAULT_ITEM_1))
+                if (m_Items.ContainsKey(type) && !type.Equals(DEFAULT_ITEM))
                     return m_Items[type].Amount;
 
                 return 0;
@@ -168,7 +168,7 @@ namespace clicker.account
                     m_Weapons = new Dictionary<ItemTypes, WeaponStateContainer>();
 
                     //Добавить оружие по-умолчанию
-                    AddWeapon(m_DEFAULT_ITEM_1);
+                    AddWeapon(DEFAULT_ITEM);
                 }
 
                 public void AddWeapon(ItemTypes type)

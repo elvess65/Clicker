@@ -17,6 +17,8 @@ namespace clicker.general.ui
         {
             Text_Title.text = "Add Slot";
             UpdateProgress(curStep, totalSteps);
+
+            base.Init();
         }
 
         public void UpdateProgress(int curStep, int totalStep)

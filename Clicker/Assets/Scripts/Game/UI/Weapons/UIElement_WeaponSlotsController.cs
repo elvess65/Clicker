@@ -18,10 +18,12 @@ namespace clicker.general.ui
 
         public List<UIElement_WeaponSlot> WeaponSlots { get; private set; }
 
-        private int m_SelectedSlotIndex = 0;
+        private int m_SelectedSlotIndex = -1;
+        private bool m_AllowClickable = false;
 
         public void Init(DataTableItems.ItemTypes[] selectedWeaponTypes, bool allowClickable)
         {
+            m_AllowClickable = allowClickable;
             Image_Selection.enabled = false;
             WeaponSlots = new List<UIElement_WeaponSlot>();
 
@@ -96,10 +98,12 @@ namespace clicker.general.ui
         /// <summary>
         /// Добавить слот оружия
         /// </summary>
-        public void AddSlot(DataTableItems.ItemTypes type, bool allowClickable)
+        public void AddSlot(DataTableItems.ItemTypes type)
         {
-            CreateWeaponSlot(type, WeaponSlots.Count, allowClickable);
-            StartCoroutine(WaitFrameToSelectWeapon(m_SelectedSlotIndex));
+            CreateWeaponSlot(type, WeaponSlots.Count, m_AllowClickable);
+
+            if (m_SelectedSlotIndex >= 0)
+                StartCoroutine(WaitFrameToSelectWeapon(m_SelectedSlotIndex));
         }
 
         public override string ToString()

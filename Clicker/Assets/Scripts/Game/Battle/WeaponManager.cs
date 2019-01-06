@@ -11,6 +11,7 @@ namespace clicker.battle
     {
         public System.Action<DataTableItems.ItemTypes[]> OnAddWeapon;
         public System.Action<DataTableItems.ItemTypes[]> OnRemoveWeapon;
+        public System.Action<DataTableItems.ItemTypes> OnAddSlot;
 
         private int m_SelectedIndex = -1;
 
@@ -25,18 +26,20 @@ namespace clicker.battle
             for (int i = 0; i < selectedWeapons.Length; i++)
                 SelectedWeapons.Add(selectedWeapons[i]);
 
+            //UI
+            GameManager.Instance.Manager_UI.CreateWeaponSlots(selectedWeapons, GameManager.Instance.Manager_UI.UIParent_MiddleLeft, true, true);
+
             //Подписаться на события изменения состояния оружия
             GameManager.Instance.PlayerAccount.Inventory.WeaponState.OnUseWeapon += UseWeaponHandler;
             GameManager.Instance.PlayerAccount.Inventory.WeaponState.OnWeaponBroken += BrokeWeaponHandler;
             GameManager.Instance.PlayerAccount.Inventory.WeaponState.OnRemoveWeapon += RemoveWeaponHandler;
 
-            //UI
-            GameManager.Instance.Manager_UI.CreateWeaponSlots(selectedWeapons, GameManager.Instance.Manager_UI.UIParent_MiddleLeft, true, true);
-
-            //Подписатья на событие добавления оружия
+            //Подписать UI на событие
             OnAddWeapon += GameManager.Instance.Manager_UI.WeaponSlotController.UpdateWeaponState;
             OnRemoveWeapon += GameManager.Instance.Manager_UI.WeaponSlotController.UpdateWeaponState;
+            OnAddSlot += GameManager.Instance.Manager_UI.WeaponSlotController.AddSlot;
 
+            //Выделение с задержкой
             StartCoroutine(WaitFrameToSelectWeapon(1));
         }
 
@@ -87,7 +90,7 @@ namespace clicker.battle
                 for (int i = 0; i < SelectedWeapons.Count; i++)
                 {
                     if (i != index && SelectedWeapons[i].Equals(weaponType))
-                        SelectedWeapons[i] = DataTableItems.ItemTypes.Hand;
+                        SelectedWeapons[i] = account.Account.AccountInventory.DEFAULT_ITEM;
                 }
 
                 SelectedWeapons[index] = weaponType;
@@ -107,9 +110,9 @@ namespace clicker.battle
         /// </summary>
         public void AddSlot()
         {
-            SelectedWeapons.Add(DataTableItems.ItemTypes.Hand);
+            SelectedWeapons.Add(account.Account.AccountInventory.DEFAULT_ITEM);
 
-            GameManager.Instance.Manager_UI.WeaponSlotController.AddSlot(DataTableItems.ItemTypes.Hand, true);
+            OnAddSlot?.Invoke(account.Account.AccountInventory.DEFAULT_ITEM);
         }
 
         public override string ToString()
@@ -159,7 +162,7 @@ namespace clicker.battle
                     //Заменить оружие в слоте на оружие по-умолчанию
                     if (SelectedWeapons[i].Equals(weaponType))
                     {
-                        SelectedWeapons[i] = DataTableItems.ItemTypes.Hand;
+                        SelectedWeapons[i] = account.Account.AccountInventory.DEFAULT_ITEM;
 
                         //Найти UI слот и обновить оружие
                         GameManager.Instance.Manager_UI.WeaponSlotController.UpdateWeaponState(SelectedWeapons.ToArray());
@@ -185,7 +188,7 @@ namespace clicker.battle
             for (int i = 0; i < SelectedWeapons.Count; i++)
             {
                 if (SelectedWeapons[i].Equals(weaponType))
-                    SelectedWeapons[i] = DataTableItems.ItemTypes.Hand;
+                    SelectedWeapons[i] = account.Account.AccountInventory.DEFAULT_ITEM;
             }
 
             OnRemoveWeapon?.Invoke(SelectedWeapons.ToArray());
@@ -200,7 +203,7 @@ namespace clicker.battle
             catch
             { }
 
-            return DataTableItems.ItemTypes.Hand;
+            return account.Account.AccountInventory.DEFAULT_ITEM;
         }
 
         IEnumerator WaitFrameToSelectWeapon(int index)
