@@ -18,12 +18,11 @@ namespace clicker.general.ui
         public int Index { get; private set; }
         public DataTableItems.ItemTypes Type { get; private set; }
 
-        public void Init(DataTableItems.ItemTypes type, int index, int amount = 0)
+        public void Init(DataTableItems.ItemTypes type, int index, int amount, float durabilityProgress)
         {
-            Type = type;
             Index = index;
 
-            SetWeapon(type, amount);
+            SetWeapon(type, amount, durabilityProgress);
 
             base.Init();
         }
@@ -51,11 +50,13 @@ namespace clicker.general.ui
         /// </summary>
         /// <param name="type">Тип оружия</param>
         /// <param name="amount">Количество оружия</param>
-        public void SetWeapon(DataTableItems.ItemTypes type, int amount)
+        /// <param name="durabilityProgress">Текущее состояние оружия</param>
+        public void SetWeapon(DataTableItems.ItemTypes type, int amount, float durabilityProgress)
         {
             Text_ItemName.text = type.ToString();
+            Type = type;
             SetAmount(amount);
-            SetDurability(1);
+            SetDurability(durabilityProgress);
         }
 
 

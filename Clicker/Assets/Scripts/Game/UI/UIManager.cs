@@ -23,10 +23,15 @@ namespace clicker.general.ui
             Button_ShowCraft.onClick.AddListener(Button_ShowCraft_PressHandler);
         }
 
-        public void CreateWeaponSlots(DataTableItems.ItemTypes[] selectedWeapons)
+        public UIElement_WeaponSlotsController CreateWeaponSlots(DataTableItems.ItemTypes[] selectedWeapons, RectTransform parent, bool cacheSlots, bool allowClickable)
         {
-            WeaponSlotController = Instantiate(WindowsManager.UIElement_WeaponSlotControllerPrefab, UIParent_MiddleLeft);
-            WeaponSlotController.Init(selectedWeapons);
+            UIElement_WeaponSlotsController weaponSlotsController = Instantiate(WindowsManager.UIElement_WeaponSlotControllerPrefab, parent);
+            weaponSlotsController.Init(selectedWeapons, allowClickable);
+
+            if (cacheSlots)
+                WeaponSlotController = weaponSlotsController;
+
+            return weaponSlotsController;
         }
 
 

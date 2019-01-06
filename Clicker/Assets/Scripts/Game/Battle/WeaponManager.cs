@@ -2,6 +2,7 @@
 using clicker.general;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace clicker.battle
@@ -10,21 +11,21 @@ namespace clicker.battle
     {
         private int m_SelectedIndex = -1;
 
-        private List<DataTableItems.ItemTypes> m_SelectedWeapons;
+        public List<DataTableItems.ItemTypes> SelectedWeapons { get; private set; }
 
         public void Init(DataTableItems.ItemTypes[] selectedWeapons)
         {
             //Заполнить список выбранного оружия
-            m_SelectedWeapons = new List<DataTableItems.ItemTypes>();
+            SelectedWeapons = new List<DataTableItems.ItemTypes>();
             for (int i = 0; i < selectedWeapons.Length; i++)
-                m_SelectedWeapons.Add(selectedWeapons[i]);
+                SelectedWeapons.Add(selectedWeapons[i]);
 
             //Подписаться на события изменения состояния оружия
             GameManager.Instance.PlayerAccount.Inventory.WeaponState.OnUseWeapon += UseWeaponHandler;
             GameManager.Instance.PlayerAccount.Inventory.WeaponState.OnWeaponBroken += BrokeWeaponHandler;
 
             //UI
-            GameManager.Instance.Manager_UI.CreateWeaponSlots(selectedWeapons);
+            GameManager.Instance.Manager_UI.CreateWeaponSlots(selectedWeapons, GameManager.Instance.Manager_UI.UIParent_MiddleLeft, true, true);
             StartCoroutine(WaitFrameToSelectWeapon(1));
         }
 
@@ -62,6 +63,43 @@ namespace clicker.battle
             return 0;
         }
 
+        /// <summary>
+        /// Добавить оружие в слот
+        /// </summary>
+        /// <param name="index">Индекс слота</param>
+        /// <param name="weaponType">Тип оружия</param>
+        public void AddWeapon(int index, DataTableItems.ItemTypes weaponType)
+        {
+            try
+            {
+                SelectedWeapons[index] = weaponType;
+
+                Debug.Log(ToString());
+
+                //Обновить глобальное UI
+                GameManager.Instance.Manager_UI.WeaponSlotController.ReplaceWeaponInSlot(index, weaponType);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError("Exeption: " + e.Message);
+            }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder strBuilder = new StringBuilder(50);
+            strBuilder.AppendFormat("Selected weapon: {0}", SelectedWeapons.Count);
+
+            if (SelectedWeapons.Count > 0)
+            {
+                strBuilder.Append("\n");
+                for (int i = 0; i < SelectedWeapons.Count; i++)
+                    strBuilder.AppendFormat(" - {0}\n", SelectedWeapons[i]);
+            }
+
+            return strBuilder.ToString();
+        }
+
 
         /// <summary>
         /// Обработчик события использования оружия (Для обновления UI)
@@ -91,28 +129,25 @@ namespace clicker.battle
             if (GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(weaponType) == 0)
             {
                 //Найти слот с оружием, которое использовалось
-                for (int i = 0; i < m_SelectedWeapons.Count; i++)
+                for (int i = 0; i < SelectedWeapons.Count; i++)
                 {
                     //Заменить оружие в слоте на оружие по-умолчанию
-                    if (m_SelectedWeapons[i].Equals(weaponType))
+                    if (SelectedWeapons[i].Equals(weaponType))
                     {
-                        m_SelectedWeapons[i] = DataTableItems.ItemTypes.Hand;
+                        SelectedWeapons[i] = DataTableItems.ItemTypes.Hand;
 
-                        //Обновить UI
                         //Найти слот и заменить иконку
-                        GameManager.Instance.Manager_UI.WeaponSlotController.ReplaceWeapon(weaponType, 
-                                                                                           m_SelectedWeapons[i], 
-                                                                                           GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(weaponType));
+                        GameManager.Instance.Manager_UI.WeaponSlotController.ReplaceWeapon(weaponType, SelectedWeapons[i]);
                     }
                 }
             }
             else
             {
-                //Обновить UI
                 //Найти слот и обновить количество предметов
                 GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemAmount(weaponType, GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(weaponType));
+                
                 //Найти слот и обновить прочность
-                GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemDurability(weaponType, 1);
+                GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemDurability(weaponType, GameManager.Instance.PlayerAccount.Inventory.WeaponState.GetDurabilityProgress(weaponType));
             }
         }
 
@@ -120,7 +155,7 @@ namespace clicker.battle
         {
             try
             {
-                return m_SelectedWeapons[index];
+                return SelectedWeapons[index];
             }
             catch
             { }
@@ -133,7 +168,6 @@ namespace clicker.battle
             yield return null;
             SelectWeapon(index);
         }
-
 
         void Update()
         {

@@ -204,6 +204,18 @@ namespace clicker.account
                     return false;
                 }
 
+                /// <summary>
+                /// Получить текущее состояние прочности оружия
+                /// </summary>
+                /// <param name="type">Тип оружия</param>
+                /// <returns>Прогресс до поломки</returns>
+                public float GetDurabilityProgress(ItemTypes type)
+                {
+                    if (m_Weapons.ContainsKey(type))
+                        return m_Weapons[type].CurDurabilityProgress;
+
+                    return 1;
+                }
 
                 public override string ToString()
                 {

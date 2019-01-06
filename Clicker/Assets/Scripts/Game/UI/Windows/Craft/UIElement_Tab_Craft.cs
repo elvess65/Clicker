@@ -87,7 +87,7 @@ namespace clicker.general.ui.windows
         {
             //Обновить состояние предмета с учетом нового прогресса
             if (m_Items.ContainsKey(type))
-                m_Items[type].UpdateProgress_AddTick(progress);
+                m_Items[type].UpdateProgress(progress);
         }
 
         /// <summary>
@@ -96,9 +96,11 @@ namespace clicker.general.ui.windows
         /// <param name="craftedItemType">Тип предмета, который был скрафчен</param>
         protected virtual void ItemCrafted_Handler(DataTableItems.ItemTypes craftedItemType)
         {
+            int craftedItemAmount = GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(craftedItemType);
+
             //Обновить состояние предмета 
             if (m_Items.ContainsKey(craftedItemType))
-                m_Items[craftedItemType].UpdateProgress_Craft(GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(craftedItemType));
+                m_Items[craftedItemType].UpdateAmount(craftedItemAmount);
 
             //Пройтись по всем UI объектам и обновить количество предметов, а так же состояние требуемых для создания предметов
             foreach (UIElement_CraftItem item in m_Items.Values)
@@ -110,6 +112,9 @@ namespace clicker.general.ui.windows
                 //Состояние требуемых для создания предметов
                 item.UpdateRequireItemsState();
             }
+
+            //Обновить UI количества оружия 
+            GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemAmount(craftedItemType, GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(craftedItemType));
         }
 
         /// <summary>

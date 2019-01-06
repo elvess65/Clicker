@@ -14,6 +14,11 @@ namespace FrameworkPackage.UI.Windows
 
         protected Button m_Button;
 
+        public void EnableButton(bool state)
+        {
+            m_Button.enabled = state;
+        }
+
         protected void Init()
         {
             ItemRectTransform = GetComponent<RectTransform>();
