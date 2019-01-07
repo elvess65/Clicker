@@ -14,6 +14,7 @@ namespace clicker.general
 
         public UIManager Manager_UI;
         public BattleManager Manager_Battle;
+        public InputManager Manager_Input;
 
         public ItemsFactory CraftItemFactory { get; private set; }   
         public Account PlayerAccount { get; private set; }

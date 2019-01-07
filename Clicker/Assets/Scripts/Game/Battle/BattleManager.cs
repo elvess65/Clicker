@@ -1,4 +1,5 @@
 ﻿using clicker.datatables;
+using clicker.general;
 using UnityEngine;
 
 namespace clicker.battle
@@ -10,11 +11,23 @@ namespace clicker.battle
     public class BattleManager : MonoBehaviour
     {
         public WeaponManager SelectedWeaponManager { get; private set; }
+        public LayerMask EnemyLayerMask;
 
         public void Init(DataTableItems.ItemTypes[] selectedWeapons)
         {
             SelectedWeaponManager = GetComponent<WeaponManager>();
             SelectedWeaponManager.Init(selectedWeapons);
+
+            GameManager.Instance.Manager_Input.OnInput += InputHandler;
+            GameManager.Instance.Manager_Input.EnableInput(true);
+        }
+
+        void InputHandler(Vector3 mousePos)
+        {
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out RaycastHit hit, 1000, EnemyLayerMask))
+            {
+                Debug.Log(hit.collider.gameObject.name);
+            }
         }
     }
 }

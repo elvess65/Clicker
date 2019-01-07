@@ -1,4 +1,5 @@
-﻿using clicker.general.ui;
+﻿using clicker.battle.HP;
+using clicker.general.ui;
 using UnityEngine;
 
 namespace FrameworkPackage.UI.Windows
@@ -6,6 +7,8 @@ namespace FrameworkPackage.UI.Windows
     public partial class UIWindowsManager
     {
         [Header("Extends:")]
+        public HPBarController EnemyHPBarControllerPrefab;
+        public HPBarController PlayerHPBarControllerPrefab;
         [Header("Windows")]
         public UIWindow_Base UIWindow_CraftPrefab;
         [Header("UIElements")]
