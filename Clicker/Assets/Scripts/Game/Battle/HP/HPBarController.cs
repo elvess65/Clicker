@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace clicker.battle.HP
@@ -10,16 +8,13 @@ namespace clicker.battle.HP
         public Image Image_FG;
         public Text Text_Progress;
 
-        // Start is called before the first frame update
-        void Start()
+        public void Init(int health)
         {
-
         }
 
-        // Update is called once per frame
         void Update()
         {
-
+            transform.LookAt(Camera.main.transform);
         }
     }
 }
