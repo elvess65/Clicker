@@ -19,8 +19,6 @@ namespace clicker.battle
         public int TotalAddSlot = 5;
         public List<DataTableItems.ItemTypes> SelectedWeapons { get; private set; }
 
-        public DataTableItems.ItemTypes SelectedWeaponType => GetWeaponTypeByIndex(m_SelectedIndex);
-
         public void Init(DataTableItems.ItemTypes[] selectedWeapons)
         {
             //Заполнить список выбранного оружия

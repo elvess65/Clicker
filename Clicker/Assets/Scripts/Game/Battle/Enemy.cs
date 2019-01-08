@@ -1,24 +1,14 @@
 ﻿using clicker.battle.HP;
 using UnityEngine;
 
-namespace clicker.battle
+namespace clicker.battle.character
 {
     /// <summary>
     /// Класс врага
     /// </summary>
-    public class Enemy : MonoBehaviour
+    public class Enemy : Character
     {
-        public Transform HPBarParent;
-
-        public HPController HPController { get; private set; }
-
-        public void Init(int health)
-        {
-            HPController = new HPController(health, HPBarParent);
-            HPController.OnDestroyObject += DestroyObjectHandler;
-        }
-
-        void DestroyObjectHandler()
+        protected override void DestroyObjectHandler()
         {
             Destroy(gameObject);
         }

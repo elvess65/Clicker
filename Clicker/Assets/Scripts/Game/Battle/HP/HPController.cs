@@ -16,25 +16,29 @@ namespace clicker.battle.HP
 
         public float CurrentProgress => Mathf.Clamp(m_CurrentHealth / m_MaxHealth, 0, 1);
 
-        public HPController(int health, Transform hpBarParent)
+        public HPController(int health, HPBarController hpBarPrefab, Transform hpBarParent)
         {
+            //Инициализировать ХП
             m_CurrentHealth = m_MaxHealth = health;
 
-            m_HPBarController = GameManager.Instantiate(GameManager.Instance.Manager_UI.WindowsManager.EnemyHPBarControllerPrefab, hpBarParent);
+            //Создание ХП бара
+            m_HPBarController = GameManager.Instantiate(hpBarPrefab, hpBarParent);
             m_HPBarController.Init(health);
         }
 
         public void TakeDamage(int damage)
         {
+            //Снятие ХП
             m_CurrentHealth -= damage;
 
-            if (m_HPBarController != null)
-                m_HPBarController.UpdateHealth(m_CurrentHealth);
+            //Обновление ХП бара
+            //if (m_HPBarController != null)
+            //    m_HPBarController.UpdateHealth(m_CurrentHealth);
 
+            //Уничтожение
             if (m_CurrentHealth < 0)
             {
                 m_CurrentHealth = 0;
-
                 DestroyObject();
             }
         }

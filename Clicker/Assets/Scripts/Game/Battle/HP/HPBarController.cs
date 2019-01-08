@@ -8,18 +8,16 @@ namespace clicker.battle.HP
         public Image Image_FG;
         public Text Text_Progress;
 
-        private int m_CurHealth;
         private int m_Health;
 
         public void Init(int health)
         {
-            m_CurHealth = m_Health = health;
+            m_Health = health;
         }
 
-        public void UpdateHealth(int curHealth)
+        public void UpdateHealth(float progress, int curHealth, int health)
         {
-            m_CurHealth = curHealth;
-            Image_FG.fillAmount = m_CurHealth / (float)m_Health;
+            Image_FG.fillAmount = curHealth / (float)m_Health;
         }
 
         void Update()
