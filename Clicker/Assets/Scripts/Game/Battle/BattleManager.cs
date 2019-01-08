@@ -26,7 +26,9 @@ namespace clicker.battle
         {
             if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out RaycastHit hit, 1000, EnemyLayerMask))
             {
-                Debug.Log(hit.collider.gameObject.name);
+                Enemy enemy = hit.collider.gameObject.GetComponent<Enemy>();
+                if (enemy != null)
+                    enemy.HPController.TakeDamage(DataTableWeapons.GetWeaponDataByType(SelectedWeaponManager.SelectedWeaponType).Damage);
             }
         }
     }

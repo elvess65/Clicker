@@ -15,6 +15,12 @@ namespace clicker.battle
         public void Init(int health)
         {
             HPController = new HPController(health, HPBarParent);
+            HPController.OnDestroyObject += DestroyObjectHandler;
+        }
+
+        void DestroyObjectHandler()
+        {
+            Destroy(gameObject);
         }
 
         void Update()

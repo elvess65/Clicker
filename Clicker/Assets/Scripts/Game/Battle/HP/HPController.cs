@@ -20,10 +20,6 @@ namespace clicker.battle.HP
         {
             m_CurrentHealth = m_MaxHealth = health;
 
-            Debug.Log(GameManager.Instance);
-            Debug.Log(GameManager.Instance.Manager_UI.WindowsManager);
-            Debug.Log(GameManager.Instance.Manager_UI.WindowsManager.EnemyHPBarControllerPrefab);
-            Debug.Log(hpBarParent);
             m_HPBarController = GameManager.Instantiate(GameManager.Instance.Manager_UI.WindowsManager.EnemyHPBarControllerPrefab, hpBarParent);
             m_HPBarController.Init(health);
         }
@@ -31,6 +27,9 @@ namespace clicker.battle.HP
         public void TakeDamage(int damage)
         {
             m_CurrentHealth -= damage;
+
+            if (m_HPBarController != null)
+                m_HPBarController.UpdateHealth(m_CurrentHealth);
 
             if (m_CurrentHealth < 0)
             {
