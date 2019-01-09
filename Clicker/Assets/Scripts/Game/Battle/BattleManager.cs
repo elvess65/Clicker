@@ -1,4 +1,5 @@
-﻿using clicker.datatables;
+﻿using clicker.battle.character;
+using clicker.datatables;
 using clicker.general;
 using UnityEngine;
 
@@ -12,11 +13,14 @@ namespace clicker.battle
     {
         public WeaponManager SelectedWeaponManager { get; private set; }
         public LayerMask EnemyLayerMask;
+        public Player Player;
 
         public void Init(DataTableItems.ItemTypes[] selectedWeapons)
         {
             SelectedWeaponManager = GetComponent<WeaponManager>();
             SelectedWeaponManager.Init(selectedWeapons);
+
+            Player.Init(20);
 
             GameManager.Instance.Manager_Input.OnInput += InputHandler;
             GameManager.Instance.Manager_Input.EnableInput(true);

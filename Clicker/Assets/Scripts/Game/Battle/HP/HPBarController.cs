@@ -7,22 +7,20 @@ namespace clicker.battle.HP
     {
         public Image Image_FG;
         public Text Text_Progress;
+        public bool LookAtCamera = true;
 
-        private int m_Health;
-
-        public void Init(int health)
+        public void UpdateHealth(int curHealth, int health)
         {
-            m_Health = health;
-        }
+            Image_FG.fillAmount = curHealth / (float)health;
 
-        public void UpdateHealth(float progress, int curHealth, int health)
-        {
-            Image_FG.fillAmount = curHealth / (float)m_Health;
+            if (Text_Progress != null)
+                Text_Progress.text = string.Format("{0}/{1}", curHealth, health);
         }
 
         void Update()
         {
-            transform.LookAt(Camera.main.transform);
+            if (LookAtCamera)
+                transform.LookAt(Camera.main.transform);
         }
     }
 }

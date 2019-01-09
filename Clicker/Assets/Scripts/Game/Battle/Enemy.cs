@@ -1,4 +1,5 @@
 ﻿using clicker.battle.HP;
+using clicker.general;
 using UnityEngine;
 
 namespace clicker.battle.character
@@ -12,6 +13,13 @@ namespace clicker.battle.character
         {
             Destroy(gameObject);
         }
+
+        protected override HPBarController GetHPBarControllerPrefab()
+        {
+            return GameManager.Instance.Manager_UI.WindowsManager.EnemyHPBarControllerPrefab;
+        }
+
+        public int Damage => 10;
 
         void Update()
         {
