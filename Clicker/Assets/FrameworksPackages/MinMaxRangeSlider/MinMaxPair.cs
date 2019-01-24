@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 
-namespace MinMaxRangeSlider
+namespace FrameworkPackage.MinMaxRangeSlider
 {
     public class MinMaxAttribute : PropertyAttribute
     {

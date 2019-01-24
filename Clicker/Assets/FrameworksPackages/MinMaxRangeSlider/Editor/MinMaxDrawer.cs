@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace MinMaxRangeSlider
+namespace FrameworkPackage.MinMaxRangeSlider
 {
     [CustomPropertyDrawer(typeof(MinMaxPair))]
     [CustomPropertyDrawer(typeof(MinMaxAttribute))]
