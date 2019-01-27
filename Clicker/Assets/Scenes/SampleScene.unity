@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1414,9 +1414,6 @@ GameObject:
   - component: {fileID: 1961181557}
   - component: {fileID: 1961181556}
   - component: {fileID: 1961181559}
-  - component: {fileID: 1961181555}
-  - component: {fileID: 1961181561}
-  - component: {fileID: 1961181558}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1424,39 +1421,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1961181555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1961181554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98b2c7ac6e9cfd44cb3b626c24014b0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Data_Items:
-  - Type: 0
-    TickToCreate: 0
-    FilterTypes: 00000000
-    RequiredItems: []
-  - Type: 1
-    TickToCreate: 2
-    FilterTypes: 01000000
-    RequiredItems: []
-  - Type: 2
-    TickToCreate: 3
-    FilterTypes: 0100000002000000
-    RequiredItems: []
-  - Type: 3
-    TickToCreate: 5
-    FilterTypes: 02000000
-    RequiredItems:
-    - Type: 1
-      Amount: 2
-    - Type: 2
-      Amount: 1
 --- !u!114 &1961181556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1490,49 +1454,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1961181558
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1961181554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62bd335f184a001409b6f2dd18c44056, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LevelsList:
-  - DelayBeforeStart: 10
-    DelayBtwSpawn: 2
-    SpawnList:
-    - MinHP: 1
-      MaxHP: 10
-      MinSpeed: 1
-      MaxSpeed: 5
-      SpawnPointsData:
-      - SpawnPoint: 1
-        PossibleEnemies: 000000000100000002000000
-      - SpawnPoint: 2
-        PossibleEnemies: 0000000001000000
-      - SpawnPoint: 3
-        PossibleEnemies: 0100000002000000
-    - MinHP: 1
-      MaxHP: 10
-      MinSpeed: 1
-      MaxSpeed: 5
-      SpawnPointsData:
-      - SpawnPoint: 1
-        PossibleEnemies: 000000000100000002000000
-      - SpawnPoint: 2
-        PossibleEnemies: 03000000
-    - MinHP: 1
-      MaxHP: 10
-      MinSpeed: 1
-      MaxSpeed: 5
-      SpawnPointsData:
-      - SpawnPoint: 0
-        PossibleEnemies: 04000000
 --- !u!114 &1961181559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1545,28 +1466,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9116a2676b75b47a67fe2dbc307786, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1961181561
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1961181554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e8f3fc6a1d11894bba3d7b77e37aa76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Data_Weapons:
-  - Type: 0
-    Damage: 1
-    Durability: -1
-  - Type: 2
-    Damage: 3
-    Durability: 7
-  - Type: 3
-    Damage: 5
-    Durability: 3
 --- !u!1 &2056556130
 GameObject:
   m_ObjectHideFlags: 0

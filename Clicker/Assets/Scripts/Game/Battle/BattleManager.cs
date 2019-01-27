@@ -15,15 +15,17 @@ namespace clicker.battle
         public LayerMask EnemyLayerMask;
         public Player Player;
 
-        public void Init(DataTableItems.ItemTypes[] selectedWeapons)
+        public void Init(DataTableItems.ItemTypes[] selectedWeapons, int playerHP)
         {
             SelectedWeaponManager = GetComponent<WeaponManager>();
             SelectedWeaponManager.Init(selectedWeapons);
 
-            Player.Init(20);
+            Player.Init(playerHP);
 
             GameManager.Instance.Manager_Input.OnInput += InputHandler;
             GameManager.Instance.Manager_Input.EnableInput(true);
+
+            //TODO: Start spawn enemies
         }
 
         void InputHandler(Vector3 mousePos)

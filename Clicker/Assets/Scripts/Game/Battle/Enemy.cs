@@ -1,6 +1,6 @@
 ﻿using clicker.battle.HP;
 using clicker.general;
-using UnityEngine;
+using System.Collections;
 
 namespace clicker.battle.character
 {
@@ -9,6 +9,8 @@ namespace clicker.battle.character
     /// </summary>
     public class Enemy : Character
     {
+        public int Damage => 10;
+
         protected override void DestroyObjectHandler()
         {
             Destroy(gameObject);
@@ -18,13 +20,11 @@ namespace clicker.battle.character
         {
             return GameManager.Instance.Manager_UI.WindowsManager.EnemyHPBarControllerPrefab;
         }
-
-        public int Damage => 10;
-
-        void Update()
+        
+        //TODO: Move to spawn
+        void Start()
         {
-            if (Input.GetKeyDown(KeyCode.I))
-                Init(10);
+            Init(10);
         }
     }
 }

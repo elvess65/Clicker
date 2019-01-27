@@ -27,7 +27,7 @@ namespace clicker.general.ui
 
         public void UpdateState()
         {
-            bool accountHasItem = GameManager.Instance.PlayerAccount.Inventory.HasAmountOfItem(m_Type, m_Amount);
+            bool accountHasItem = DataManager.Instance.PlayerAccount.Inventory.HasAmountOfItem(m_Type, m_Amount);
             Text_RequireItem.color = accountHasItem ? Color.black : Color.red;
         }
     }

@@ -12,11 +12,13 @@ namespace clicker.battle.character
 
         public HPController HPController { get; private set; }
 
+
         public void Init(int health)
         {
             HPController = new HPController(health, GetHPBarControllerPrefab(), HPBarParent);
             HPController.OnDestroyObject += DestroyObjectHandler;
         }
+
 
         protected abstract HPBarController GetHPBarControllerPrefab();
 

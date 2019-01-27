@@ -17,23 +17,11 @@ namespace clicker.general
         public InputManager Manager_Input;
 
         public ItemsFactory CraftItemFactory { get; private set; }   
-        public Account PlayerAccount { get; private set; }
+      
 
         void Awake()
         {
-            //TODO: Переместить в раздел иницилазизации данных
-            DataTableItems.SetData(GetComponent<LocalItemsDataEditor>().Data_Items);
-            DataTableWeapons.SetData(GetComponent<LocalWeaponsDataEditor>().Data_Weapons);
-
             Instance = this;
-        }
-
-        void Start()
-        {
-            //TODO: Переместить в раздел иницилазизации данных
-            //Создать акканту
-            PlayerAccount = new Account();
-            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 2);
 
             //Создание предметов
             CraftItemFactory = GetComponent<ItemsFactory>();
@@ -41,13 +29,18 @@ namespace clicker.general
 
             //UI
             Manager_UI.Init();
+        }
 
+        void Start()
+        {
             //Battle
+            //TODO: Move to other place
             DataTableItems.ItemTypes[] selectedWeapons = new DataTableItems.ItemTypes[2];
             selectedWeapons[0] = Account.AccountInventory.DEFAULT_ITEM;
             selectedWeapons[1] = DataTableItems.ItemTypes.Stone;
+            int playerHP = 20;
 
-            Manager_Battle.Init(selectedWeapons);
+            Manager_Battle.Init(selectedWeapons, playerHP);
         }
 
         void ItemCrafted_Handler(DataTableItems.ItemTypes type)
@@ -55,10 +48,10 @@ namespace clicker.general
             //Отнять предметы, необходимые для создания
             DataTableItems.Item itemData = DataTableItems.GetIemDataByType(type);
             for (int i = 0; i < itemData.RequiredItems.Length; i++)
-                PlayerAccount.Inventory.RemoveItem(itemData.RequiredItems[i].Type, itemData.RequiredItems[i].Amount);
+                DataManager.Instance.PlayerAccount.Inventory.RemoveItem(itemData.RequiredItems[i].Type, itemData.RequiredItems[i].Amount);
 
             //Добавить созданный предмет
-            PlayerAccount.Inventory.AddItem(type);
+            DataManager.Instance.PlayerAccount.Inventory.AddItem(type);
         }
     }
 }

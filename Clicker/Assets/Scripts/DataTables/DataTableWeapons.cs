@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using UnityEngine;
 using static clicker.datatables.DataTableItems;
 
 namespace clicker.datatables
@@ -9,7 +8,7 @@ namespace clicker.datatables
     {
         private static Dictionary<ItemTypes, Weapon> m_Weapons;
 
-        public static void SetData(LocalWeaponsDataEditor.WeaponsData[] data)
+        public static void SetData(WeaponsData[] data)
         {
             if (data == null)
                 return;

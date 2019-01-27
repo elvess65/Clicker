@@ -37,7 +37,7 @@ namespace clicker.general.ui.windows
                     {
                         //Создать объект
                         UIElement_CraftItem item = Instantiate(GameManager.Instance.Manager_UI.WindowsManager.UIElement_CraftItemPrefab, ItemsParent);
-                        item.Init(type, GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(type), GameManager.Instance.CraftItemFactory.GetProgressForItem(type), itemData.RequiredItems);
+                        item.Init(type, DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(type), GameManager.Instance.CraftItemFactory.GetProgressForItem(type), itemData.RequiredItems);
                         item.OnItemPress += Item_PressHanlder;
 
                         //Добавить объект в словарь для последующего доступа
@@ -72,7 +72,7 @@ namespace clicker.general.ui.windows
         protected virtual void Item_PressHanlder(DataTableItems.ItemTypes type)
         {
             //Если можно - добавить тики определенному предметму
-            if (GameManager.Instance.PlayerAccount.Inventory.CanCraftItem(type))
+            if (DataManager.Instance.PlayerAccount.Inventory.CanCraftItem(type))
                 GameManager.Instance.CraftItemFactory.AddTickToItem(type);
             else
                 Debug.LogError("Cant craft item");
@@ -96,7 +96,7 @@ namespace clicker.general.ui.windows
         /// <param name="craftedItemType">Тип предмета, который был скрафчен</param>
         protected virtual void ItemCrafted_Handler(DataTableItems.ItemTypes craftedItemType)
         {
-            int craftedItemAmount = GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(craftedItemType);
+            int craftedItemAmount = DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(craftedItemType);
 
             //Обновить состояние предмета 
             if (m_Items.ContainsKey(craftedItemType))
@@ -107,7 +107,7 @@ namespace clicker.general.ui.windows
             {
                 //не обновлять предмет, который был создан
                 if (item.Type != craftedItemType)
-                    item.SetItemAmount(GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(item.Type));
+                    item.SetItemAmount(DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(item.Type));
 
                 //Состояние требуемых для создания предметов
                 item.UpdateRequireItemsState();
@@ -149,7 +149,7 @@ namespace clicker.general.ui.windows
             foreach (UIElement_CraftItem item in m_Items.Values)
             {
                 //Обновить количество предметов
-                item.SetItemAmount(GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(item.Type));
+                item.SetItemAmount(DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(item.Type));
                 //Обновить прогресс предмета
                 item.SetItemProgress(GameManager.Instance.CraftItemFactory.GetProgressForItem(item.Type));
                 //Обновить состояние необходимых для создания предмета предметов

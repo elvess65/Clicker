@@ -149,8 +149,8 @@ namespace clicker.general.ui
 
         (int amount, float durabilityProgress) GetAmountAndDurabilityForWeapon(DataTableItems.ItemTypes type)
         {
-            return (GameManager.Instance.PlayerAccount.Inventory.GetItemAmount(type),
-                    GameManager.Instance.PlayerAccount.Inventory.WeaponState.GetDurabilityProgress(type));
+            return (DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(type),
+                    DataManager.Instance.PlayerAccount.Inventory.WeaponState.GetDurabilityProgress(type));
         }
 
         IEnumerator WaitFrameToSelectWeapon(int index)
