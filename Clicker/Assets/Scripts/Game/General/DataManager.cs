@@ -14,6 +14,7 @@ namespace clicker.general
 
         private iItemsDataLoader m_ItemsDataLoader;
         private iWeaponsDataLoader m_WeaponsDataLoader;
+        private iLevelDataLoader m_LevelsDataLoader;
 
         void Awake()
         {
@@ -35,10 +36,12 @@ namespace clicker.general
             //Инициализировать загрузчики данных
             m_ItemsDataLoader = new ItemsDataLoader_Local();
             m_WeaponsDataLoader = new WeaponsDataLoader_Local();
+            m_LevelsDataLoader = new LevelDataLoader_Local();
 
             //Загрузить данные
             DataTableItems.SetData(m_ItemsDataLoader.GetData(0));
             DataTableWeapons.SetData(m_WeaponsDataLoader.GetData(0));
+            DataTableLevels.SetData(m_LevelsDataLoader.GetData(0));
 
             //Создать акканту
             PlayerAccount = new Account();

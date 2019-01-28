@@ -15,17 +15,25 @@ namespace clicker.battle
         public LayerMask EnemyLayerMask;
         public Player Player;
 
+        private level.LevelController m_LevelController;
+
         public void Init(DataTableItems.ItemTypes[] selectedWeapons, int playerHP)
         {
+            //Выбранное оружие
             SelectedWeaponManager = GetComponent<WeaponManager>();
             SelectedWeaponManager.Init(selectedWeapons);
 
+            //Инициализация игрока
             Player.Init(playerHP);
 
+            //Инициализация ввода для атаки
             GameManager.Instance.Manager_Input.OnInput += InputHandler;
             GameManager.Instance.Manager_Input.EnableInput(true);
 
-            //TODO: Start spawn enemies
+            //Начало создания врагов
+            m_LevelController = GetComponent<level.LevelController>();
+            m_LevelController.Init(0, 0);
+            m_LevelController.StartSpawn();
         }
 
         void InputHandler(Vector3 mousePos)

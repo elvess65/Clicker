@@ -1,11 +1,34 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections.Generic;
+using clicker.datatables;
 using static clicker.datatables.DataTableEnemies;
 
-namespace clicker.battle
+namespace clicker.battle.level
 {
     public class LevelController : MonoBehaviour
     {
+        public EnemySpawnPoint[] SpawnPoints;
+
+        public void Init(int age, int level)
+        {
+            int hp = DataTableLevels.GetHP(age, level);
+
+            int count = DataTableLevels.GetSpawnCount(age, level);
+            int rate = DataTableLevels.GetSpawnRate(age, level);
+
+            int[] enemies = DataTableLevels.GetEnemiesForLevel(age, level);
+
+            for (int i = 0; i < SpawnPoints.Length; i++)
+                SpawnPoints[i].Init(rate, count, hp, enemies);
+        }
+
+        public void StartSpawn()
+        {
+            for (int i = 0; i < SpawnPoints.Length; i++)
+                SpawnPoints[i].StartSpawn();
+        }
+
+
         public enum SpawnPointTypes
         {
             SpawnPoint_Boss,
