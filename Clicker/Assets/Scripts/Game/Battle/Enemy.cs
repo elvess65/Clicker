@@ -1,6 +1,6 @@
 ﻿using clicker.battle.HP;
 using clicker.general;
-using System.Collections;
+using UnityEngine;
 
 namespace clicker.battle.character
 {
@@ -13,6 +13,8 @@ namespace clicker.battle.character
 
         protected override void DestroyObjectHandler()
         {
+            base.DestroyObjectHandler();
+
             Destroy(gameObject);
         }
 
@@ -20,11 +22,10 @@ namespace clicker.battle.character
         {
             return GameManager.Instance.Manager_UI.WindowsManager.EnemyHPBarControllerPrefab;
         }
-        
-        //TODO: Move to spawn
-        void Start()
+
+        private void Update()
         {
-            Init(10);
+            transform.Translate(Vector3.right * Time.deltaTime * 2);
         }
     }
 }

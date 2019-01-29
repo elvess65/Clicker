@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using static clicker.datatables.DataTableEnemies;
 using static clicker.datatables.DataTableLevels;
 
 namespace clicker.datatables
@@ -31,6 +32,6 @@ namespace clicker.datatables
         public int BaseSpawnRate = 2;
         [Header("Enemies")]
         public int NewEnemyEachAmountOfLevels = 2;  //CurLvl = 7. 7 / 2 = 3.5 = 4; Enemies [0] [1] [2] [3]
-        public int[] Enemies;
+        public EnemyTypes[] EnemyTypes;
     }
 }

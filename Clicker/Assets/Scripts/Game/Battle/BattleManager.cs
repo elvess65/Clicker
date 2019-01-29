@@ -32,7 +32,7 @@ namespace clicker.battle
 
             //Начало создания врагов
             m_LevelController = GetComponent<level.LevelController>();
-            m_LevelController.Init(0, 0);
+            m_LevelController.Init(DataTableLevels.AgeTypes.FirstAge, 0);
             m_LevelController.StartSpawn();
         }
 

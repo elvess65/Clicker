@@ -72,7 +72,7 @@ MonoBehaviour:
   m_FillMethod: 0
   m_FillAmount: 1
   m_FillClockwise: 1
-  m_FillOrigin: 0
+  m_FillOrigin: 1
   m_UseSpriteMesh: 0
 --- !u!1 &7485681494261068563
 GameObject:
@@ -163,7 +163,7 @@ GameObject:
   - component: {fileID: 7578047173322029980}
   - component: {fileID: 2902350166432087487}
   m_Layer: 5
-  m_Name: Canvas HPBar
+  m_Name: Canvas Enemy HPBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -202,6 +202,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Image_FG: {fileID: 2646429396464562569}
+  Text_Progress: {fileID: 0}
+  LookAtCamera: 1
 --- !u!223 &6079778455409335856
 Canvas:
   m_ObjectHideFlags: 0

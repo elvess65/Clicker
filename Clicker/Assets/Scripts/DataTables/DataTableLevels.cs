@@ -22,33 +22,48 @@ namespace clicker.datatables
                                         data[i].NewEnemyEachAmountOfLevels, 
                                         data[i].BaseSpawnCount, 
                                         data[i].BaseSpawnRate,
-                                        data[i].Enemies);
+                                        data[i].EnemyTypes);
 
                 m_Levels.Add(data[i].AgeType, level);
             }
         }
 
         //HP
-        public static int GetHP(int age, int lvl)
+        public static int GetHP(AgeTypes age, int lvl)
         {
+            if (m_Levels.ContainsKey(age))
+            {
+                int baseHP = m_Levels[age].BaseHP;
+                return baseHP + baseHP * lvl;
+            }
+
             return 1;
         }
 
         //Spawn
-        public static int GetSpawnCount(int age, int lvl)
+        public static int GetSpawnCount(AgeTypes age, int lvl)
         {
+            if (m_Levels.ContainsKey(age))
+                return m_Levels[age].BaseSpawnCount;
+
             return 1;
         }
 
-        public static int GetSpawnRate(int age, int lvl)
+        public static int GetSpawnRate(AgeTypes age, int lvl)
         {
+            if (m_Levels.ContainsKey(age))
+                return m_Levels[age].BaseSpawnRate;
+
             return 1;
         }
 
         //Enemies
-        public static int[] GetEnemiesForLevel(int age, int lvl)
+        public static DataTableEnemies.EnemyTypes[] GetEnemiesForLevel(AgeTypes age, int lvl)
         {
-            return new int[] { 1, 2, 3 };
+            if (m_Levels.ContainsKey(age))
+                return m_Levels[age].EnemyTypes;
+
+            return new DataTableEnemies.EnemyTypes[] { DataTableEnemies.EnemyTypes.Enemy1, DataTableEnemies.EnemyTypes.Enemy2, DataTableEnemies.EnemyTypes.Enemy3 };
         }
 
         #region Data Structures
@@ -69,7 +84,7 @@ namespace clicker.datatables
             private int m_BaseSpawnRate;
             //Enemies
             private int m_NewEnemyEachAmountOfLevels;   //CurLvl = 7. 7 / 2 = 3.5 = 4; Enemies [0] [1] [2] [3]
-            private int[] m_Enemies;
+            private DataTableEnemies.EnemyTypes[] m_EnemyTypes;
 
             public AgeTypes AgeType => m_AgeType;
             //HP
@@ -80,9 +95,9 @@ namespace clicker.datatables
             public int BaseSpawnRate => m_BaseSpawnRate;
             //Enemies
             public int NewEnemyEachAmountOfLevels => m_NewEnemyEachAmountOfLevels;
-            public int[] Enemies => m_Enemies;
+            public DataTableEnemies.EnemyTypes[] EnemyTypes => m_EnemyTypes;
 
-            public Level(AgeTypes ageType, int baseHP, int hpSpreadPercent, int newEnemyEachAmountOfLevels, int baseSpawnCount, int baseSpawnRate, int[] enemies)
+            public Level(AgeTypes ageType, int baseHP, int hpSpreadPercent, int newEnemyEachAmountOfLevels, int baseSpawnCount, int baseSpawnRate, DataTableEnemies.EnemyTypes[] enemyTypes)
             {
                 m_AgeType = ageType;
                 //HP
@@ -93,9 +108,9 @@ namespace clicker.datatables
                 m_BaseSpawnRate = baseSpawnRate;
                 //Enemies
                 m_NewEnemyEachAmountOfLevels = newEnemyEachAmountOfLevels;
-                m_Enemies = enemies;
+                m_EnemyTypes = enemyTypes;
             }
-        }
+        }Создание врагов с характеристиками
         #endregion
     }
 }

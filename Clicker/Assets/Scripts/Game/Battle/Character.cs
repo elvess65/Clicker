@@ -8,6 +8,8 @@ namespace clicker.battle.character
     /// </summary>
     public abstract class Character : MonoBehaviour
     {
+        public System.Action<Character> OnCharacterDestroyed;
+
         public Transform HPBarParent;
 
         public HPController HPController { get; private set; }
@@ -22,6 +24,9 @@ namespace clicker.battle.character
 
         protected abstract HPBarController GetHPBarControllerPrefab();
 
-        protected abstract void DestroyObjectHandler();
+        protected virtual void DestroyObjectHandler()
+        {
+            OnCharacterDestroyed?.Invoke(this);
+        }
     }
 }

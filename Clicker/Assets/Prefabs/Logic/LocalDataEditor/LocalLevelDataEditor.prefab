@@ -50,4 +50,4 @@ MonoBehaviour:
     BaseSpawnCount: 3
     BaseSpawnRate: 2
     NewEnemyEachAmountOfLevels: 2
-    Enemies: 0100000002000000030000000400000005000000
+    EnemyTypes: 0000000001000000020000000300000004000000

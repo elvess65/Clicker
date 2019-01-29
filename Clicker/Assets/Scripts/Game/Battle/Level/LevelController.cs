@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using clicker.datatables;
 using static clicker.datatables.DataTableEnemies;
+using static clicker.datatables.DataTableLevels;
 
 namespace clicker.battle.level
 {
@@ -9,14 +10,14 @@ namespace clicker.battle.level
     {
         public EnemySpawnPoint[] SpawnPoints;
 
-        public void Init(int age, int level)
+        public void Init(AgeTypes age, int level)
         {
             int hp = DataTableLevels.GetHP(age, level);
 
             int count = DataTableLevels.GetSpawnCount(age, level);
             int rate = DataTableLevels.GetSpawnRate(age, level);
 
-            int[] enemies = DataTableLevels.GetEnemiesForLevel(age, level);
+            EnemyTypes[] enemies = DataTableLevels.GetEnemiesForLevel(age, level);
 
             for (int i = 0; i < SpawnPoints.Length; i++)
                 SpawnPoints[i].Init(rate, count, hp, enemies);
