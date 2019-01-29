@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1247919402893788860}
   - component: {fileID: 7982447255146252750}
   - component: {fileID: 4937277638157532496}
+  - component: {fileID: 644728161265830449}
   - component: {fileID: 4000116683709283689}
   - component: {fileID: 5269714914689981634}
   m_Layer: 9
@@ -56,6 +57,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HPBarParent: {fileID: 6918417271729221012}
+  PathMoveController: {fileID: 644728161265830449}
+--- !u!114 &644728161265830449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1970078368754982223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25bdcd44556f42c498981e05d86772b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EaseType: 21
 --- !u!23 &4000116683709283689
 MeshRenderer:
   m_ObjectHideFlags: 0

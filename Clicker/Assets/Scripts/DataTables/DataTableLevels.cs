@@ -110,7 +110,7 @@ namespace clicker.datatables
                 m_NewEnemyEachAmountOfLevels = newEnemyEachAmountOfLevels;
                 m_EnemyTypes = enemyTypes;
             }
-        }Создание врагов с характеристиками
+        }
         #endregion
     }
 }

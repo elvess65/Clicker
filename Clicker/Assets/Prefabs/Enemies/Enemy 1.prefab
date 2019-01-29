@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 1507970207600899219}
   - component: {fileID: 1507970207600899240}
   - component: {fileID: 1507970207600899241}
-  - component: {fileID: 1507970207600899244}
   m_Layer: 9
   m_Name: Enemy 1
   m_TagString: Untagged
@@ -58,6 +57,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HPBarParent: {fileID: 1507970208757706998}
+  PathMoveController: {fileID: 1507970207600899219}
 --- !u!114 &1507970207600899219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,28 +121,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1507970207600899244
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1507970207600899242}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5403635d6a62f47f5a91330e4a7ae9fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pathName: 
-  pathColor: {r: 0, g: 1, b: 1, a: 1}
-  nodes:
-  - {x: 0, y: 0, z: 0}
-  - {x: 3.28, y: 1.43, z: 6.93}
-  - {x: 6.57, y: 4.27, z: -0.76}
-  nodeCount: 0
-  initialized: 0
-  initialName: 
-  pathVisible: 1
 --- !u!1 &1507970208757706999
 GameObject:
   m_ObjectHideFlags: 0

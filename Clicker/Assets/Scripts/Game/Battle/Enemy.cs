@@ -1,5 +1,6 @@
 ﻿using clicker.battle.HP;
 using clicker.general;
+using FrameworkPackage.iTween;
 using UnityEngine;
 
 namespace clicker.battle.character
@@ -9,7 +10,16 @@ namespace clicker.battle.character
     /// </summary>
     public class Enemy : Character
     {
+        public iTweenPathMoveController PathMoveController;
+
         public int Damage => 10;
+
+        public void Init(int health, iTweenPath path)
+        {
+            Init(health);
+
+            PathMoveController.StartMove(10, path);
+        }
 
         protected override void DestroyObjectHandler()
         {
@@ -21,11 +31,6 @@ namespace clicker.battle.character
         protected override HPBarController GetHPBarControllerPrefab()
         {
             return GameManager.Instance.Manager_UI.WindowsManager.EnemyHPBarControllerPrefab;
-        }
-
-        private void Update()
-        {
-            transform.Translate(Vector3.right * Time.deltaTime * 2);
         }
     }
 }

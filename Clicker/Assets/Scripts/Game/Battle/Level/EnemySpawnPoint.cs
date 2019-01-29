@@ -1,5 +1,6 @@
 ﻿using clicker.battle.character;
 using clicker.general;
+using FrameworkPackage.iTween;
 using System;
 using System.Text;
 using UnityEngine;
@@ -8,6 +9,8 @@ namespace clicker.battle.level
 {
     public class EnemySpawnPoint : MonoBehaviour
     {
+        public iTweenPath PathController;
+
         private float m_SpawnRate;
         private int m_SpawnCount;
         private int m_HP;
@@ -51,7 +54,7 @@ namespace clicker.battle.level
 
             Enemy enemy = Instantiate(GameManager.Instance.AssetsLibrary.GetPrefab_Enemy(randomEnemyType), transform.position, Quaternion.identity);
             enemy.OnCharacterDestroyed += EnemyDestroyedHandler;
-            enemy.Init(m_HP);
+            enemy.Init(m_HP, PathController);
 
             //TODO: Start move along the path
 
