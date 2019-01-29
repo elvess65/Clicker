@@ -14,12 +14,20 @@ namespace clicker.battle.character
 
         public int Damage => 10;
 
-        public void Init(int health, iTweenPath path)
+        public void Init(int health, int speed, iTweenPath path)
         {
             Init(health);
 
-            PathMoveController.StartMove(10, path);
+            PathMoveController.StartMove(speed, path);
         }
+
+        public void DestroyEnemyOnCollisionWithPlayer()
+        {
+            Debug.Log("1");
+            DestroyObjectHandler();
+            Destroy(gameObject);
+        }
+
 
         protected override void DestroyObjectHandler()
         {

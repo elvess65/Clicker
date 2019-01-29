@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using clicker.datatables;
 using static clicker.datatables.DataTableEnemies;
 using static clicker.datatables.DataTableLevels;
@@ -8,19 +7,32 @@ namespace clicker.battle.level
 {
     public class LevelController : MonoBehaviour
     {
+        public System.Action OnLevelFinished;
+
         public EnemySpawnPoint[] SpawnPoints;
+
+        private int m_SpawnpointsDestroyedEnemiesCount = 0;
+
 
         public void Init(AgeTypes age, int level)
         {
-            int hp = DataTableLevels.GetHP(age, level);
+            //HP
+            int hp = DataTableLevels.GetHP(age, level);             //TODO: add spread
+            
+            //Spawn
+            int count = DataTableLevels.GetSpawnCount(age, level);  //TODO: add spread
+            int rate = DataTableLevels.GetSpawnRate(age, level);    //TODO: add spread
 
-            int count = DataTableLevels.GetSpawnCount(age, level);
-            int rate = DataTableLevels.GetSpawnRate(age, level);
+            //Enemies
+            int speed = 3;                                          //TODO: add spread
+            EnemyTypes[] enemies = DataTableLevels.GetEnemiesForLevel(age, level); 
 
-            EnemyTypes[] enemies = DataTableLevels.GetEnemiesForLevel(age, level);
-
+            //Spawn points
             for (int i = 0; i < SpawnPoints.Length; i++)
-                SpawnPoints[i].Init(rate, count, hp, enemies);
+            {
+                SpawnPoints[i].OnDestroyedAllEnemiesFromSpawn += DestroyedAllEnemiesFromSpawn;
+                SpawnPoints[i].Init(rate, count, hp, speed, enemies);
+            }
         }
 
         public void StartSpawn()
@@ -30,47 +42,14 @@ namespace clicker.battle.level
         }
 
 
-        public enum SpawnPointTypes
+        void DestroyedAllEnemiesFromSpawn(EnemySpawnPoint spawnPoint)
         {
-            SpawnPoint_Boss,
-            SpawnPoint_1,
-            SpawnPoint_2,
-            SpawnPoint_3
-        }
+            spawnPoint.OnDestroyedAllEnemiesFromSpawn -= DestroyedAllEnemiesFromSpawn;
 
-        public class Level
-        {
-            public float DelayBeforeStart;
-            public float DelayBtwSpawn;
+            m_SpawnpointsDestroyedEnemiesCount++;
 
-            public List<Spawn> SpawnList;
-
-            public Level()
-            {
-                DelayBeforeStart = 2;
-                DelayBtwSpawn = 1;
-
-                SpawnList = new List<Spawn>();
-                SpawnList.Add(new Spawn());
-                SpawnList.Add(new Spawn());
-                SpawnList.Add(new Spawn());
-            }
-
-            public class Spawn
-            {
-                public (int min, int max) EnemyPossibleHealth = (1, 2);
-                public (int min, int max) EnemyPossibleSpeed = (1, 2);
-                public EnemyTypes[] PossibleEnemies;
-
-                public void SpawnEnemy()
-                {
-                    int health = Random.Range(EnemyPossibleHealth.min, EnemyPossibleHealth.max + 1);
-                    int speed = Random.Range(EnemyPossibleSpeed.min, EnemyPossibleSpeed.max + 1);
-                    EnemyTypes type = (EnemyTypes)Random.Range(0, PossibleEnemies.Length);
-
-                    Debug.Log(string.Format("Spawn enemy {0}. Health: {1}. Speed {2}", type, health, speed));
-                }
-            }
+            if (m_SpawnpointsDestroyedEnemiesCount >= SpawnPoints.Length)
+                OnLevelFinished?.Invoke();
         }
     }
 }

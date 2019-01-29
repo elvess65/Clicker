@@ -18,7 +18,7 @@ namespace clicker.general
         public AssetsLibrary AssetsLibrary;
 
         public ItemsFactory CraftItemFactory { get; private set; }   
-      
+        public bool GameIsActive { get; private set; }
 
         void Awake()
         {
@@ -42,6 +42,8 @@ namespace clicker.general
             int playerHP = 20;
 
             Manager_Battle.Init(selectedWeapons, playerHP);
+
+            GameIsActive = true;
         }
 
         void ItemCrafted_Handler(DataTableItems.ItemTypes type)
@@ -53,6 +55,25 @@ namespace clicker.general
 
             //Добавить созданный предмет
             DataManager.Instance.PlayerAccount.Inventory.AddItem(type);
+        }
+
+
+        public void HandleGameOver()
+        {
+            GameIsActive = false;
+
+            Debug.LogError("Game Over");
+
+            Manager_UI.WindowsManager.ShowWindow(Manager_UI.WindowsManager.UIWindow_GameOver);
+        }
+
+        public void HandleFinishLevel()
+        {
+            GameIsActive = false;
+
+            Manager_UI.WindowsManager.ShowWindow(Manager_UI.WindowsManager.UIWindow_LevelFinished);
+
+            Debug.LogError("Level finished");
         }
     }
 }

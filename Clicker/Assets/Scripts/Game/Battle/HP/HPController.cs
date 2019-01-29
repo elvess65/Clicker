@@ -14,7 +14,7 @@ namespace clicker.battle.HP
         private int m_MaxHealth;
         private HPBarController m_HPBarController;
 
-        public float CurrentProgress => Mathf.Clamp(m_CurrentHealth / m_MaxHealth, 0, 1);
+        public float CurrentProgress => Mathf.Clamp((float)m_CurrentHealth / m_MaxHealth, 0, 1);
 
         public HPController(int health, HPBarController hpBarPrefab, Transform hpBarParent)
         {
@@ -29,15 +29,11 @@ namespace clicker.battle.HP
         public void TakeDamage(int damage)
         {
             //Снятие ХП
-            m_CurrentHealth -= damage;
+            m_CurrentHealth = Mathf.Clamp(m_CurrentHealth - damage, 0, m_CurrentHealth);
 
             //Обновление ХП бара
             if (m_HPBarController != null)
                 m_HPBarController.UpdateHealth(m_CurrentHealth, m_MaxHealth);
-
-            //Уничтожение
-            if (m_CurrentHealth < 0)
-                m_CurrentHealth = 0;
 
             //Уничтожение 
             if (m_CurrentHealth == 0)

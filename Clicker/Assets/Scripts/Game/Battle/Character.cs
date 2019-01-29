@@ -11,6 +11,7 @@ namespace clicker.battle.character
         public System.Action<Character> OnCharacterDestroyed;
 
         public Transform HPBarParent;
+        public Collider CharacterCollider;
 
         public HPController HPController { get; private set; }
 
@@ -26,6 +27,9 @@ namespace clicker.battle.character
 
         protected virtual void DestroyObjectHandler()
         {
+            if (CharacterCollider != null)
+                CharacterCollider.enabled = false;
+
             OnCharacterDestroyed?.Invoke(this);
         }
     }

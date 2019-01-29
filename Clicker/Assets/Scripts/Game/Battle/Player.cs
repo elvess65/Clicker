@@ -9,11 +9,6 @@ namespace clicker.battle.character
     /// </summary>
     public class Player : Character
     {
-        protected override void DestroyObjectHandler()
-        {
-            Debug.Log("Game over");
-        }
-
         protected override HPBarController GetHPBarControllerPrefab()
         {
             return GameManager.Instance.Manager_UI.WindowsManager.PlayerHPBarControllerPrefab;
@@ -24,8 +19,12 @@ namespace clicker.battle.character
             Enemy enemy = other.GetComponent<Enemy>();
             if (enemy != null)
             {
+                //Нанести урон игроку
                 HPController.TakeDamage(enemy.Damage);
-                Destroy(enemy.gameObject);
+
+                //Если игрок не был уничтожен
+                if (HPController.CurrentProgress > 0)
+                    enemy.DestroyEnemyOnCollisionWithPlayer();
             }
         }
     }

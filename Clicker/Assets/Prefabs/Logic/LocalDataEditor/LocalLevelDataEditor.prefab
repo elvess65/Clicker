@@ -48,6 +48,6 @@ MonoBehaviour:
     BaseHP: 10
     HPSpreadPercent: 15
     BaseSpawnCount: 3
-    BaseSpawnRate: 2
+    BaseSpawnRate: 5
     NewEnemyEachAmountOfLevels: 2
     EnemyTypes: 0000000001000000020000000300000004000000

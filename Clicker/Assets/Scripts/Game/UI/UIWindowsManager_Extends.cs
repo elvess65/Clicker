@@ -11,6 +11,8 @@ namespace FrameworkPackage.UI.Windows
         public HPBarController PlayerHPBarControllerPrefab;
         [Header("Windows")]
         public UIWindow_Base UIWindow_CraftPrefab;
+        public UIWindow_Base UIWindow_GameOver;
+        public UIWindow_Base UIWindow_LevelFinished;
         [Header("UIElements")]
         public UIElement_CraftItem UIElement_CraftItemPrefab;
         public UIElement_CraftItem_RequireItem UIElement_CraftRequireItemPrefab;

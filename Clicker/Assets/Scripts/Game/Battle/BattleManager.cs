@@ -24,6 +24,7 @@ namespace clicker.battle
             SelectedWeaponManager.Init(selectedWeapons);
 
             //Инициализация игрока
+            Player.OnCharacterDestroyed += PlayerDestroyedHandler;
             Player.Init(playerHP);
 
             //Инициализация ввода для атаки
@@ -32,8 +33,24 @@ namespace clicker.battle
 
             //Начало создания врагов
             m_LevelController = GetComponent<level.LevelController>();
+            m_LevelController.OnLevelFinished += LevelFinishedHandler;
             m_LevelController.Init(DataTableLevels.AgeTypes.FirstAge, 0);
             m_LevelController.StartSpawn();
+        }
+
+
+        void LevelFinishedHandler()
+        {
+            m_LevelController.OnLevelFinished -= LevelFinishedHandler;
+
+            GameManager.Instance.HandleFinishLevel();
+        }
+
+        void PlayerDestroyedHandler(Character character)
+        {
+            character.OnCharacterDestroyed -= PlayerDestroyedHandler;
+
+            GameManager.Instance.HandleGameOver();
         }
 
         void InputHandler(Vector3 mousePos)
