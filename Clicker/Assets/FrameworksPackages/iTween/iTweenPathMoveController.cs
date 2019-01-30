@@ -20,8 +20,7 @@ namespace FrameworkPackage.iTween
                 return;
 
             m_IsMoving = true;
-            Debug.Log(gameObject);
-            Debug.Log(path.pathName);
+
             iTween.MoveTo(gameObject, iTween.Hash("path", iTweenPath.GetPath(path.pathName),
                                                   "speed", speed,
                                                   "easetype", EaseType,

@@ -2,6 +2,7 @@
 using clicker.general;
 using FrameworkPackage.iTween;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
@@ -72,8 +73,6 @@ namespace clicker.battle.level
 
         void EnemyDestroyedHandler(Character enemyCharacter)
         {
-            Debug.Log("EnemySpawnPoint: Enemy was destroyed " + enemyCharacter.gameObject.name);
-
             m_DestroyedEnemiesCount++;
 
             if (m_DestroyedEnemiesCount == m_SpawnCount)

@@ -12,10 +12,37 @@ namespace clicker.account
     {
         public AccountInventory Inventory;
 
-        public Account()
+        public int AccountID { get; private set; }
+        public int WeaponSlots { get; private set; }
+
+        //Level
+        public DataTableLevels.AgeTypes Age { get; private set; }
+        public int Level { get; private set; }
+        
+        public Account(int accountID, DataTableLevels.AgeTypes age, int level, int weaponSlots)
         {
+            //Base
+            AccountID = accountID;
+            WeaponSlots = weaponSlots;
+
+            //Level
+            Age = age;
+            Level = level;
+
+            //Other
             Inventory = new AccountInventory();
         }
+
+        public void IncrementAge()
+        {
+            Age++;
+        }
+
+        public void IncrementLevel()
+        {
+            Level++;
+        }
+
 
         /// <summary>
         /// Представялет инвентарь игрока
@@ -183,7 +210,6 @@ namespace clicker.account
                     if (m_Weapons.ContainsKey(type))
                     {
                         m_Weapons.Remove(type);
-
                         OnRemoveWeapon?.Invoke(type);
                     }
                 }
@@ -238,6 +264,7 @@ namespace clicker.account
 
                     return strBuilder.ToString();
                 }
+
 
                 /// <summary>
                 /// Структура для сохранения данных о текущем состоянии оружия и количестве оружия этого типа

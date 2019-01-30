@@ -23,7 +23,6 @@ namespace clicker.battle.character
 
         public void DestroyEnemyOnCollisionWithPlayer()
         {
-            Debug.Log("1");
             DestroyObjectHandler();
             Destroy(gameObject);
         }

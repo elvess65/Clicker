@@ -33,19 +33,25 @@ namespace clicker.general
 
         void Initialize()
         {
+            //Должно быть перемещено в поолучение данных
+            int accountID = 1;
+            int weaponSlots = 1;
+            DataTableLevels.AgeTypes age = DataTableLevels.AgeTypes.FirstAge;
+            int level = 0;
+
             //Инициализировать загрузчики данных
             m_ItemsDataLoader = new ItemsDataLoader_Local();
             m_WeaponsDataLoader = new WeaponsDataLoader_Local();
             m_LevelsDataLoader = new LevelDataLoader_Local();
 
             //Загрузить данные
-            DataTableItems.SetData(m_ItemsDataLoader.GetData(0));
-            DataTableWeapons.SetData(m_WeaponsDataLoader.GetData(0));
-            DataTableLevels.SetData(m_LevelsDataLoader.GetData(0));
+            DataTableItems.SetData(m_ItemsDataLoader.GetData(accountID));
+            DataTableWeapons.SetData(m_WeaponsDataLoader.GetData(accountID));
+            DataTableLevels.SetData(m_LevelsDataLoader.GetData(accountID));
 
             //Создать акканту
-            PlayerAccount = new Account();
-            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 2);
+            PlayerAccount = new Account(accountID, age, level, weaponSlots);
+            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 1);
 
             Debug.Log("Initialize");
 

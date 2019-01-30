@@ -28,8 +28,8 @@ namespace clicker.general.ui
             WeaponSlots = new List<UIElement_WeaponSlot>();
 
             //Создать слоты оружия
-            for (int i = 0; i < selectedWeaponTypes.Length; i++)
-                CreateWeaponSlot(selectedWeaponTypes[i], i, allowClickable); 
+            for (int i = 0; i < DataManager.Instance.PlayerAccount.WeaponSlots; i++)
+                CreateWeaponSlot(selectedWeaponTypes[i], i, allowClickable);
         }
 
 

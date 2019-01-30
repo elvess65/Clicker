@@ -17,7 +17,7 @@ namespace clicker.battle
 
         private level.LevelController m_LevelController;
 
-        public void Init(DataTableItems.ItemTypes[] selectedWeapons, int playerHP)
+        public void Init(DataTableItems.ItemTypes[] selectedWeapons, int playerHP, DataTableLevels.AgeTypes age, int level)
         {
             //Выбранное оружие
             SelectedWeaponManager = GetComponent<WeaponManager>();
@@ -34,7 +34,7 @@ namespace clicker.battle
             //Начало создания врагов
             m_LevelController = GetComponent<level.LevelController>();
             m_LevelController.OnLevelFinished += LevelFinishedHandler;
-            m_LevelController.Init(DataTableLevels.AgeTypes.FirstAge, 0);
+            m_LevelController.Init(age, level);
             m_LevelController.StartSpawn();
         }
 

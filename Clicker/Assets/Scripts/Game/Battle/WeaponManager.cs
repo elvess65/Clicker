@@ -40,7 +40,14 @@ namespace clicker.battle
             OnAddSlot += GameManager.Instance.Manager_UI.WeaponSlotController.AddSlot;
 
             //Выделение с задержкой
-            StartCoroutine(WaitFrameToSelectWeapon(1));
+            StartCoroutine(WaitFrameToSelectWeapon(0));
+        }
+
+        public void UnscribeFromGlobalEvents()
+        {
+            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnUseWeapon -= UseWeaponHandler;
+            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnWeaponBroken -= BrokeWeaponHandler;
+            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnRemoveWeapon -= RemoveWeaponHandler;
         }
 
         /// <summary>

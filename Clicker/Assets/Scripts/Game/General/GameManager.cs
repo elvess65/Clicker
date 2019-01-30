@@ -3,6 +3,7 @@ using clicker.battle;
 using clicker.datatables;
 using clicker.general.ui;
 using clicker.items;
+using FrameworkPackage.UI.Windows;
 using UnityEngine;
 
 namespace clicker.general
@@ -36,12 +37,11 @@ namespace clicker.general
         {
             //Battle
             //TODO: Move to other place
-            DataTableItems.ItemTypes[] selectedWeapons = new DataTableItems.ItemTypes[2];
+            DataTableItems.ItemTypes[] selectedWeapons = new DataTableItems.ItemTypes[1];
             selectedWeapons[0] = Account.AccountInventory.DEFAULT_ITEM;
-            selectedWeapons[1] = DataTableItems.ItemTypes.Stone;
             int playerHP = 20;
 
-            Manager_Battle.Init(selectedWeapons, playerHP);
+            Manager_Battle.Init(selectedWeapons, playerHP, DataManager.Instance.PlayerAccount.Age, DataManager.Instance.PlayerAccount.Level);
 
             GameIsActive = true;
         }
@@ -64,16 +64,32 @@ namespace clicker.general
 
             Debug.LogError("Game Over");
 
-            Manager_UI.WindowsManager.ShowWindow(Manager_UI.WindowsManager.UIWindow_GameOver);
+            UIWindow_CloseButton wnd = Manager_UI.WindowsManager.ShowWindow(Manager_UI.WindowsManager.UIWindow_GameOver) as UIWindow_CloseButton;
+            wnd.Button_Close.onClick.AddListener(() =>
+            {
+                ReloadLevel();
+            });
         }
 
         public void HandleFinishLevel()
         {
             GameIsActive = false;
 
-            Manager_UI.WindowsManager.ShowWindow(Manager_UI.WindowsManager.UIWindow_LevelFinished);
+            DataManager.Instance.PlayerAccount.IncrementLevel();
+
+            UIWindow_CloseButton wnd = Manager_UI.WindowsManager.ShowWindow(Manager_UI.WindowsManager.UIWindow_LevelFinished) as UIWindow_CloseButton;
+            wnd.Button_Close.onClick.AddListener(() => 
+            {
+                ReloadLevel();
+            });
 
             Debug.LogError("Level finished");
+        }
+
+        void ReloadLevel()
+        {
+            Manager_Battle.SelectedWeaponManager.UnscribeFromGlobalEvents();
+            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
         }
     }
 }
