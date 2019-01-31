@@ -29,15 +29,24 @@ namespace clicker.general
         void Start()
         {
             Initialize();
+            StartCoroutine(Wait());
         }
+
+        public static DataTableItems.ItemTypes[] SELECTED_WPN;  //Иммитация сохранения
+        public static int PLAYER_HP = 20;                       //Иммитация сохранения
+        public static int CRAFT_TIME = 15;                      //Иммитация сохранения
 
         void Initialize()
         {
-            //Должно быть перемещено в поолучение данных
+            //Иммитация получения сохранения
             int accountID = 1;
-            int weaponSlots = 1;
             DataTableLevels.AgeTypes age = DataTableLevels.AgeTypes.FirstAge;
             int level = 0;
+
+            int defaultSlotsCount = 1;
+            SELECTED_WPN = new DataTableItems.ItemTypes[defaultSlotsCount];
+            for (int i = 0; i < SELECTED_WPN.Length; i++)
+                SELECTED_WPN[i] = Account.AccountInventory.DEFAULT_ITEM;
 
             //Инициализировать загрузчики данных
             m_ItemsDataLoader = new ItemsDataLoader_Local();
@@ -50,12 +59,30 @@ namespace clicker.general
             DataTableLevels.SetData(m_LevelsDataLoader.GetData(accountID));
 
             //Создать акканту
-            PlayerAccount = new Account(accountID, age, level, weaponSlots);
+            PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 1);
 
             Debug.Log("Initialize");
+        }
 
-            StartCoroutine(Wait());
+        public void ResetProgress()
+        {
+            PlayerAccount.ResetProgress();
+
+            //Иммитация получения сохранения
+            int accountID = 1;
+            DataTableLevels.AgeTypes age = DataTableLevels.AgeTypes.FirstAge;
+            int level = 0;
+
+            int defaultSlotsCount = 1;
+            SELECTED_WPN = new DataTableItems.ItemTypes[defaultSlotsCount];
+            for (int i = 0; i < SELECTED_WPN.Length; i++)
+                SELECTED_WPN[i] = Account.AccountInventory.DEFAULT_ITEM;
+
+            //Создать акканту
+            PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN);
+            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 1);
+
         }
 
         IEnumerator Wait()

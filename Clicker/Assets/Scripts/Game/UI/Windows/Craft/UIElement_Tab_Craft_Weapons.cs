@@ -20,7 +20,7 @@ namespace clicker.general.ui.windows
 
                 //Создать панель оружия
                 m_WeaponSlotsController = 
-                    GameManager.Instance.Manager_UI.CreateWeaponSlots(GameManager.Instance.Manager_Battle.SelectedWeaponManager.SelectedWeapons.ToArray(),
+                    GameManager.Instance.Manager_UI.CreateWeaponSlots(DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray(),
                                                                       WeaponSlotsParent, 
                                                                       false, 
                                                                       false);
@@ -48,14 +48,14 @@ namespace clicker.general.ui.windows
             base.ItemCrafted_Handler(craftedItemType);
 
             //Обновить UI количества оружия
-            m_WeaponSlotsController.UpdateWeaponState(GameManager.Instance.Manager_Battle.SelectedWeaponManager.SelectedWeapons.ToArray());
+            m_WeaponSlotsController.UpdateWeaponState(DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray());
         }
 
         protected override void UpdateTabState()
         {
             base.UpdateTabState();
 
-            m_WeaponSlotsController.UpdateWeaponState(GameManager.Instance.Manager_Battle.SelectedWeaponManager.SelectedWeapons.ToArray());
+            m_WeaponSlotsController.UpdateWeaponState(DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray());
         }
 
         protected override void SubscribeForEvents()
@@ -102,7 +102,8 @@ namespace clicker.general.ui.windows
         {
             GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot--;
             buttonTransform.GetComponent<UIElement_AddWeaponSlot>().UpdateProgress(GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot, 
-                GameManager.Instance.Manager_Battle.SelectedWeaponManager.TotalAddSlot);
+                                                                                   GameManager.Instance.Manager_Battle.SelectedWeaponManager.TotalAddSlot);
+
             if (GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot <= 0)
             {
                 GameManager.Instance.Manager_Battle.SelectedWeaponManager.AddSlot();

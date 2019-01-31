@@ -36,13 +36,7 @@ namespace clicker.general
 
         void Start()
         {
-            //Battle
-            //TODO: Move to other place
-            DataTableItems.ItemTypes[] selectedWeapons = new DataTableItems.ItemTypes[1];
-            selectedWeapons[0] = Account.AccountInventory.DEFAULT_ITEM;
-            int playerHP = 20;
-
-            Manager_Battle.Init(selectedWeapons, playerHP, DataManager.Instance.PlayerAccount.Age, DataManager.Instance.PlayerAccount.Level);
+            Manager_Battle.Init(DataManager.Instance.PlayerAccount.HP, DataManager.Instance.PlayerAccount.Age, DataManager.Instance.PlayerAccount.Level);
 
             GameIsActive = true;
         }
@@ -63,8 +57,13 @@ namespace clicker.general
         {
             GameIsActive = false;
 
-            DataManager.Instance.PlayerAccount.ResetProgress();
+            //Очистить прогресс игрока
+            DataManager.Instance.ResetProgress();
 
+            //Спрятать все окна
+            Manager_UI.WindowsManager.HideAllWindows();
+
+            //Показать окно
             UIWindow_CloseButton wnd = Manager_UI.WindowsManager.ShowWindow(Manager_UI.WindowsManager.UIWindow_GameOver) as UIWindow_CloseButton;
             wnd.Button_Close.onClick.AddListener(() =>
             {
@@ -74,20 +73,27 @@ namespace clicker.general
 
         public void HandleFinishLevel()
         {
+            //Поставить игру на паузу
             GameIsActive = false;
 
+            //Повысить уровень
             DataManager.Instance.PlayerAccount.IncrementLevel();
 
+            //Сохранить текущее состояние выбранного оружия
+            //Иммитация сохранения
+            DataManager.SELECTED_WPN = DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray();
+
+            //Спрятать все окна
+            Manager_UI.WindowsManager.HideAllWindows();
+
+            //Показать окно повышения уровня
             UIWindow_CloseButton wnd = Manager_UI.WindowsManager.ShowWindow(Manager_UI.WindowsManager.UIWindow_LevelFinished) as UIWindow_CloseButton;
             wnd.Button_Close.onClick.AddListener(() => 
             {
-                int craftTime = 10;
-
                 //Запустить окно, которое показывает скольво времени для крафта осталось
                 UIWindow_CraftTime craftTimeWnd = Manager_UI.WindowsManager.ShowWindowWithoutFade(Manager_UI.WindowsManager.UIWindow_CraftTime) as UIWindow_CraftTime;
-
                 craftTimeWnd.OnUIHided += ReloadLevel;
-                craftTimeWnd.Init(craftTime);
+                craftTimeWnd.Init(DataManager.Instance.PlayerAccount.CraftTime);
             });
         }
 

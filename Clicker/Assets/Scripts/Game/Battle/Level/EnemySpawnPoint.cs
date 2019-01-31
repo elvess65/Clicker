@@ -95,11 +95,7 @@ namespace clicker.battle.level
             m_DestroyedEnemiesCount++;
 
             if (m_DestroyedEnemiesCount == m_SpawnCount)
-            {
-                Debug.Log("EnemySpawnPoint: All enemies destroyed");
-
                 OnDestroyedAllEnemiesFromSpawn?.Invoke(this);
-            }
         }
 
         void Update()

@@ -17,17 +17,14 @@ namespace clicker.battle
 
         public int CurAddSlot = 5;
         public int TotalAddSlot = 5;
-        public List<DataTableItems.ItemTypes> SelectedWeapons { get; private set; }
 
-        public void Init(DataTableItems.ItemTypes[] selectedWeapons)
+        public void Init()
         {
-            //Заполнить список выбранного оружия
-            SelectedWeapons = new List<DataTableItems.ItemTypes>();
-            for (int i = 0; i < selectedWeapons.Length; i++)
-                SelectedWeapons.Add(selectedWeapons[i]);
-
             //UI
-            GameManager.Instance.Manager_UI.CreateWeaponSlots(selectedWeapons, GameManager.Instance.Manager_UI.UIParent_MiddleLeft, true, true);
+            GameManager.Instance.Manager_UI.CreateWeaponSlots(DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray(), 
+                                                              GameManager.Instance.Manager_UI.UIParent_MiddleLeft, 
+                                                              true, 
+                                                              true);
 
             //Подписаться на события изменения состояния оружия
             DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnUseWeapon += UseWeaponHandler;
@@ -94,17 +91,17 @@ namespace clicker.battle
             try
             {
                 //Если пытаемся добавить оружия, а такое же оружие есть в другом слоте
-                for (int i = 0; i < SelectedWeapons.Count; i++)
+                for (int i = 0; i < DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.Count; i++)
                 {
-                    if (i != index && SelectedWeapons[i].Equals(weaponType))
-                        SelectedWeapons[i] = account.Account.AccountInventory.DEFAULT_ITEM;
+                    if (i != index && DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon[i].Equals(weaponType))
+                        DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon[i] = account.Account.AccountInventory.DEFAULT_ITEM;
                 }
 
-                SelectedWeapons[index] = weaponType;
+                DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon[index] = weaponType;
 
                 Debug.Log(ToString());
 
-                OnAddWeapon?.Invoke(SelectedWeapons.ToArray());
+                OnAddWeapon?.Invoke(DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray());
             }
             catch (System.Exception e)
             {
@@ -117,7 +114,7 @@ namespace clicker.battle
         /// </summary>
         public void AddSlot()
         {
-            SelectedWeapons.Add(account.Account.AccountInventory.DEFAULT_ITEM);
+            DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.Add(account.Account.AccountInventory.DEFAULT_ITEM);
 
             OnAddSlot?.Invoke(account.Account.AccountInventory.DEFAULT_ITEM);
         }
@@ -125,13 +122,13 @@ namespace clicker.battle
         public override string ToString()
         {
             StringBuilder strBuilder = new StringBuilder(50);
-            strBuilder.AppendFormat("Selected weapon: {0}", SelectedWeapons.Count);
+            strBuilder.AppendFormat("Selected weapon: {0}", DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.Count);
 
-            if (SelectedWeapons.Count > 0)
+            if (DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.Count > 0)
             {
                 strBuilder.Append("\n");
-                for (int i = 0; i < SelectedWeapons.Count; i++)
-                    strBuilder.AppendFormat(" - {0}\n", SelectedWeapons[i]);
+                for (int i = 0; i < DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.Count; i++)
+                    strBuilder.AppendFormat(" - {0}\n", DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon[i]);
             }
 
             return strBuilder.ToString();
@@ -164,15 +161,15 @@ namespace clicker.battle
             if (DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(weaponType) == 0)
             {
                 //Найти слот с оружием, которое использовалось
-                for (int i = 0; i < SelectedWeapons.Count; i++)
+                for (int i = 0; i < DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.Count; i++)
                 {
                     //Заменить оружие в слоте на оружие по-умолчанию
-                    if (SelectedWeapons[i].Equals(weaponType))
+                    if (DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon[i].Equals(weaponType))
                     {
-                        SelectedWeapons[i] = account.Account.AccountInventory.DEFAULT_ITEM;
+                        DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon[i] = account.Account.AccountInventory.DEFAULT_ITEM;
 
                         //Найти UI слот и обновить оружие
-                        GameManager.Instance.Manager_UI.WeaponSlotController.UpdateWeaponState(SelectedWeapons.ToArray());
+                        GameManager.Instance.Manager_UI.WeaponSlotController.UpdateWeaponState(DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray());
                     }
                 }
             }
@@ -192,20 +189,20 @@ namespace clicker.battle
         /// <param name="weaponType"></param>
         void RemoveWeaponHandler(DataTableItems.ItemTypes weaponType)
         {
-            for (int i = 0; i < SelectedWeapons.Count; i++)
+            for (int i = 0; i < DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.Count; i++)
             {
-                if (SelectedWeapons[i].Equals(weaponType))
-                    SelectedWeapons[i] = account.Account.AccountInventory.DEFAULT_ITEM;
+                if (DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon[i].Equals(weaponType))
+                    DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon[i] = account.Account.AccountInventory.DEFAULT_ITEM;
             }
 
-            OnRemoveWeapon?.Invoke(SelectedWeapons.ToArray());
+            OnRemoveWeapon?.Invoke(DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray());
         }
 
         DataTableItems.ItemTypes GetWeaponTypeByIndex(int index)
         {
             try
             {
-                return SelectedWeapons[index];
+                return DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon[index];
             }
             catch
             { }

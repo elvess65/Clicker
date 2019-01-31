@@ -107,10 +107,7 @@ namespace clicker.datatables
                 //CurLvl = 15. 15 / 2 = 7.5 = 8; Enemies [0] [1] [2] [3] [4]
 
                 float amountOfEnemies = (float)lvl / m_Levels[age].NewEnemyEachAmountOfLevels;
-                Debug.Log("I: " + lvl);
-                Debug.Log("FLOAT AMOUNT: " + amountOfEnemies);
                 int enemyIndex = Mathf.CeilToInt(amountOfEnemies);
-                Debug.Log("INT AMOUNT: " + enemyIndex);
 
                 DataTableEnemies.EnemyTypes[] enemyTypes = m_Levels[age].EnemyTypes;
 

@@ -51,6 +51,28 @@ namespace FrameworkPackage.UI.Windows
             return wnd;
         }
 
+        public void ShowScreenFade()
+        {
+            if (UIWindow_ScreenFade != null)
+            {
+                m_ScreenFade = CreateWindow(UIWindow_ScreenFade, FadeParent);
+                m_ScreenFade.Show();
+            }
+        }
+
+        public void HideScreenFade()
+        {
+            if (m_ScreenFade != null)
+                m_ScreenFade.Hide();
+        }
+
+        public void HideAllWindows()
+        {
+            while (m_WindowQueue.Count > 0)
+                m_WindowQueue.Peek().Hide();
+        }
+
+
         UIWindow_Base CreateWindow(UIWindow_Base source, RectTransform parent)
         {
             UIWindow_Base wnd = Instantiate(source);
@@ -66,22 +88,6 @@ namespace FrameworkPackage.UI.Windows
 
             if (m_WindowQueue.Count == 0)
                 HideScreenFade();
-        }
-
-
-        public void ShowScreenFade()
-        {
-            if (UIWindow_ScreenFade != null)
-            {
-                m_ScreenFade = CreateWindow(UIWindow_ScreenFade, FadeParent);
-                m_ScreenFade.Show();
-            }
-        }
-
-        public void HideScreenFade()
-        {
-            if (m_ScreenFade != null)
-                m_ScreenFade.Hide();
         }
     }
 }

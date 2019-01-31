@@ -12,16 +12,15 @@ namespace clicker.battle
     public class BattleManager : MonoBehaviour
     {
         public WeaponManager SelectedWeaponManager { get; private set; }
-        public LayerMask EnemyLayerMask;
         public Player Player;
 
         private level.LevelController m_LevelController;
 
-        public void Init(DataTableItems.ItemTypes[] selectedWeapons, int playerHP, DataTableLevels.AgeTypes age, int level)
+        public void Init(int playerHP, DataTableLevels.AgeTypes age, int level)
         {
             //Выбранное оружие
             SelectedWeaponManager = GetComponent<WeaponManager>();
-            SelectedWeaponManager.Init(selectedWeapons);
+            SelectedWeaponManager.Init();
 
             //Инициализация игрока
             Player.OnCharacterDestroyed += PlayerDestroyedHandler;
@@ -55,7 +54,7 @@ namespace clicker.battle
 
         void InputHandler(Vector3 mousePos)
         {
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out RaycastHit hit, 1000, EnemyLayerMask))
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out RaycastHit hit, 1000))
             {
                 //Нанести урон врагу
                 Enemy enemy = hit.collider.gameObject.GetComponent<Enemy>();

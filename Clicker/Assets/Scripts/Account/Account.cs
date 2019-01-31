@@ -13,24 +13,26 @@ namespace clicker.account
         public AccountInventory Inventory;
 
         public int AccountID { get; private set; }
-        public int WeaponSlots { get; private set; }
+        public int HP { get; private set; }
+        public int CraftTime { get; private set; }
 
         //Level
         public DataTableLevels.AgeTypes Age { get; private set; }
         public int Level { get; private set; }
         
-        public Account(int accountID, DataTableLevels.AgeTypes age, int level, int weaponSlots)
+        public Account(int accountID, int hp, int craftTime, DataTableLevels.AgeTypes age, int level, DataTableItems.ItemTypes[] selectedWeapon)
         {
             //Base
             AccountID = accountID;
-            WeaponSlots = weaponSlots;
+            HP = hp;
+            CraftTime = craftTime;
 
             //Level
             Age = age;
             Level = level;
 
             //Other
-            Inventory = new AccountInventory();
+            Inventory = new AccountInventory(selectedWeapon);
         }
 
         public void IncrementAge()
@@ -58,14 +60,22 @@ namespace clicker.account
             private Dictionary<ItemTypes, ItemAmountContainer> m_Items;
 
             public AccountWeapons WeaponState { get; private set; }
+            public List<DataTableItems.ItemTypes> SelectedWeapon { get; private set; }
 
             public const ItemTypes DEFAULT_ITEM = ItemTypes.Hand;
 
-            public AccountInventory()
+            public AccountInventory(DataTableItems.ItemTypes[] selectedWeapon)
             {
+                //Состояние оружия
                 WeaponState = new AccountWeapons();
                 WeaponState.OnWeaponBroken += WeaponBrokenHandler;
 
+                //Выбранное оружие
+                SelectedWeapon = new List<DataTableItems.ItemTypes>();
+                for (int i = 0; i < selectedWeapon.Length; i++)
+                    SelectedWeapon.Add(selectedWeapon[i]);
+
+                //Предметы
                 m_Items = new Dictionary<ItemTypes, ItemAmountContainer>();
 
                 //Добавить предмет по-умолчанию
