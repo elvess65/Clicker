@@ -43,6 +43,12 @@ namespace clicker.account
             Level++;
         }
 
+        public void ResetProgress()
+        {
+            Age = DataTableLevels.AgeTypes.FirstAge;
+            Level = 0;
+        }
+
 
         /// <summary>
         /// Представялет инвентарь игрока

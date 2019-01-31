@@ -2,7 +2,6 @@
 using clicker.general;
 using FrameworkPackage.iTween;
 using System;
-using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
@@ -14,30 +13,48 @@ namespace clicker.battle.level
 
         public iTweenPath PathController;
 
-        private float m_SpawnRate;
-        private int m_SpawnCount;
+        //HP 
         private int m_HP;
-        private int m_Speed;
+        private int m_HPSpread;
 
+        //Spawn
+        private int m_SpawnCount;
+        private float m_SpawnRate;
+
+        //Enemies
+        private int m_Speed;
+        private int m_SpeedSpread;
+
+        private datatables.DataTableEnemies.EnemyTypes[] m_EnemyTypes;
+
+        //Other
         private DateTime m_SpawnTime;
         private int m_CurSpawnCount = 0;
         private int m_DestroyedEnemiesCount = 0;
         private bool m_CanSpawn = false;
-        private datatables.DataTableEnemies.EnemyTypes[] m_EnemyTypes;
-
-        public void Init(float spawnRate, int spawnCount, int hp, int speed, datatables.DataTableEnemies.EnemyTypes[] enemyTypes)
+ 
+        public void Init(int hp, int hpSpread,                                  //HP 
+                         int spawnCount, int spawnCountSpread,                  //Spawn
+                         float spawnRate, int spawnRateSpread, 
+                         int speed, int speedSpread,                            //Enemies
+                         datatables.DataTableEnemies.EnemyTypes[] enemyTypes) 
         {
-            m_DestroyedEnemiesCount = 0;
-            m_CurSpawnCount = 0;
-
-            m_SpawnRate = spawnRate;
-            m_SpawnCount = spawnCount;
+            //HP 
             m_HP = hp;
-            m_Speed = speed;
+            m_HPSpread = hpSpread;
 
+            //Spawn
+            m_SpawnCount = spawnCount;  //TODO: Randomize
+            m_SpawnRate = spawnRate;    //TODO: Randomize
+
+            //Enemies
+            m_Speed = speed;
+            m_SpeedSpread = speedSpread;
             m_EnemyTypes = enemyTypes;
 
-            Debug.Log(ToString());
+            //Other
+            m_DestroyedEnemiesCount = 0;
+            m_CurSpawnCount = 0;
         }
 
         public void StartSpawn()
@@ -62,13 +79,15 @@ namespace clicker.battle.level
             if (m_CurSpawnCount >= m_SpawnCount)
                 m_CanSpawn = false;
 
+            int randomHP = m_HP;        //TODO: Randomize
+            int randomSpeed = m_Speed;  //TODO: Randomize
             datatables.DataTableEnemies.EnemyTypes randomEnemyType = m_EnemyTypes[UnityEngine.Random.Range(0, m_EnemyTypes.Length)];
 
             Enemy enemy = Instantiate(GameManager.Instance.AssetsLibrary.GetPrefab_Enemy(randomEnemyType), transform.position, Quaternion.identity);
             enemy.OnCharacterDestroyed += EnemyDestroyedHandler;
-            enemy.Init(m_HP, m_Speed, PathController);
+            enemy.Init(randomHP, randomSpeed, PathController);
 
-            Debug.Log(string.Format("EnemySpawnPoint: Spawn enemy {0} with HP: {1}", randomEnemyType, m_HP));
+            Debug.Log(string.Format("EnemySpawnPoint: Spawn enemy {0} with HP: {1} and speed: {2}", randomEnemyType, randomHP, randomSpeed));
         }
 
         void EnemyDestroyedHandler(Character enemyCharacter)

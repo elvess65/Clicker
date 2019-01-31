@@ -2,6 +2,7 @@
 using clicker.battle;
 using clicker.datatables;
 using clicker.general.ui;
+using clicker.general.ui.windows;
 using clicker.items;
 using FrameworkPackage.UI.Windows;
 using UnityEngine;
@@ -62,7 +63,7 @@ namespace clicker.general
         {
             GameIsActive = false;
 
-            Debug.LogError("Game Over");
+            DataManager.Instance.PlayerAccount.ResetProgress();
 
             UIWindow_CloseButton wnd = Manager_UI.WindowsManager.ShowWindow(Manager_UI.WindowsManager.UIWindow_GameOver) as UIWindow_CloseButton;
             wnd.Button_Close.onClick.AddListener(() =>
@@ -80,10 +81,14 @@ namespace clicker.general
             UIWindow_CloseButton wnd = Manager_UI.WindowsManager.ShowWindow(Manager_UI.WindowsManager.UIWindow_LevelFinished) as UIWindow_CloseButton;
             wnd.Button_Close.onClick.AddListener(() => 
             {
-                ReloadLevel();
-            });
+                int craftTime = 10;
 
-            Debug.LogError("Level finished");
+                //Запустить окно, которое показывает скольво времени для крафта осталось
+                UIWindow_CraftTime craftTimeWnd = Manager_UI.WindowsManager.ShowWindowWithoutFade(Manager_UI.WindowsManager.UIWindow_CraftTime) as UIWindow_CraftTime;
+
+                craftTimeWnd.OnUIHided += ReloadLevel;
+                craftTimeWnd.Init(craftTime);
+            });
         }
 
         void ReloadLevel()

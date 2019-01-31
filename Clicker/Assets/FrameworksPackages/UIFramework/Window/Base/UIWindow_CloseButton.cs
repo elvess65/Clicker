@@ -33,7 +33,8 @@ namespace FrameworkPackage.UI.Windows
             if (Button_Close != null)
                 Button_Close.onClick.AddListener(ButtonClose_PressHandler);
 
-            LockInput(true);
+            if (!m_ShowAnimationIsFinished)
+                LockInput(true);
         }
 
         protected void LockInput(bool inputIsLocked)

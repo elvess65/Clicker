@@ -20,6 +20,8 @@ namespace FrameworkPackage.UI.Windows
         public Text Text_Main;
         public UIAnimationController_Base[] AnimationControllers;
 
+        protected bool m_ShowAnimationIsFinished = false;
+
         public virtual void Show()
         {
             Init();
@@ -61,7 +63,9 @@ namespace FrameworkPackage.UI.Windows
         }
 
         protected virtual void ShowAnimation_Finished()
-        { }
+        {
+            m_ShowAnimationIsFinished = true;
+        }
 
         protected virtual void HideAnimation_Finished()
         {

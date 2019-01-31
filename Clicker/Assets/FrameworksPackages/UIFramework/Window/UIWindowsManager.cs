@@ -31,13 +31,21 @@ namespace FrameworkPackage.UI.Windows
 
         public UIWindow_Base ShowWindow(UIWindow_Base source)
         {
-            if (m_WindowQueue.Count == 0)
+            if (m_WindowQueue.Count == 0 )
                 ShowScreenFade();
 
             UIWindow_Base wnd = CreateWindow(source, WindowParent);
             m_WindowQueue.Push(wnd);
 
             wnd.OnUIBeginHiding += WindowCloseHandler;
+            wnd.Show();
+
+            return wnd;
+        }
+
+        public UIWindow_Base ShowWindowWithoutFade(UIWindow_Base source)
+        {
+            UIWindow_Base wnd = CreateWindow(source, WindowParent);
             wnd.Show();
 
             return wnd;

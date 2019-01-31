@@ -9,14 +9,9 @@
         private float m_CurTime;
         private bool m_Perform;
 
-        public bool IsStarted
-        {
-            get { return m_Perform; }
-        }
-        public float Progress
-        {
-            get { return m_CurTime / TotalTime; }
-        }
+        public bool IsStarted { get { return m_Perform; } }
+        public float Progress { get { return m_CurTime / TotalTime; } }
+        public float CurTime  { get { return m_CurTime; } }
 
         public InterpolationData(float totalTime)
         {

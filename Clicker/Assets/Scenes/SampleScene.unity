@@ -1046,6 +1046,8 @@ MonoBehaviour:
     type: 3}
   UIWindow_LevelFinished: {fileID: 5798447099048000548, guid: e6b3648501fbc0f4a99760a96408f260,
     type: 3}
+  UIWindow_CraftTime: {fileID: 1678194578208700031, guid: 0ccec5effb535e14ba55a2528f0512ae,
+    type: 3}
   UIElement_CraftItemPrefab: {fileID: 7180971594246650665, guid: d16f980d99a48fe4ebc7b7c0f1b8498e,
     type: 3}
   UIElement_CraftRequireItemPrefab: {fileID: 942627447139561413, guid: 1660f9c374923cc468bca423d3a82234,

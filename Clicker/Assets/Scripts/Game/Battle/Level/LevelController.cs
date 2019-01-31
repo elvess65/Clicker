@@ -16,29 +16,43 @@ namespace clicker.battle.level
 
         public void Init(AgeTypes age, int level)
         {
-            Debug.LogWarning(string.Format("LevelController: Start level. Age: {0}. Level: {1}", age, level));
-
             //HP
-            int hp = DataTableLevels.GetHP(age, level);             //TODO: add spread
-            int hpSpread = 5;   //percent
+            int hp = DataTableLevels.GetHP(age, level);             
+            int hpSpread = DataTableLevels.GetHPSpread(age, level);
 
             //Spawn
-            int count = DataTableLevels.GetSpawnCount(age, level);  //TODO: add spread
-            int countSpread = 10;   //percent
+            int spawnCount = DataTableLevels.GetSpawnCount(age, level);  
+            int spawnCountSpread = 10;   
 
-            int rate = DataTableLevels.GetSpawnRate(age, level);    //TODO: add spread
-            int rateSpread = 15;    //percent
+            int rate = DataTableLevels.GetSpawnRate(age, level);    
+            int rateSpread = 15;    
 
             //Enemies
-            int speed = 3;                                          //TODO: add spread
-            int speedSpread = 15;   //percent
-            EnemyTypes[] enemies = DataTableLevels.GetEnemiesForLevel(age, level); 
+            int speed = DataTableLevels.GetSpeed(age, level);
+            int speedSpread = 15;  
+
+            EnemyTypes[] enemies = DataTableLevels.GetEnemiesForLevel(age, level);
+
+            Debug.LogWarning(string.Format("LevelController: Start level. Age: {0}. Level: {1}", age, level));           
+            Debug.Log(string.Format(" HP {0}. HPSpread {1} \n SpawnCount: {2}. SpawnCountSpread: {3} \n SpawnRate: {4}. SpawnRateSpread: {5} \n Speed: {6}. SpeedSpread: {7}",
+                                    hp, hpSpread,
+                                    spawnCount, spawnCountSpread,
+                                    rate, rateSpread,
+                                    speed, speedSpread));
+
+            Debug.Log("Enemies:\n");
+            for (int i = 0; i < enemies.Length; i++)
+                Debug.Log(string.Format("{0}\n", enemies[i]));
 
             //Spawn points
             for (int i = 0; i < SpawnPoints.Length; i++)
             {
                 SpawnPoints[i].OnDestroyedAllEnemiesFromSpawn += DestroyedAllEnemiesFromSpawn;
-                SpawnPoints[i].Init(rate, count, hp, speed, enemies);
+                SpawnPoints[i].Init(hp,             hpSpread,                   //HP
+                                    spawnCount,     spawnCountSpread,           //Spawn
+                                    rate,           rateSpread, 
+                                    speed,          speedSpread,                //Enemies
+                                    enemies);
             }
         }
 
