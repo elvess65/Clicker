@@ -26,6 +26,7 @@ namespace FrameworkPackage.iTween
                                                   "easetype", EaseType,
                                                   "oncompletetarget", gameObject,
                                                   "oncomplete", "ArrivedHandler"));
+
         }
 
         /// <summary>
