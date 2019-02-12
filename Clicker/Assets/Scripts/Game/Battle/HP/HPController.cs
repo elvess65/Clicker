@@ -40,6 +40,12 @@ namespace clicker.battle.HP
                 DestroyObject();
         }
 
+        public void ResetHPBarPosition()
+        {
+            m_HPBarController.transform.localPosition = Vector3.zero;
+        }
+
+
         void DestroyObject()
         {
             OnDestroyObject?.Invoke();

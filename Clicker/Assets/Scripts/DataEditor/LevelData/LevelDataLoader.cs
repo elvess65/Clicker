@@ -33,9 +33,10 @@ namespace clicker.datatables
         public int BaseSpawnRate = 2;
         public int BaseSpawnRateSpread = 2;
         [Header("Enemies")]
-        public int BaseSpeed = 10;
-        public int BaseSpeedSpread = 10;
-        public int NewEnemyEachAmountOfLevels = 2;      //CurLvl = 7. 7 / 2 = 3.5 = 4; Enemies [0] [1] [2] [3]
+        public float BaseSpeed = 10;
+        public int BaseSpeedSpreadPercent = 10;
+        public float BaseMaxSpeed = 15;
+        public float NewEnemyEachAmountOfLevels = 2;      //CurLvl = 7. 7 / 2 = 3.5 = 4; Enemies [0] [1] [2] [3]
         public EnemyTypes[] EnemyTypes;
     }
 }

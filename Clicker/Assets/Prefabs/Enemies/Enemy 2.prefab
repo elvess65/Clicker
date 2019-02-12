@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3114326146561239948}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.7, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3114326147160327068}
@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 1032755079112142155}
   - component: {fileID: 3114326147160327065}
   - component: {fileID: 3114326147160327064}
+  - component: {fileID: 2570468004376253595}
   m_Layer: 9
   m_Name: Enemy 2
   m_TagString: Untagged
@@ -87,7 +88,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HPBarParent: {fileID: 3114326146561239949}
-  PathMoveController: {fileID: 1032755079112142155}
+  CharacterCollider: {fileID: 3114326147160327064}
+  PathMoveController: {fileID: 2570468004376253595}
 --- !u!114 &1032755079112142155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,3 +153,15 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2570468004376253595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3114326147160327047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6002ea3b2f8c2f34bb33489cdc87142f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

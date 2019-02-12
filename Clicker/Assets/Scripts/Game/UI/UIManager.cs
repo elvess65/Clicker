@@ -8,6 +8,8 @@ namespace clicker.general.ui
     [RequireComponent(typeof(UIWindowsManager))]
     public class UIManager : MonoBehaviour
     {
+        public System.Action<UIWindow_Base> OnShowCraftWindow;
+
         public UIWindowsManager WindowsManager { get; private set; }
         public UIElement_WeaponSlotsController WeaponSlotController { get; private set; }
 
@@ -46,7 +48,9 @@ namespace clicker.general.ui
 
         void Button_ShowCraft_PressHandler()
         {
-            WindowsManager.ShowWindow(WindowsManager.UIWindow_CraftPrefab);
+            UIWindow_Base wnd = WindowsManager.ShowWindow(WindowsManager.UIWindow_CraftPrefab);
+
+            OnShowCraftWindow?.Invoke(wnd);
         } 
     }
 }
