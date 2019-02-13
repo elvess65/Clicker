@@ -18,9 +18,10 @@ namespace clicker.datatables
             {
                 Level level = new Level(data[i].AgeType,
                                         data[i].BaseHP, data[i].BaseHPSpreadPercent,                                //HP
-                                        data[i].BaseSpawnCount, data[i].BaseSpawnCountSpread,                       //Spawn
-                                        data[i].BaseSpawnRate, data[i].BaseSpawnRateSpread,
-                                        data[i].BaseSpeed, data[i].BaseSpeedSpreadPercent, data[i].BaseMaxSpeed,    //Enemies
+                                        data[i].BaseSpawnCount, data[i].BaseSpawnCountSpreadPercent,                //Spawn
+                                        data[i].BaseSpawnRate, data[i].BaseSpawnRateSpreadPercent, 
+                                        data[i].MinSpawnRate, data[i].RateStepEachAmountOfLevels,
+                                        data[i].BaseSpeed, data[i].BaseSpeedSpreadPercent, data[i].MaxSpeed,        //Enemies
                                         data[i].NewEnemyEachAmountOfLevels,
                                         data[i].EnemyTypes);
 
@@ -35,77 +36,71 @@ namespace clicker.datatables
             {
                 int baseHP = m_Levels[age].BaseHP;
                 return baseHP + baseHP * lvl;
-
-                //base HP = 10;
-                // - lvl = 0;
-                //Result: 10 + 10 * 0 = 10 + 0 = 10;
-                // - lvl = 1;
-                //Result: 10 + 10 * 1 = 10 + 10 = 20;
-                // - lvl = 5;
-                //Result: 10 + 10 * 5 = 10 + 50 = 60;
             }
 
             return 1;
         }
 
-        public static int GetHPSpreadPercent(AgeTypes age, int lvl)
+        public static int GetHPSpreadPercent(AgeTypes age, int lvl, int levelHP)
         {
             if (m_Levels.ContainsKey(age))
             {
-                int baseHPSpreadPercent = m_Levels[age].BaseHPSpreadPercent;
-                return baseHPSpreadPercent;
+                float baseHPSpreadPercent = m_Levels[age].BaseHPSpreadPercent / 100f;
+                return (int)(baseHPSpreadPercent * levelHP);
             }
 
             return 0;
         }
 
         //Spawn
+        // - Spawn count
         public static int GetSpawnCount(AgeTypes age, int lvl)
         {
             if (m_Levels.ContainsKey(age))
             {
-                int deltaConst = 0;
                 int baseSpawnCount = m_Levels[age].BaseSpawnCount;
-
-                int spawnCount = baseSpawnCount + lvl - deltaConst;
-                return Mathf.Clamp(spawnCount, 1, spawnCount);
+                return baseSpawnCount + lvl;
             }
 
             return 1;
         }
 
-        public static int GetSpawnCountSpread(AgeTypes age, int lvl)
+        public static int GetSpawnCountSpread(AgeTypes age, int lvl, int levelSpawnCount)
         {
             if (m_Levels.ContainsKey(age))
             {
-                int baseSpawnCountSpread = m_Levels[age].BaseSpawnCountSpread;
-                int deltaConst = 1;
-                int spawnCountSpread = baseSpawnCountSpread + lvl - deltaConst;
-                return Mathf.Clamp(spawnCountSpread, 1, spawnCountSpread);
+                float baseSpawnCountSpreadPercent = m_Levels[age].BaseSpawnCountSpreadPercent / 100f;
+                return (int)(baseSpawnCountSpreadPercent * levelSpawnCount);
             }
 
             return 0;
         }
 
-        public static int GetSpawnRate(AgeTypes age, int lvl)
+        // - Spawn rate
+        public static float GetSpawnRate(AgeTypes age, int lvl)
         {
             if (m_Levels.ContainsKey(age))
             {
-                int baseSpawnRate = m_Levels[age].BaseSpawnRate;
-                return baseSpawnRate;
+                float baseSpawnRate = m_Levels[age].BaseSpawnRate;
+                float result = baseSpawnRate - (float)lvl / m_Levels[age].RateStepEachAmountOfLevels;
+
+                return Mathf.Clamp(result, m_Levels[age].MinSpawnRate, baseSpawnRate);
             }
 
             return 1;
-        }
+        } 
 
-        public static int GetSpawnRateSpread(AgeTypes age, int lvl)
+        public static float GetSpawnRateSpread(AgeTypes age, int lvl, float spawnRate)
         {
             if (m_Levels.ContainsKey(age))
             {
+                float constValue = 2f;
+
                 int baseSpawnRateSpread = m_Levels[age].BaseSpawnRateSpread;
-                int deltaConst = 1;
-                int spawnRateSpread = baseSpawnRateSpread + lvl - deltaConst;
-                return Mathf.Clamp(spawnRateSpread, 1, spawnRateSpread);
+                float baseSpawnPercent = m_Levels[age].BaseSpawnRateSpread / 100f;
+
+                float result = baseSpawnPercent * (spawnRate / constValue);
+                return result;
             }
 
             return 0;
@@ -116,19 +111,21 @@ namespace clicker.datatables
         {
             if (m_Levels.ContainsKey(age))
             {
+                float constValue = 0.07f;
+
                 float baseSpeed = m_Levels[age].BaseSpeed;
-                return baseSpeed + lvl;
+                return baseSpeed + (baseSpeed * (lvl * constValue));
             }
 
             return 1;
         }
 
-        public static int GetSpeedSpreadPercent(AgeTypes age, int lvl)
+        public static float GetSpeedSpreadPercent(AgeTypes age, int lvl, float levelSpeed)
         {
             if (m_Levels.ContainsKey(age))
             {
-                int baseSpeedSpreadPercent = m_Levels[age].BaseSpeedSpreadPercent;
-                return baseSpeedSpreadPercent + lvl;
+                float baseSpeedSpreadPercent = m_Levels[age].BaseSpeedSpreadPercent / 100f;
+                return baseSpeedSpreadPercent * levelSpeed;
             }
 
             return 0;
@@ -137,11 +134,7 @@ namespace clicker.datatables
         public static float GetSpeedMax(AgeTypes age)
         {
             if (m_Levels.ContainsKey(age))
-            {
-                float baseMaxSpeed = m_Levels[age].BaseMaxSpeed;
-                int deltaMaxSpeed = 1;
-                return baseMaxSpeed * ((int)age + deltaMaxSpeed);
-            }
+                return m_Levels[age].MaxSpeed;
 
             return 10;
         }
@@ -192,14 +185,20 @@ namespace clicker.datatables
             private int m_BaseHP;                           //HP = HPFunc(curLevel, BaseHP)
             private int m_BaseHPSpreadPercent;              //HPFunc { result +- HPSpreadPercent }
             //Spawn
+            // - Spawn count
             private int m_BaseSpawnCount;
-            private int m_BaseSpawnCountSpread;
-            private int m_BaseSpawnRate;
-            private int m_BaseSpawnRateSpread;
+            private int m_BaseSpawnCountSpreadPercent;
+            // - Spawn rate
+            private float m_BaseSpawnRate;
+            private int m_BaseSpawnRateSpreadPercent;
+            private float m_MinSpawnRate;
+            private int m_RateStepEachAmountOfLevels;
             //Enemies
+            // - Speed
             private float m_BaseSpeed;
             private int m_BaseSpeedSpreadPercent;
-            private float m_BaseMaxSpeed;
+            private float m_MaxSpeed;
+            // - Enemy
             private float m_NewEnemyEachAmountOfLevels;   //CurLvl = 7. 7 / 2 = 3.5 = 4; Enemies [0] [1] [2] [3]
             private DataTableEnemies.EnemyTypes[] m_EnemyTypes;
 
@@ -208,22 +207,36 @@ namespace clicker.datatables
             public int BaseHP => m_BaseHP;
             public int BaseHPSpreadPercent => m_BaseHPSpreadPercent;
             //Spawn
+            // - Spawn count
             public int BaseSpawnCount => m_BaseSpawnCount;
-            public int BaseSpawnCountSpread => m_BaseSpawnCountSpread;
-            public int BaseSpawnRate => m_BaseSpawnRate;
-            public int BaseSpawnRateSpread => m_BaseSpawnRateSpread;
+            public int BaseSpawnCountSpreadPercent => m_BaseSpawnCountSpreadPercent;
+            // - Spawn rate
+            public float BaseSpawnRate => m_BaseSpawnRate;
+            public int BaseSpawnRateSpread => m_BaseSpawnRateSpreadPercent;
+            public float MinSpawnRate => m_MinSpawnRate;
+            public int RateStepEachAmountOfLevels => m_RateStepEachAmountOfLevels;
             //Enemies
+            // - Speed
             public float BaseSpeed => m_BaseSpeed;
             public int BaseSpeedSpreadPercent => m_BaseSpeedSpreadPercent;
-            public float BaseMaxSpeed => m_BaseMaxSpeed;
+            public float MaxSpeed => m_MaxSpeed;
+            // - Enemy
             public float NewEnemyEachAmountOfLevels => m_NewEnemyEachAmountOfLevels;
             public DataTableEnemies.EnemyTypes[] EnemyTypes => m_EnemyTypes;
 
             public Level(AgeTypes ageType,
-                        int baseHP, int baseHPSpreadPercent,                            //HP
-                        int baseSpawnCount, int baseSpawnCountSpread,                   //Spawn
-                        int baseSpawnRate, int baseSpawnRateSpread,
-                        float baseSpeed, int baseSpeedSpreadPercent, float baseMaxSpeed,    //Enemies
+                        //HP
+                        int baseHP, int baseHPSpreadPercent,
+                        //Spawn
+                        // - Spawn count
+                        int baseSpawnCount, int baseSpawnCountSpreadPercent,
+                        // - Spawn rate
+                        float baseSpawnRate, int baseSpawnRateSpreadPercent, 
+                        float minSpawnRate, int rateStepEachAmountOfLevels,
+                        //Enemies
+                        // - Speed
+                        float baseSpeed, int baseSpeedSpreadPercent, float maxSpeed,
+                        // - Enemy
                         float newEnemyEachAmountOfLevels, 
                         DataTableEnemies.EnemyTypes[] enemyTypes)
             {
@@ -234,17 +247,21 @@ namespace clicker.datatables
                 m_BaseHPSpreadPercent = baseHPSpreadPercent;
 
                 //Spawn
+                // - Spawn count
                 m_BaseSpawnCount = baseSpawnCount;
-                m_BaseSpawnCountSpread = baseSpawnCountSpread;
-
+                m_BaseSpawnCountSpreadPercent = baseSpawnCountSpreadPercent;
+                // - Spawn rate
                 m_BaseSpawnRate = baseSpawnRate;
-                m_BaseSpawnRateSpread = baseSpawnRateSpread;
+                m_BaseSpawnRateSpreadPercent = baseSpawnRateSpreadPercent;
+                m_MinSpawnRate = minSpawnRate;
+                m_RateStepEachAmountOfLevels = rateStepEachAmountOfLevels;
 
                 //Enemies
+                // - Speed
                 m_BaseSpeed = baseSpeed;
                 m_BaseSpeedSpreadPercent = baseSpeedSpreadPercent;
-                m_BaseMaxSpeed = baseMaxSpeed;
-
+                m_MaxSpeed = maxSpeed;
+                // - Enemy
                 m_NewEnemyEachAmountOfLevels = newEnemyEachAmountOfLevels;
                 m_EnemyTypes = enemyTypes;
             }

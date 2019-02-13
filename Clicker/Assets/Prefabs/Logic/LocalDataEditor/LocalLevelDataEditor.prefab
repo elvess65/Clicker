@@ -45,9 +45,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Data_Levels:
   - AgeType: 0
-    BaseHP: 10
-    HPSpreadPercent: 15
-    BaseSpawnCount: 3
-    BaseSpawnRate: 5
+    BaseHP: 1
+    BaseHPSpreadPercent: 20
+    BaseSpawnCount: 1
+    BaseSpawnCountSpreadPercent: 20
+    BaseSpawnRate: 4
+    MinSpawnRate: 0.7
+    RateStepEachAmountOfLevels: 7
+    BaseSpawnRateSpreadPercent: 20
+    BaseSpeed: 1
+    BaseSpeedSpreadPercent: 10
+    MaxSpeed: 15
     NewEnemyEachAmountOfLevels: 2
     EnemyTypes: 0000000001000000020000000300000004000000

@@ -18,18 +18,18 @@ namespace clicker.battle.level
         {
             //HP
             int hp = DataTableLevels.GetHP(age, level);             
-            int hpSpreadPercent = DataTableLevels.GetHPSpreadPercent(age, level);
+            int hpSpreadPercent = DataTableLevels.GetHPSpreadPercent(age, level, hp);
 
             //Spawn
             int spawnCount = DataTableLevels.GetSpawnCount(age, level);  
-            int spawnCountSpread = DataTableLevels.GetSpawnCountSpread(age, level);   
+            int spawnCountSpread = DataTableLevels.GetSpawnCountSpread(age, level, spawnCount);   
 
-            int rate = DataTableLevels.GetSpawnRate(age, level);    
-            int rateSpread = DataTableLevels.GetSpawnRateSpread(age, level);
+            float rate = DataTableLevels.GetSpawnRate(age, level);    
+            float rateSpread = DataTableLevels.GetSpawnRateSpread(age, level, rate);
 
             //Enemies
             float speed = DataTableLevels.GetSpeed(age, level);
-            int speedSpreadPercent = DataTableLevels.GetSpeedSpreadPercent(age, level);
+            float speedSpreadPercent = DataTableLevels.GetSpeedSpreadPercent(age, level, speed);
             float maxSpeed = DataTableLevels.GetSpeedMax(age);
 
             EnemyTypes[] enemies = DataTableLevels.GetEnemiesForLevel(age, level);

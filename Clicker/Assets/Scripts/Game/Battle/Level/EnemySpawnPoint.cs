@@ -24,7 +24,7 @@ namespace clicker.battle.level
 
         //Enemies
         private float m_Speed;
-        private int m_SpeedSpreadPercent;
+        private float m_SpeedSpreadPercent;
         private float m_MaxSpeed;
 
         private datatables.DataTableEnemies.EnemyTypes[] m_EnemyTypes;
@@ -37,11 +37,18 @@ namespace clicker.battle.level
         private int m_CurSpawnCount = 0;
         private int m_DestroyedEnemiesCount = 0;
         private bool m_CanSpawn = false;
- 
-        public void Init(int hp, int hpSpreadPercent,                           //HP 
-                         int spawnCount, int spawnCountSpread,                  //Spawn
-                         float spawnRate, int spawnRateSpread,
-                         float speed, int speedSpreadPercent, float maxSpeed,          //Enemies
+                           
+        public void Init(//HP 
+                         int hp, int hpSpreadPercent,
+                         //Spawn 
+                         // - Spawn count
+                         int spawnCount, int spawnCountSpread,
+                         // - Spawn rate
+                         float spawnRate, float spawnRateSpread,
+                         //Enemies
+                         // - Speed
+                         float speed, float speedSpreadPercent, float maxSpeed,
+                         // - Enemy
                          datatables.DataTableEnemies.EnemyTypes[] enemyTypes) 
         {
             //HP 
@@ -49,13 +56,14 @@ namespace clicker.battle.level
             m_HPSpreadPercent = hpSpreadPercent;
 
             //Spawn
-            m_SpawnCount = GetSpread(spawnCount, spawnCountSpread);  
+            m_SpawnCount = GetSpread(spawnCount, spawnCountSpread);
             m_SpawnRate =  GetSpread(spawnRate, spawnRateSpread);
 
             //Enemies
             m_Speed = speed;
             m_SpeedSpreadPercent = speedSpreadPercent;
             m_MaxSpeed = maxSpeed;
+
             m_EnemyTypes = enemyTypes;
 
             //Other
@@ -135,7 +143,7 @@ namespace clicker.battle.level
         /// <summary>
         /// Разброс процентного значения. Версия для float
         /// </summary>
-        float GetSpreadByPercent(float val, int percent)
+        float GetSpreadByPercent(float val, float percent)
         {
             float rawVal = val * (percent / 100f);
             int percentVal = (int)rawVal;
@@ -156,7 +164,7 @@ namespace clicker.battle.level
         /// <summary>
         /// Разброс установленного значения. Версия функции для float
         /// </summary>
-        float GetSpread(float val, int spread)
+        float GetSpread(float val, float spread)
         {
             float rawResult = val + spread * GetSign();          //val = 2, spread = 1. Result = 2 +- 1(0);
             return Mathf.Clamp(rawResult, 1, rawResult);

@@ -56,6 +56,7 @@ namespace clicker.general
             GameIsActive = true;
         }
 
+
         void ItemCrafted_Handler(DataTableItems.ItemTypes type)
         {
             //Отнять предметы, необходимые для создания

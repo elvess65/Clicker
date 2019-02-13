@@ -28,14 +28,20 @@ namespace clicker.datatables
         public int BaseHP = 10;                         //HP = HPFunc(curLevel, BaseHP)
         public int BaseHPSpreadPercent = 15;            //HPFunc { result +- HPSpreadPercent }
         [Header("Spawn")]
+        [Header(" - Spawn count")]
         public int BaseSpawnCount = 3;
-        public int BaseSpawnCountSpread = 3;
-        public int BaseSpawnRate = 2;
-        public int BaseSpawnRateSpread = 2;
+        public int BaseSpawnCountSpreadPercent = 3;
+        [Header(" - Spawn rate")]
+        public float BaseSpawnRate = 2f;
+        public float MinSpawnRate = 0.7f;
+        public int RateStepEachAmountOfLevels = 7;
+        public int BaseSpawnRateSpreadPercent = 2;
         [Header("Enemies")]
+        [Header(" - Speed")]
         public float BaseSpeed = 10;
         public int BaseSpeedSpreadPercent = 10;
-        public float BaseMaxSpeed = 15;
+        public float MaxSpeed = 15;
+        [Header(" - Enemy")]
         public float NewEnemyEachAmountOfLevels = 2;      //CurLvl = 7. 7 / 2 = 3.5 = 4; Enemies [0] [1] [2] [3]
         public EnemyTypes[] EnemyTypes;
     }
