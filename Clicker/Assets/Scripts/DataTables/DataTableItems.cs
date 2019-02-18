@@ -14,16 +14,23 @@ namespace clicker.datatables
 
             m_Items = new Dictionary<ItemTypes, Item>();
 
-            for (int i = 0; i < data.Length; i++)
+            try
             {
-                //Создать предмет
-                Item item = new Item(data[i].Type, data[i].TickToCreate, data[i].FilterTypes);
+                for (int i = 0; i < data.Length; i++)
+                {
+                    //Создать предмет
+                    Item item = new Item(data[i].Type, data[i].TickToCreate, data[i].FilterTypes);
 
-                //Создать необходимые для создания предмета предметы
-                for (int j = 0; j < data[i].RequiredItems.Length; j++)
-                    item.AddRequiredItem(data[i].RequiredItems[j].Type, data[i].RequiredItems[j].Amount);
+                    //Создать необходимые для создания предмета предметы
+                    for (int j = 0; j < data[i].RequiredItems.Length; j++)
+                        item.AddRequiredItem(data[i].RequiredItems[j].Type, data[i].RequiredItems[j].Amount);
 
-                m_Items.Add(data[i].Type, item);
+                    m_Items.Add(data[i].Type, item);
+                }
+            }
+            catch (System.Exception e)
+            {
+                UnityEngine.Debug.LogError(e.Message);
             }
         }
 
@@ -44,9 +51,23 @@ namespace clicker.datatables
         public enum ItemTypes
         {
             Hand,
-            Stick,
-            Stone,
-            WoodenSpear,
+            Stick,              //Палка
+            Stone,              //Камень
+            Spear,              //Деревяное копье
+            StickWithStone,     //Палка с камнем
+            Thread,             //Нить
+            WoodenArrow,        //Деревяная стрела
+            Bow,                //Лук
+            StonePike,          //Каменный наконечник
+            Arrow_StonePike,    //Стрела с каменным наконечником
+            Spear_StonePike,    //Копье с каменным наконечником
+            Fire,               //Огонь
+            Berries,            //Ягоды
+            Meat,               //Мясо
+            GrilledMeat,        //Жаренное мясо
+            Water,              //Вода
+            Wife,               //Жена
+            Child,              //Дети
             Max
         }
 
@@ -54,7 +75,10 @@ namespace clicker.datatables
         {
             Default,
             Materials,
-            Weapons
+            Weapons,
+            Ammo,
+            Food,
+            Population
         }
 
         /// <summary>

@@ -70,9 +70,9 @@ namespace clicker.general
 
         void ShowCraftWindow_Handler(UIWindow_Base wnd)
         {
-            Debug.Log(m_State);
+            Debug.Log("ShowCraftWindow_Handler: state " + m_State);
 
-            switch(m_State)
+            switch (m_State)
             {
                 case GameStates.Level:
                     TimeMultiplayerController.StartChangeMultiplayer(m_LEVEL_TIME_MULTIPLAYER);
