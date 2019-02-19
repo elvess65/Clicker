@@ -17,14 +17,19 @@ namespace FrameworkPackage.UI.Windows
         public UIWindow_Base UIWindow_CraftTime;
         public UIWindow_Base UIWindow_AgeFinished;
 
+        [Header(" - General")]
         [Header("UIElements")]
+        public UIElement_ItemSlot UIElement_ItemSlotPrefab;
+        public UIElement_AddItemSlot UIElement_AddItemSlotPrefab;
+
         [Header(" - Craft")]
         public UIElement_CraftItem UIElement_CraftItemPrefab;
         public UIElement_CraftItem_RequireItem UIElement_CraftRequireItemPrefab;
 
         [Header(" - Weapon")]
-        public UIElement_WeaponSlot UIElement_WeaponSlotPrefab;
         public UIElement_WeaponSlotsController UIElement_WeaponSlotControllerPrefab;
-        public UIElement_AddWeaponSlot UIElement_AddWeaponSlotPrefab;
+
+        [Header(" - Food")]
+        public UIElement_FoodSlotsController UIElement_FoodSlotControllerPrefab;
     }
 }

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7679629529525601742}
   - component: {fileID: 5961255410928467294}
   m_Layer: 5
-  m_Name: UIElement - WeaponSlot
+  m_Name: UIElement - ItemSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,7 +63,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Text_ItemName: {fileID: 4889126458129944488}
   Text_Amount: {fileID: 161363004533877307}
-  Image_DurabilityProgress: {fileID: 8935449746975153044}
+  Image_Progress: {fileID: 8935449746975153044}
 --- !u!114 &7679629529525601742
 MonoBehaviour:
   m_ObjectHideFlags: 0

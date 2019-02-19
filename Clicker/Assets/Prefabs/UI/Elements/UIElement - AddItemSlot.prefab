@@ -326,7 +326,7 @@ GameObject:
   - component: {fileID: 6562156310703701789}
   - component: {fileID: 2076548761909181528}
   m_Layer: 5
-  m_Name: UIElement - AddWeaponSlot
+  m_Name: UIElement - AddItemSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

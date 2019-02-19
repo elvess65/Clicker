@@ -26,7 +26,7 @@ namespace clicker.general.ui.windows
                                                                       false);
 
                 //Создать кнопку добавления слотов оружия
-                UIElement_AddWeaponSlot addSlotButton = GameManager.Instance.Manager_UI.CreateAddWeaponSlotButton(m_WeaponSlotsController.AddSlotParent);
+                UIElement_AddItemSlot addSlotButton = GameManager.Instance.Manager_UI.CreateAddWeaponSlotButton(m_WeaponSlotsController.AddSlotParent);
                 addSlotButton.OnItemClick += AddSlotButton_PressHandler;
 
                 //Задать каждому предмету во вкладке события перетягивания
@@ -101,7 +101,7 @@ namespace clicker.general.ui.windows
         void AddSlotButton_PressHandler(RectTransform buttonTransform)
         {
             GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot--;
-            buttonTransform.GetComponent<UIElement_AddWeaponSlot>().UpdateProgress(GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot, 
+            buttonTransform.GetComponent<UIElement_AddItemSlot>().UpdateProgress(GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot, 
                                                                                    GameManager.Instance.Manager_Battle.SelectedWeaponManager.TotalAddSlot);
 
             if (GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot <= 0)
@@ -122,7 +122,7 @@ namespace clicker.general.ui.windows
 
         void PointerUp_Handler(PointerEventData eventData, DataTableItems.ItemTypes type)
         {
-            foreach (UIElement_WeaponSlot item in m_WeaponSlotsController.WeaponSlots)
+            foreach (UIElement_ItemSlot item in m_WeaponSlotsController.ItemSlots)
             {
                 if (RectTransformUtility.RectangleContainsScreenPoint(item.ItemRectTransform, Input.mousePosition))
                 {

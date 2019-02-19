@@ -69,10 +69,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3331199951504910960}
   - component: {fileID: 593719857421787236}
-  - component: {fileID: 5768915630613340754}
+  - component: {fileID: 7234120580709525529}
   - component: {fileID: 8439607211836558066}
   m_Layer: 5
-  m_Name: UIElement - Panel Weapon Slots
+  m_Name: UIElement - Panel Food Slots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -108,7 +108,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1533637802267568259}
   m_CullTransparentMesh: 0
---- !u!114 &5768915630613340754
+--- !u!114 &7234120580709525529
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -117,7 +117,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1533637802267568259}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7ba51877ad5e884a9ee455959297496, type: 3}
+  m_Script: {fileID: 11500000, guid: 83b2d0fee3904b849a73c1f95828db43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SlotParent: {fileID: 4817336631840866964}

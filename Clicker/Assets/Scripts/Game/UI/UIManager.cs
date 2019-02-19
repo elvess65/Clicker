@@ -36,9 +36,9 @@ namespace clicker.general.ui
             return weaponSlotsController;
         }
 
-        public UIElement_AddWeaponSlot CreateAddWeaponSlotButton(RectTransform parent)
+        public UIElement_AddItemSlot CreateAddWeaponSlotButton(RectTransform parent)
         {
-            UIElement_AddWeaponSlot addWeaponSlotButton = Instantiate(WindowsManager.UIElement_AddWeaponSlotPrefab, parent);
+            UIElement_AddItemSlot addWeaponSlotButton = Instantiate(WindowsManager.UIElement_AddItemSlotPrefab, parent);
             addWeaponSlotButton.Init(GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot,
                                      GameManager.Instance.Manager_Battle.SelectedWeaponManager.TotalAddSlot);
 

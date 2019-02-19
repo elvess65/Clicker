@@ -4,10 +4,10 @@ using UnityEngine.UI;
 namespace clicker.general.ui
 {
     /// <summary>
-    /// Кнопка, позволяющая добавлять слоты оружия 
+    /// Кнопка, позволяющая добавлять слоты панелям 
     /// Выводит количество необходимых нажатий для добавления слота
     /// </summary>
-    public class UIElement_AddWeaponSlot : UIElement_ClickableItem
+    public class UIElement_AddItemSlot : UIElement_ClickableItem
     {
         public Text Text_Title;
         public Text Text_Progress;
