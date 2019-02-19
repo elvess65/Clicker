@@ -31,6 +31,7 @@ namespace clicker.general
         public bool GameIsActive { get; private set; }
 
         private GameStates m_State = GameStates.Level;
+        private DataTableLevels.AgeWinConditionController m_WinConditionController;
 
         private const float m_LEVEL_TIME_MULTIPLAYER = 0.1f;
 
@@ -48,9 +49,14 @@ namespace clicker.general
 
         void Start()
         {
+            //Условия прохождения епохи
+            m_WinConditionController = DataTableLevels.GetWinConditionController(DataManager.Instance.PlayerAccount.Age);
+
+            //Изменение множителя времени
             TimeMultiplayerController.OnMultiplayerValueChanged += MultiplayerValueChanged_Handler;
             TimeMultiplayerController.Init();
 
+            //Инициализация боя
             Manager_Battle.Init(DataManager.Instance.PlayerAccount.HP, DataManager.Instance.PlayerAccount.Age, DataManager.Instance.PlayerAccount.Level);
 
             GameIsActive = true;
@@ -113,6 +119,20 @@ namespace clicker.general
         {
             //Поставить игру на паузу
             GameIsActive = false;
+
+            if (m_WinConditionController.AgeIsFinished(DataManager.Instance.PlayerAccount))
+            {
+                Debug.Log("You have finished the age");
+                UIWindow_CloseButton ageWinishedWnd = Manager_UI.WindowsManager.ShowWindow(Manager_UI.WindowsManager.UIWindow_AgeFinished) as UIWindow_CloseButton;
+                ageWinishedWnd.Button_Close.onClick.AddListener(() =>
+                {
+                    //Очистить прогресс игрока
+                    DataManager.Instance.ResetProgress();
+
+                    ReloadLevel();
+                });
+                return;
+            }
 
             //Изменить состояние игры
             m_State = GameStates.Crafting;

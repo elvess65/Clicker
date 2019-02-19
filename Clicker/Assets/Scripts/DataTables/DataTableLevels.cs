@@ -19,11 +19,12 @@ namespace clicker.datatables
                 Level level = new Level(data[i].AgeType,
                                         data[i].BaseHP, data[i].BaseHPSpreadPercent,                                //HP
                                         data[i].BaseSpawnCount, data[i].BaseSpawnCountSpreadPercent,                //Spawn
-                                        data[i].BaseSpawnRate, data[i].BaseSpawnRateSpreadPercent, 
+                                        data[i].BaseSpawnRate, data[i].BaseSpawnRateSpreadPercent,
                                         data[i].MinSpawnRate, data[i].RateStepEachAmountOfLevels,
                                         data[i].BaseSpeed, data[i].BaseSpeedSpreadPercent, data[i].MaxSpeed,        //Enemies
                                         data[i].NewEnemyEachAmountOfLevels,
-                                        data[i].EnemyTypes);
+                                        data[i].EnemyTypes,
+                                        GetWinConditionControllerForAge(data[i].AgeType));                          //Win condition
 
                 m_Levels.Add(data[i].AgeType, level);
             }
@@ -88,7 +89,7 @@ namespace clicker.datatables
             }
 
             return 1;
-        } 
+        }
 
         public static float GetSpawnRateSpread(AgeTypes age, int lvl, float spawnRate)
         {
@@ -154,7 +155,7 @@ namespace clicker.datatables
                 DataTableEnemies.EnemyTypes[] enemyTypes = m_Levels[age].EnemyTypes;
 
                 //Размер массива ограничеваеться размером массива  доступных врагов
-                DataTableEnemies.EnemyTypes[] enemies = new DataTableEnemies.EnemyTypes[enemyIndex + 1 <= enemyTypes.Length ? enemyIndex + 1: enemyTypes.Length];
+                DataTableEnemies.EnemyTypes[] enemies = new DataTableEnemies.EnemyTypes[enemyIndex + 1 <= enemyTypes.Length ? enemyIndex + 1 : enemyTypes.Length];
 
                 for (int i = 0; i < enemyTypes.Length; i++)
                 {
@@ -170,6 +171,33 @@ namespace clicker.datatables
 
             return new DataTableEnemies.EnemyTypes[] { DataTableEnemies.EnemyTypes.Enemy1, DataTableEnemies.EnemyTypes.Enemy2, DataTableEnemies.EnemyTypes.Enemy3 };
         }
+
+        //Win condition
+        public static AgeWinConditionController GetWinConditionController(AgeTypes age)
+        {
+            if (m_Levels.ContainsKey(age))
+                return m_Levels[age].WinConditionController;
+
+            return null;
+        }
+
+        static AgeWinConditionController GetWinConditionControllerForAge(AgeTypes ageType)
+        {
+            switch (ageType)
+            {
+                case AgeTypes.FirstAge:
+                {
+                    Dictionary<DataTableItems.ItemTypes, int> itemsToWin = new Dictionary<DataTableItems.ItemTypes, int>();
+                        itemsToWin.Add(DataTableItems.ItemTypes.Stick, 3);
+
+                    return new FirstAge_WinConditionController(itemsToWin);
+                }
+            }
+
+            Debug.LogError("ERROR: Win condition controller for age " + ageType + " not found");
+            return null;
+        }
+
 
         #region Data Structures
         public enum AgeTypes
@@ -223,6 +251,8 @@ namespace clicker.datatables
             // - Enemy
             public float NewEnemyEachAmountOfLevels => m_NewEnemyEachAmountOfLevels;
             public DataTableEnemies.EnemyTypes[] EnemyTypes => m_EnemyTypes;
+            //Win condition
+            public AgeWinConditionController WinConditionController { get; private set; }
 
             public Level(AgeTypes ageType,
                         //HP
@@ -231,14 +261,16 @@ namespace clicker.datatables
                         // - Spawn count
                         int baseSpawnCount, int baseSpawnCountSpreadPercent,
                         // - Spawn rate
-                        float baseSpawnRate, int baseSpawnRateSpreadPercent, 
+                        float baseSpawnRate, int baseSpawnRateSpreadPercent,
                         float minSpawnRate, int rateStepEachAmountOfLevels,
                         //Enemies
                         // - Speed
                         float baseSpeed, int baseSpeedSpreadPercent, float maxSpeed,
                         // - Enemy
-                        float newEnemyEachAmountOfLevels, 
-                        DataTableEnemies.EnemyTypes[] enemyTypes)
+                        float newEnemyEachAmountOfLevels,
+                        DataTableEnemies.EnemyTypes[] enemyTypes,
+                        //Win condition
+                        AgeWinConditionController winConditionController)
             {
                 m_AgeType = ageType;
 
@@ -264,8 +296,42 @@ namespace clicker.datatables
                 // - Enemy
                 m_NewEnemyEachAmountOfLevels = newEnemyEachAmountOfLevels;
                 m_EnemyTypes = enemyTypes;
+                //Win condition
+                WinConditionController = winConditionController;
             }
         }
+
+        #region Win Condition Controllers
+        public abstract class AgeWinConditionController
+        {
+            public abstract bool AgeIsFinished(account.Account account);
+        }
+
+        public class FirstAge_WinConditionController : AgeWinConditionController
+        {
+            //Пример: Для прохождения епохи нужно собрать 10 камней
+
+            private Dictionary<DataTableItems.ItemTypes, int> m_ItemsToWin;
+
+            public FirstAge_WinConditionController(Dictionary<DataTableItems.ItemTypes, int> itemsToWin) : base()
+            {
+                m_ItemsToWin = new Dictionary<DataTableItems.ItemTypes, int>();
+                m_ItemsToWin = itemsToWin;
+            }
+
+            public override bool AgeIsFinished(account.Account account)
+            {
+                int count = 0;
+                foreach (DataTableItems.ItemTypes itemType in m_ItemsToWin.Keys)
+                {
+                    if (account.Inventory.HasAmountOfItem(itemType, m_ItemsToWin[itemType]))
+                        count++;
+                }
+
+                return count == m_ItemsToWin.Count;
+            }
+        }
+        #endregion
         #endregion
     }
 }

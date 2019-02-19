@@ -1167,6 +1167,8 @@ MonoBehaviour:
     type: 3}
   UIWindow_CraftTime: {fileID: 1678194578208700031, guid: 0ccec5effb535e14ba55a2528f0512ae,
     type: 3}
+  UIWindow_AgeFinished: {fileID: 3337563800385309979, guid: 54f4b80511a3a3b4e8c252052a89f004,
+    type: 3}
   UIElement_CraftItemPrefab: {fileID: 7180971594246650665, guid: d16f980d99a48fe4ebc7b7c0f1b8498e,
     type: 3}
   UIElement_CraftRequireItemPrefab: {fileID: 942627447139561413, guid: 1660f9c374923cc468bca423d3a82234,
