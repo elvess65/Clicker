@@ -12,11 +12,13 @@ namespace clicker.general.ui
 
         public UIWindowsManager WindowsManager { get; private set; }
         public UIElement_WeaponSlotsController WeaponSlotController { get; private set; }
+        public UIElement_FoodSlotsController FoodSlotController { get; private set; }
 
         [Header("Buttons")]
         public Button Button_ShowCraft;
         [Header("UI Parents")]
         public RectTransform UIParent_MiddleLeft;
+        public RectTransform UIParent_MiddleRight;
 
         public void Init()
         {
@@ -36,7 +38,18 @@ namespace clicker.general.ui
             return weaponSlotsController;
         }
 
-        public UIElement_AddItemSlot CreateAddWeaponSlotButton(RectTransform parent)
+        public UIElement_FoodSlotsController CreateFoodSlots(DataTableItems.ItemTypes[] selectedFood, RectTransform parent, bool cacheSlots, bool allowClickable)
+        {
+            UIElement_FoodSlotsController foodSlotsController = Instantiate(WindowsManager.UIElement_FoodSlotControllerPrefab, parent);
+            foodSlotsController.Init(selectedFood, allowClickable);
+
+            if (cacheSlots)
+                FoodSlotController = foodSlotsController;
+
+            return foodSlotsController;
+        }
+
+        public UIElement_AddItemSlot CreateAddItemSlotButton(RectTransform parent)
         {
             UIElement_AddItemSlot addWeaponSlotButton = Instantiate(WindowsManager.UIElement_AddItemSlotPrefab, parent);
             addWeaponSlotButton.Init(GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot,

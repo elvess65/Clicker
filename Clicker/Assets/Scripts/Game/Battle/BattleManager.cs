@@ -22,6 +22,12 @@ namespace clicker.battle
             SelectedWeaponManager = GetComponent<WeaponManager>();
             SelectedWeaponManager.Init();
 
+            //Выбранная еда
+            GameManager.Instance.Manager_UI.CreateFoodSlots(new DataTableItems.ItemTypes[] { DataTableItems.ItemTypes.Max },
+                                                             GameManager.Instance.Manager_UI.UIParent_MiddleRight,
+                                                             true,
+                                                             true);
+
             //Инициализация игрока
             Player.OnCharacterDestroyed += PlayerDestroyedHandler;
             Player.Init(playerHP);

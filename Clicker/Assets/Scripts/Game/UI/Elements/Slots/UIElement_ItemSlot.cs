@@ -1,5 +1,6 @@
 ﻿using clicker.datatables;
 using FrameworkPackage.UI.Windows;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace clicker.general.ui
@@ -14,6 +15,7 @@ namespace clicker.general.ui
         public Text Text_ItemName;
         public Text Text_Amount;
         public Image Image_Progress;
+        public Image Image_Icon;
 
         public int Index { get; private set; }
         public DataTableItems.ItemTypes Type { get; private set; }
@@ -36,11 +38,24 @@ namespace clicker.general.ui
         /// <param name="progress">Прогресс предмета</param>
         public void SetItem(DataTableItems.ItemTypes type, int amount, float progress)
         {
+            if (type == DataTableItems.ItemTypes.Max)
+            {
+                Text_ItemName.text = string.Empty;
+                SetAmount(0);
+                SetSlotProgress(0);
+
+                SelAlphaToImage(Image_Icon, 0.5f);
+                return;
+            }
+
             Text_ItemName.text = type.ToString();
             Type = type;
 
             SetAmount(amount);
             SetSlotProgress(progress);
+
+            if (Image_Icon.color.a < 0.9f)
+                SelAlphaToImage(Image_Icon, 1f);
         }
 
         /// <summary>
@@ -67,6 +82,14 @@ namespace clicker.general.ui
             base.Button_PressHandler();
 
             OnSlotPress?.Invoke(Index);
+        }
+
+
+        void SelAlphaToImage(Image image, float alphaValue)
+        {
+            Color color = Image_Icon.color;
+            color.a = alphaValue;
+            Image_Icon.color = color;
         }
     }
 }

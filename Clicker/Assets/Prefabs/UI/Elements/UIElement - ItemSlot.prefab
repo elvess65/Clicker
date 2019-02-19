@@ -64,6 +64,7 @@ MonoBehaviour:
   Text_ItemName: {fileID: 4889126458129944488}
   Text_Amount: {fileID: 161363004533877307}
   Image_Progress: {fileID: 8935449746975153044}
+  Image_Icon: {fileID: 4670310375002224071}
 --- !u!114 &7679629529525601742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -221,7 +222,7 @@ GameObject:
   - component: {fileID: 608688438304150603}
   - component: {fileID: 4670310375002224071}
   m_Layer: 5
-  m_Name: Image - WeaponIcon
+  m_Name: Image - ItemIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -269,7 +270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.5372549}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
