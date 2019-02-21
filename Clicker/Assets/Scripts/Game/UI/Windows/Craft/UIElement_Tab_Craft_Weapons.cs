@@ -33,14 +33,14 @@ namespace clicker.general.ui.windows
         protected override void AddItemToSlot(int index, DataTableItems.ItemTypes type)
         {
             //Добавить оружие в ячейку выбранного оружия
-            GameManager.Instance.Manager_Battle.SelectedWeaponManager.AddWeapon(index, type);
+            GameManager.Instance.Manager_Battle.SelectedWeaponManager.AddItem(index, type);
         }
 
         protected override void AddSlotButton_PressHandler(RectTransform buttonTransform)
         {
             GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot--;
             buttonTransform.GetComponent<UIElement_AddItemSlot>().UpdateProgress(GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot,
-                                                                                   GameManager.Instance.Manager_Battle.SelectedWeaponManager.TotalAddSlot);
+                                                                                 GameManager.Instance.Manager_Battle.SelectedWeaponManager.TotalAddSlot);
 
             if (GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot <= 0)
             {
@@ -55,14 +55,14 @@ namespace clicker.general.ui.windows
             base.ItemCrafted_Handler(craftedItemType);
 
             //Обновить UI количества оружия
-            m_SlotsController.UpdateWeaponState(DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray());
+            m_SlotsController.UpdateItemsState(DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray());
         }
 
         protected override void UpdateTabState()
         {
             base.UpdateTabState();
 
-            m_SlotsController.UpdateWeaponState(DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray());
+            m_SlotsController.UpdateItemsState(DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray());
         }
 
         protected override void SubscribeForEvents()
@@ -70,10 +70,10 @@ namespace clicker.general.ui.windows
             base.SubscribeForEvents();
 
             //Подписатья на событие добавления оружия
-            GameManager.Instance.Manager_Battle.SelectedWeaponManager.OnAddWeapon += UpdateWeaponState;
+            GameManager.Instance.Manager_Battle.SelectedWeaponManager.OnAddItem += UpdateLocalSlotsControllerState;
 
             //Подписатья на событие добавления слота
-            GameManager.Instance.Manager_Battle.SelectedWeaponManager.OnAddSlot += AddSlot_Handler;
+            GameManager.Instance.Manager_Battle.SelectedWeaponManager.OnAddSlot += AddSlotToLocalSlotsController;
         }
 
         protected override void UnscribeFromEvents()
@@ -81,19 +81,10 @@ namespace clicker.general.ui.windows
             base.UnscribeFromEvents();
 
             //Отписаться от событие добавления оружия
-            GameManager.Instance.Manager_Battle.SelectedWeaponManager.OnAddWeapon -= UpdateWeaponState;
+            GameManager.Instance.Manager_Battle.SelectedWeaponManager.OnAddItem -= UpdateLocalSlotsControllerState;
 
             //Отписаться от событие добавления слота
-            GameManager.Instance.Manager_Battle.SelectedWeaponManager.OnAddSlot -= AddSlot_Handler;
-        }
-
-
-        /// <summary>
-        /// Обновить состояния оружия
-        /// </summary>
-        void UpdateWeaponState(DataTableItems.ItemTypes[] selectedWeaponTypes)
-        {
-            m_SlotsController.UpdateWeaponState(selectedWeaponTypes);
+            GameManager.Instance.Manager_Battle.SelectedWeaponManager.OnAddSlot -= AddSlotToLocalSlotsController;
         }
     }
 }

@@ -36,7 +36,7 @@ namespace clicker.general.ui
         /// <summary>
         /// Обновить состояния предмета
         /// </summary>
-        public void UpdateWeaponState(DataTableItems.ItemTypes[] selectedItemTypes)
+        public void UpdateItemsState(DataTableItems.ItemTypes[] selectedItemTypes)
         {
             for (int i = 0; i < selectedItemTypes.Length; i++)
             {

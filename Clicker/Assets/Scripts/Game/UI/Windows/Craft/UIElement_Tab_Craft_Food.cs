@@ -23,27 +23,52 @@ namespace clicker.general.ui.windows
 
         protected override UIElement_FoodSlotsController GetSlotsController()
         {
-            return GameManager.Instance.Manager_UI.CreateFoodSlots(GetSelectedFoodOrNone(),
+            return GameManager.Instance.Manager_UI.CreateFoodSlots(DataManager.Instance.PlayerAccount.Inventory.SelectedFood.ToArray(),
                                                                    SlotsParent,
                                                                    false,
                                                                    false);
         }
 
-        DataTableItems.ItemTypes[] GetSelectedFoodOrNone()
-        {
-            //TODO: Fill slots by selected food from inventory or ItemTypes.Max if slot is empty
-            return new DataTableItems.ItemTypes[] { DataTableItems.ItemTypes.Max };
-        }
-
-
         protected override void AddItemToSlot(int index, DataTableItems.ItemTypes type)
         {
-            Debug.Log("ADD ITEM " + type + " TO SLOT");
+            //Добавить еду в ячейку выбранного оружия
+            GameManager.Instance.Manager_Battle.SelectedFoodManager.AddItem(index, type);
         }
 
         protected override void AddSlotButton_PressHandler(RectTransform buttonTransform)
         {
-            Debug.Log("ADD SLOT");
+            GameManager.Instance.Manager_Battle.SelectedFoodManager.CurAddSlot--;
+            buttonTransform.GetComponent<UIElement_AddItemSlot>().UpdateProgress(GameManager.Instance.Manager_Battle.SelectedFoodManager.CurAddSlot,
+                                                                                 GameManager.Instance.Manager_Battle.SelectedFoodManager.TotalAddSlot);
+
+            if (GameManager.Instance.Manager_Battle.SelectedFoodManager.CurAddSlot <= 0)
+            {
+                GameManager.Instance.Manager_Battle.SelectedFoodManager.AddSlot();
+                buttonTransform.gameObject.SetActive(false);
+            }
+        }
+
+
+        protected override void SubscribeForEvents()
+        {
+            base.SubscribeForEvents();
+
+            //Подписатья на событие добавления оружия
+            GameManager.Instance.Manager_Battle.SelectedFoodManager.OnAddItem += UpdateLocalSlotsControllerState;
+
+            //Подписатья на событие добавления слота
+            GameManager.Instance.Manager_Battle.SelectedFoodManager.OnAddSlot += AddSlotToLocalSlotsController;
+        }
+
+        protected override void UnscribeFromEvents()
+        {
+            base.UnscribeFromEvents();
+
+            //Отписаться от событие добавления оружия
+            GameManager.Instance.Manager_Battle.SelectedFoodManager.OnAddItem -= UpdateLocalSlotsControllerState;
+
+            //Отписаться от событие добавления слота
+            GameManager.Instance.Manager_Battle.SelectedFoodManager.OnAddSlot -= AddSlotToLocalSlotsController;
         }
     }
 }

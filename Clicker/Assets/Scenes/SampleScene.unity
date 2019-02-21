@@ -399,6 +399,7 @@ GameObject:
   - component: {fileID: 207201828}
   - component: {fileID: 207201826}
   - component: {fileID: 207201827}
+  - component: {fileID: 207201830}
   - component: {fileID: 207201829}
   m_Layer: 0
   m_Name: Manager Battle
@@ -465,6 +466,18 @@ MonoBehaviour:
   - {fileID: 1835733991}
   - {fileID: 599212432}
   - {fileID: 1684038904}
+--- !u!114 &207201830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207201825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 778b1aa59a5f5584bb084672aee99518, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &355337666
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ namespace clicker.general.ui
     {
         protected override void Item_PressHandler(int index)
         {
-            GameManager.Instance.Manager_Battle.SelectedWeaponManager.SelectWeapon(index);
+            GameManager.Instance.Manager_Battle.SelectedWeaponManager.SelectItem(index);
         }
 
         protected override (int amount, float progress) GetAmountAndProgressForItem(DataTableItems.ItemTypes type)

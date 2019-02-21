@@ -10,7 +10,7 @@ namespace clicker.general.ui
     {
         protected override void Item_PressHandler(int index)
         {
-            Debug.Log("Press at food slot at index : " + index);
+            GameManager.Instance.Manager_Battle.SelectedFoodManager.SelectItem(index);
         }
 
         protected override (int amount, float progress) GetAmountAndProgressForItem(DataTableItems.ItemTypes type)

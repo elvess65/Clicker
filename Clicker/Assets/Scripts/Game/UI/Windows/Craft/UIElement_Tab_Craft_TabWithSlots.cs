@@ -39,9 +39,17 @@ namespace clicker.general.ui.windows
         /// <summary>
         /// Добавить слот
         /// </summary>
-        protected void AddSlot_Handler(DataTableItems.ItemTypes type)
+        protected void AddSlotToLocalSlotsController(DataTableItems.ItemTypes type)
         {
             m_SlotsController.AddSlot(type);
+        }
+
+        /// <summary>
+        /// Обновить состояния предметов в локальном контроллере
+        /// </summary>
+        protected void UpdateLocalSlotsControllerState(DataTableItems.ItemTypes[] selectedItemTypes)
+        {
+            m_SlotsController.UpdateItemsState(selectedItemTypes);
         }
 
 

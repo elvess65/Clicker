@@ -9,9 +9,11 @@ namespace clicker.battle
     /// Отвечает за бой
     /// </summary>
     [RequireComponent(typeof(WeaponManager))]
+    [RequireComponent(typeof(FoodManager))]
     public class BattleManager : MonoBehaviour
     {
         public WeaponManager SelectedWeaponManager { get; private set; }
+        public FoodManager SelectedFoodManager { get; private set; }
         public Player Player;
 
         private level.LevelController m_LevelController;
@@ -23,10 +25,8 @@ namespace clicker.battle
             SelectedWeaponManager.Init();
 
             //Выбранная еда
-            GameManager.Instance.Manager_UI.CreateFoodSlots(new DataTableItems.ItemTypes[] { DataTableItems.ItemTypes.Max },
-                                                             GameManager.Instance.Manager_UI.UIParent_MiddleRight,
-                                                             true,
-                                                             true);
+            SelectedFoodManager = GetComponent<FoodManager>();
+            SelectedFoodManager.Init();
 
             //Инициализация игрока
             Player.OnCharacterDestroyed += PlayerDestroyedHandler;
@@ -40,7 +40,7 @@ namespace clicker.battle
             m_LevelController = GetComponent<level.LevelController>();
             m_LevelController.OnLevelFinished += LevelFinishedHandler;
             m_LevelController.Init(age, level);
-            m_LevelController.StartSpawn();
+            //m_LevelController.StartSpawn();
         }
 
 

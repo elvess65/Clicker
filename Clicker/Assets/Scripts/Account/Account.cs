@@ -20,7 +20,8 @@ namespace clicker.account
         public DataTableLevels.AgeTypes Age { get; private set; }
         public int Level { get; private set; }
         
-        public Account(int accountID, int hp, int craftTime, DataTableLevels.AgeTypes age, int level, DataTableItems.ItemTypes[] selectedWeapon)
+        public Account(int accountID, int hp, int craftTime, DataTableLevels.AgeTypes age, int level, 
+            DataTableItems.ItemTypes[] selectedWeapon, DataTableItems.ItemTypes[] selectedFood)
         {
             //Base
             AccountID = accountID;
@@ -32,7 +33,7 @@ namespace clicker.account
             Level = level;
 
             //Other
-            Inventory = new AccountInventory(selectedWeapon);
+            Inventory = new AccountInventory(selectedWeapon, selectedFood);
         }
 
         public void IncrementAge()
@@ -61,10 +62,11 @@ namespace clicker.account
 
             public AccountWeapons WeaponState { get; private set; }
             public List<DataTableItems.ItemTypes> SelectedWeapon { get; private set; }
+            public List<DataTableItems.ItemTypes> SelectedFood { get; private set; }
 
             public const ItemTypes DEFAULT_ITEM = ItemTypes.Hand;
 
-            public AccountInventory(DataTableItems.ItemTypes[] selectedWeapon)
+            public AccountInventory(DataTableItems.ItemTypes[] selectedWeapon, DataTableItems.ItemTypes[] selectedFood)
             {
                 //Состояние оружия
                 WeaponState = new AccountWeapons();
@@ -74,6 +76,11 @@ namespace clicker.account
                 SelectedWeapon = new List<DataTableItems.ItemTypes>();
                 for (int i = 0; i < selectedWeapon.Length; i++)
                     SelectedWeapon.Add(selectedWeapon[i]);
+
+                //Выбрання еда
+                SelectedFood = new List<DataTableItems.ItemTypes>();
+                for (int i = 0; i < selectedFood.Length; i++)
+                    SelectedFood.Add(selectedFood[i]);
 
                 //Предметы
                 m_Items = new Dictionary<ItemTypes, ItemAmountContainer>();

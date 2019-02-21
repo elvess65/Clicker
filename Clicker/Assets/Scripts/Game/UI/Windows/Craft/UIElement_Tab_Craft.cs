@@ -114,7 +114,7 @@ namespace clicker.general.ui.windows
             }
 
             //Обновить UI количества оружия
-            GameManager.Instance.Manager_UI.WeaponSlotController.UpdateWeaponState(DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray());
+            GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemsState(DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray());
         }
 
         /// <summary>
