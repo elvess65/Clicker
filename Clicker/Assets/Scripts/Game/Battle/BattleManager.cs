@@ -65,7 +65,7 @@ namespace clicker.battle
                 //Нанести урон врагу
                 Enemy enemy = hit.collider.gameObject.GetComponent<Enemy>();
                 if (enemy != null)
-                    enemy.HPController.TakeDamage(SelectedWeaponManager.UseWeapon());
+                    enemy.HPController.TakeDamage(SelectedWeaponManager.UseItem());
             }
         }
     }

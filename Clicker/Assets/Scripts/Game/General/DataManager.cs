@@ -1,5 +1,6 @@
 ﻿using clicker.account;
 using clicker.datatables;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -36,6 +37,7 @@ namespace clicker.general
         public static DataTableItems.ItemTypes[] SELECTED_FOOD; //Иммитация сохранения
         public static int PLAYER_HP = 20;                       //Иммитация сохранения
         public static int CRAFT_TIME = 15;                      //Иммитация сохранения
+        public static int MAX_FOOD_IN_SLOT = 5;                 //Иммитация сохранения
 
         void Initialize()
         {
@@ -65,7 +67,7 @@ namespace clicker.general
             DataTableLevels.SetData(m_LevelsDataLoader.GetData(accountID));
 
             //Создать акканту
-            PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN, SELECTED_FOOD);
+            PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN, SELECTED_FOOD, MAX_FOOD_IN_SLOT);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 1);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Berries, 3);
 
@@ -92,7 +94,7 @@ namespace clicker.general
                 SELECTED_FOOD[i] = DataTableItems.ItemTypes.Max;
 
             //Создать акканту
-            PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN, SELECTED_FOOD);
+            PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN, SELECTED_FOOD, MAX_FOOD_IN_SLOT);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 1);
         }
 

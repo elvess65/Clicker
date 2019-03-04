@@ -49,6 +49,17 @@ namespace clicker.general.ui.windows
         }
 
 
+        protected override void ItemCrafted_Handler(DataTableItems.ItemTypes craftedItemType)
+        {
+            base.ItemCrafted_Handler(craftedItemType);
+
+            //Обновить UI количества оружия
+            m_SlotsController.UpdateItemsState(DataManager.Instance.PlayerAccount.Inventory.SelectedFood.ToArray());
+
+            //Обновить UI количества еды
+            GameManager.Instance.Manager_UI.FoodSlotController.UpdateItemsState(DataManager.Instance.PlayerAccount.Inventory.SelectedFood.ToArray());
+        }
+
         protected override void SubscribeForEvents()
         {
             base.SubscribeForEvents();

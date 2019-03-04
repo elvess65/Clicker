@@ -9,8 +9,6 @@ namespace clicker.battle
 {
     public class WeaponManager : SelectedItemsManager
     {
-        public System.Action<DataTableItems.ItemTypes[]> OnRemoveItem;
-
         public override void Init()
         {
             //UI
@@ -62,9 +60,9 @@ namespace clicker.battle
         /// Использовать выбранное оружие
         /// </summary>
         /// <returns>Урон от выбранного оружия</returns>
-        public int UseWeapon()
+        public override int UseItem()
         {
-            //Получить тип оружия
+            //Получить тип предмета
             DataTableItems.ItemTypes selectedWeaponType = GetItemTypeByIndex(m_SelectedIndex);
 
             //Если оружие было использовано
@@ -100,7 +98,7 @@ namespace clicker.battle
             Debug.LogWarning("WeaponManager: USE WEAPON: " + weaponType + ". Durability: " + durabilityProgress);
 
             //Найти слот и обновить прогресс
-            GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemDurability(weaponType, durabilityProgress);
+            GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemProgress(weaponType, durabilityProgress);
         }
 
         /// <summary>
@@ -113,7 +111,7 @@ namespace clicker.battle
                            ". Amount: " + DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(weaponType));
 
             //Переключить на оружие по умолчанию
-            if (DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(weaponType) == 0)
+            if (!DataManager.Instance.PlayerAccount.Inventory.HasItem(weaponType))
             {
                 //Найти слот с оружием, которое использовалось
                 for (int i = 0; i < DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.Count; i++)
@@ -134,7 +132,7 @@ namespace clicker.battle
                 GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemAmount(weaponType, DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(weaponType));
                 
                 //Найти UI слот и обновить прочность
-                GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemDurability(weaponType, DataManager.Instance.PlayerAccount.Inventory.WeaponState.GetDurabilityProgress(weaponType));
+                GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemProgress(weaponType, DataManager.Instance.PlayerAccount.Inventory.WeaponState.GetDurabilityProgress(weaponType));
             }
         }
 
@@ -164,7 +162,7 @@ namespace clicker.battle
         {
             //Test
             if (Input.GetKeyDown(KeyCode.U))
-                Debug.Log("Take damage: " + UseWeapon());
+                Debug.Log("Take damage: " + UseItem());
 
             if (Input.GetKeyDown(KeyCode.S))
                 AddSlot();

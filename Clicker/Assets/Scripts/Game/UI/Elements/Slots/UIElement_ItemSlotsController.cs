@@ -46,11 +46,11 @@ namespace clicker.general.ui
         }
 
         /// <summary>
-        /// Обновить прогресс прочности указанного типа оружия
+        /// Обновить прогресс указанного типа предмета
         /// </summary>
         /// <param name="type">Тип</param>
-        /// <param name="progress">Прочность</param>
-        public void UpdateItemDurability(DataTableItems.ItemTypes type, float progress)
+        /// <param name="progress">Прогресс</param>
+        public void UpdateItemProgress(DataTableItems.ItemTypes type, float progress)
         {
             for (int i = 0; i < ItemSlots.Count; i++)
             {

@@ -7,6 +7,10 @@ namespace clicker.battle
 {
     public class FoodManager : SelectedItemsManager
     {
+        private float m_LastClickTime = 0;
+
+        private const float m_DOUBLE_CLICK_TIME = 1;
+
         public override void Init()
         {
             //UI
@@ -17,6 +21,7 @@ namespace clicker.battle
 
             //Подписать UI на событие
             OnAddItem += GameManager.Instance.Manager_UI.FoodSlotController.UpdateItemsState;
+            OnRemoveItem += GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemsState;
             OnAddSlot += GameManager.Instance.Manager_UI.FoodSlotController.AddSlot;
 
             base.Init();
@@ -28,6 +33,14 @@ namespace clicker.battle
         /// <param name="index">Индекс еды из списка выбранного</param>
         public override void SelectItem(int index)
         {
+            float timeBtwClick = Time.time - m_LastClickTime;
+            m_LastClickTime = Time.time;
+            if (timeBtwClick <= m_DOUBLE_CLICK_TIME)
+            {
+                UseItem();
+                m_LastClickTime = 0;
+            }
+
             if (m_SelectedIndex == index)
                 return;
 
@@ -41,6 +54,51 @@ namespace clicker.battle
                                                " Amount: " + DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(GetItemTypeByIndex(m_SelectedIndex)));
         }
 
+        public override int UseItem()
+        {
+            //Получить тип предмета
+            DataTableItems.ItemTypes selectedFoodType = GetItemTypeByIndex(m_SelectedIndex);
+
+            if (selectedFoodType != DataTableItems.ItemTypes.Max)
+            {
+                Debug.Log("USE ITEM " + selectedFoodType);
+
+                //Удалить использованный предмет
+                DataManager.Instance.PlayerAccount.Inventory.RemoveItem(selectedFoodType);
+
+                //Если после использования предмета еще остались предметы этого типа
+                if (!DataManager.Instance.PlayerAccount.Inventory.HasItem(selectedFoodType))
+                {
+                    //Найти слот с предметом, который использовался
+                    for (int i = 0; i < DataManager.Instance.PlayerAccount.Inventory.SelectedFood.Count; i++)
+                    {
+                        //Удалить предмет из слота
+                        if (DataManager.Instance.PlayerAccount.Inventory.SelectedFood[i].Equals(selectedFoodType))
+                        {
+                            DataManager.Instance.PlayerAccount.Inventory.SelectedFood[i] = DataTableItems.ItemTypes.Max;
+
+                            //Найти UI слот и обновить состояние
+                            GameManager.Instance.Manager_UI.FoodSlotController.UpdateItemsState(DataManager.Instance.PlayerAccount.Inventory.SelectedFood.ToArray());
+                        }
+                    }
+                }
+                else 
+                {
+                    int amount = DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(selectedFoodType);
+
+                    //Найти UI слот и обновить количество предметов
+                    GameManager.Instance.Manager_UI.FoodSlotController.UpdateItemAmount(selectedFoodType, amount);
+
+                    //Найти UI слот и обновить прогресс
+                    GameManager.Instance.Manager_UI.FoodSlotController.UpdateItemProgress(selectedFoodType, GetFoodProgress(amount)); 
+                }
+
+                return 10;
+            }
+
+            return 0;
+        }
+
 
         protected override List<DataTableItems.ItemTypes> GetTargetItemList()
         {
@@ -50,6 +108,12 @@ namespace clicker.battle
         protected override DataTableItems.ItemTypes GetDefaultItem()
         {
             return DataTableItems.ItemTypes.Max;
+        }
+
+
+        float GetFoodProgress(int amount)
+        {
+            return (float)amount / DataManager.Instance.PlayerAccount.Inventory.FoodState.MaxFoodInSlot;
         }
     }
 }

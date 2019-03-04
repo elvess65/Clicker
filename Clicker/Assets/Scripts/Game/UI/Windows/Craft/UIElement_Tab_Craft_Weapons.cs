@@ -56,6 +56,9 @@ namespace clicker.general.ui.windows
 
             //Обновить UI количества оружия
             m_SlotsController.UpdateItemsState(DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray());
+
+            //Обновить UI количества оружия
+            GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemsState(DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray());
         }
 
         protected override void UpdateTabState()

@@ -21,7 +21,7 @@ namespace clicker.account
         public int Level { get; private set; }
         
         public Account(int accountID, int hp, int craftTime, DataTableLevels.AgeTypes age, int level, 
-            DataTableItems.ItemTypes[] selectedWeapon, DataTableItems.ItemTypes[] selectedFood)
+            DataTableItems.ItemTypes[] selectedWeapon, DataTableItems.ItemTypes[] selectedFood, int maxFoodInSlot)
         {
             //Base
             AccountID = accountID;
@@ -33,7 +33,7 @@ namespace clicker.account
             Level = level;
 
             //Other
-            Inventory = new AccountInventory(selectedWeapon, selectedFood);
+            Inventory = new AccountInventory(selectedWeapon, selectedFood, maxFoodInSlot);
         }
 
         public void IncrementAge()
@@ -61,13 +61,18 @@ namespace clicker.account
             private Dictionary<ItemTypes, ItemAmountContainer> m_Items;
 
             public AccountWeapons WeaponState { get; private set; }
+            public AccountFoods FoodState { get; private set; }
+
             public List<DataTableItems.ItemTypes> SelectedWeapon { get; private set; }
             public List<DataTableItems.ItemTypes> SelectedFood { get; private set; }
 
             public const ItemTypes DEFAULT_ITEM = ItemTypes.Hand;
 
-            public AccountInventory(DataTableItems.ItemTypes[] selectedWeapon, DataTableItems.ItemTypes[] selectedFood)
+            public AccountInventory(DataTableItems.ItemTypes[] selectedWeapon, DataTableItems.ItemTypes[] selectedFood, int maxFoodInSlot)
             {
+                //Состояние еды
+                FoodState = new AccountFoods(maxFoodInSlot);
+
                 //Состояние оружия
                 WeaponState = new AccountWeapons();
                 WeaponState.OnWeaponBroken += WeaponBrokenHandler;
@@ -117,6 +122,16 @@ namespace clicker.account
                     return true;
 
                 return false;
+            }
+
+            /// <summary>
+            /// Есть ли хотя бы одинуказанный предмет
+            /// </summary>
+            /// <param name="type">Тип предмета</param>
+            /// <returns>true если есть</returns>
+            public bool HasItem(ItemTypes type)
+            {
+                return GetItemAmount(type) > 0;
             }
 
             /// <summary>
@@ -352,6 +367,19 @@ namespace clicker.account
                         return strBuilder.ToString();
                     }
 
+                }
+            }
+
+            /// <summary>
+            /// Состояние еды в игрока
+            /// </summary>
+            public class AccountFoods
+            {
+                public int MaxFoodInSlot { get; private set; }
+
+                public AccountFoods(int maxFoodInSlot)
+                {
+                    MaxFoodInSlot = maxFoodInSlot;
                 }
             }
         }

@@ -8,6 +8,7 @@ namespace clicker.battle
     public abstract class SelectedItemsManager : MonoBehaviour
     {
         public System.Action<DataTableItems.ItemTypes[]> OnAddItem;
+        public System.Action<DataTableItems.ItemTypes[]> OnRemoveItem;
         public System.Action<DataTableItems.ItemTypes> OnAddSlot;
 
         public int CurAddSlot = 5;
@@ -35,6 +36,11 @@ namespace clicker.battle
         }
 
         /// <summary>
+        /// Использовать выбранный предмет
+        /// </summary>
+        public abstract int UseItem();
+
+        /// <summary>
         /// Добавить предмет в слот
         /// </summary>
         /// <param name="index">Индекс слота</param>
@@ -43,7 +49,7 @@ namespace clicker.battle
         {
             try
             {
-                //Если пытаемся добавить оружия, а такое же оружие есть в другом слоте
+                //Если пытаемся добавить прредмет, а такое же оружие есть в другом слоте
                 for (int i = 0; i < GetTargetItemList().Count; i++)
                 {
                     if (i != index && GetTargetItemList()[i].Equals(weaponType))
