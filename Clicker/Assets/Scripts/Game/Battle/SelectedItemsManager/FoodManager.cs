@@ -37,10 +37,14 @@ namespace clicker.battle
             m_LastClickTime = Time.time;
             if (timeBtwClick <= m_DOUBLE_CLICK_TIME)
             {
-                UseItem();
+                if (GameManager.Instance.Manager_Battle.Player.HPController.CurrentProgress < 1)
+                    GameManager.Instance.Manager_Battle.Player.HPController.AddHP(UseItem());
+
                 m_LastClickTime = 0;
             }
 
+
+            Debug.Log(m_SelectedIndex == index);
             if (m_SelectedIndex == index)
                 return;
 

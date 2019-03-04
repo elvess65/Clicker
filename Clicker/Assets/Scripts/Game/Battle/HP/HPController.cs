@@ -40,6 +40,16 @@ namespace clicker.battle.HP
                 DestroyObject();
         }
 
+        public void AddHP(int amount)
+        {
+            //Добавление ХП
+            m_CurrentHealth = Mathf.Clamp(m_CurrentHealth + amount, 0, m_MaxHealth);
+
+            //Обновление ХП бара
+            if (m_HPBarController != null)
+                m_HPBarController.UpdateHealth(m_CurrentHealth, m_MaxHealth);
+        }
+
         public void ResetHPBarPosition()
         {
             m_HPBarController.transform.localPosition = Vector3.zero;

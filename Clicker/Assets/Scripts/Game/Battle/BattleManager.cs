@@ -31,6 +31,7 @@ namespace clicker.battle
             //Инициализация игрока
             Player.OnCharacterDestroyed += PlayerDestroyedHandler;
             Player.Init(playerHP);
+            Player.HPController.TakeDamage(10);
 
             //Инициализация ввода для атаки
             GameManager.Instance.Manager_Input.OnInput += InputHandler;

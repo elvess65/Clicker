@@ -51,7 +51,7 @@ namespace clicker.general
             for (int i = 0; i < SELECTED_WPN.Length; i++)
                 SELECTED_WPN[i] = Account.AccountInventory.DEFAULT_ITEM;
 
-            defaultSlotsCount = 1;
+            defaultSlotsCount = 2;
             SELECTED_FOOD = new DataTableItems.ItemTypes[defaultSlotsCount];
             for (int i = 0; i < SELECTED_FOOD.Length; i++)
                 SELECTED_FOOD[i] = DataTableItems.ItemTypes.Max;
@@ -70,6 +70,7 @@ namespace clicker.general
             PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN, SELECTED_FOOD, MAX_FOOD_IN_SLOT);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 1);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Berries, 3);
+            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Meat, 5);
 
             Debug.Log("Initialize");
         }
