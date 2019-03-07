@@ -1,0 +1,66 @@
+﻿using clicker.general;
+using FrameworkPackage.Utils;
+using UnityEngine;
+
+namespace clicker.battle
+{
+    public class PeriodicManager : MonoBehaviour
+    {
+        public System.Action<float> OnProgress;
+        public System.Action OnPeriodFinished;
+
+        private float m_ActionPeriod;
+        private float m_Multiplayer;
+
+        private bool m_Loop = false;
+        private InterpolationData<float> m_LerpPeriod;
+
+        public void Init(float actionPeriod, bool loop, float multiplayer = 1)
+        {
+            SetMultiplyer(multiplayer);
+
+            m_Loop = loop;
+            m_ActionPeriod = actionPeriod;
+
+            m_LerpPeriod = new InterpolationData<float>(actionPeriod);
+            m_LerpPeriod.From = 0;
+            m_LerpPeriod.To = 1;
+        }
+
+        public void SetMultiplyer(float multiplayer)
+        {
+            m_Multiplayer = multiplayer;
+        }
+
+        public void StartPeriod()
+        {
+            m_LerpPeriod.Start();
+        }
+
+        public void StopPerdiod()
+        {
+            m_LerpPeriod.Stop();
+        }
+
+
+        void Update()
+        {
+            if (GameManager.Instance.GameIsActive && m_LerpPeriod.IsStarted)
+            {
+                m_LerpPeriod.Increment(m_Multiplayer);
+
+                OnProgress?.Invoke(m_LerpPeriod.Progress);
+
+                if (m_LerpPeriod.Overtime())
+                {
+                    OnPeriodFinished?.Invoke();
+
+                    if (m_Loop)
+                        StartPeriod();
+                    else
+                        m_LerpPeriod.Stop();
+                }
+            }
+        }
+    }
+}

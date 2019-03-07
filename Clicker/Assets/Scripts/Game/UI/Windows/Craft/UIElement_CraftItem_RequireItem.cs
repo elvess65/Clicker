@@ -1,5 +1,4 @@
 ﻿using clicker.datatables;
-using clicker.general;
 using UnityEngine;
 using UnityEngine.UI;
 

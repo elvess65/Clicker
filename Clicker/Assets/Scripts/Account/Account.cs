@@ -198,6 +198,28 @@ namespace clicker.account
                 }
             }
 
+            /// <summary>
+            /// Получить список предметов по определенному фильтру
+            /// </summary>
+            /// <param name="filterType">Фильтр</param>
+            /// <returns>Массив предметов</returns>
+            public ItemTypes[] GetItemsByFilterType(ItemFilterTypes filterType)
+            {
+                List<ItemTypes> result = new List<ItemTypes>();
+
+                foreach (ItemTypes itemType in m_Items.Keys)
+                {
+                    if (HasItem(itemType))
+                    {
+                        //Данные о предмете
+                        DataTableItems.Item itemData = DataTableItems.GetIemDataByType(itemType);
+                        if (itemData.MatchFilter(filterType))
+                            result.Add(itemType);
+                    }
+                }
+
+                return result.ToArray();
+            }
 
             public override string ToString()
             {

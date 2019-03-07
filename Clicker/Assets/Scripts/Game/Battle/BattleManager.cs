@@ -14,6 +14,7 @@ namespace clicker.battle
     {
         public WeaponManager SelectedWeaponManager { get; private set; }
         public FoodManager SelectedFoodManager { get; private set; }
+        public PopulationManager PopulationManager { get; private set; }
         public Player Player;
 
         private level.LevelController m_LevelController;
@@ -32,6 +33,10 @@ namespace clicker.battle
             Player.OnCharacterDestroyed += PlayerDestroyedHandler;
             Player.Init(playerHP);
             Player.HPController.TakeDamage(10);
+
+            //Инициализация населения
+            PopulationManager = GetComponent<PopulationManager>();
+            PopulationManager.Init();
 
             //Инициализация ввода для атаки
             GameManager.Instance.Manager_Input.OnInput += InputHandler;

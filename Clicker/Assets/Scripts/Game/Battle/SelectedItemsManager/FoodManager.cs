@@ -33,18 +33,8 @@ namespace clicker.battle
         /// <param name="index">Индекс еды из списка выбранного</param>
         public override void SelectItem(int index)
         {
-            float timeBtwClick = Time.time - m_LastClickTime;
-            m_LastClickTime = Time.time;
-            if (timeBtwClick <= m_DOUBLE_CLICK_TIME)
-            {
-                if (GameManager.Instance.Manager_Battle.Player.HPController.CurrentProgress < 1)
-                    GameManager.Instance.Manager_Battle.Player.HPController.AddHP(UseItem());
+            HandleDoubleClick(index);
 
-                m_LastClickTime = 0;
-            }
-
-
-            Debug.Log(m_SelectedIndex == index);
             if (m_SelectedIndex == index)
                 return;
 
@@ -114,6 +104,24 @@ namespace clicker.battle
             return DataTableItems.ItemTypes.Max;
         }
 
+
+        void HandleDoubleClick(int index)
+        {
+            //Если только выделили ячеыйку - очистить время предыдущего выделения
+            if (m_SelectedIndex != index)
+                m_LastClickTime = 0;
+
+            //Двойное нажатие
+            float timeBtwClick = Time.time - m_LastClickTime;
+            m_LastClickTime = Time.time;
+            if (timeBtwClick <= m_DOUBLE_CLICK_TIME)
+            {
+                if (GameManager.Instance.Manager_Battle.Player.HPController.CurrentProgress < 1)
+                    GameManager.Instance.Manager_Battle.Player.HPController.AddHP(UseItem());
+
+                m_LastClickTime = 0;
+            }
+        }
 
         float GetFoodProgress(int amount)
         {

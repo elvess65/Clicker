@@ -1,6 +1,5 @@
 ﻿using clicker.account;
 using clicker.datatables;
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -70,7 +69,8 @@ namespace clicker.general
             PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN, SELECTED_FOOD, MAX_FOOD_IN_SLOT);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 1);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Berries, 3);
-            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Meat, 5);
+            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.GrilledMeat, 20);
+            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Water, 10);
 
             Debug.Log("Initialize");
         }

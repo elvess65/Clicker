@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -401,6 +401,7 @@ GameObject:
   - component: {fileID: 207201827}
   - component: {fileID: 207201830}
   - component: {fileID: 207201829}
+  - component: {fileID: 207201831}
   m_Layer: 0
   m_Name: Manager Battle
   m_TagString: Untagged
@@ -476,6 +477,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 778b1aa59a5f5584bb084672aee99518, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurAddSlot: 5
+  TotalAddSlot: 5
+--- !u!114 &207201831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207201825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7ca2d959e8d07d448b03e0bde614558, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &355337666

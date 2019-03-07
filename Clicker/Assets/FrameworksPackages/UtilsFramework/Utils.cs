@@ -22,9 +22,9 @@
             To = default(T);
         }
 
-        public void Increment()
+        public void Increment(float multiplayer = 1)
         {
-            m_CurTime += UnityEngine.Time.deltaTime;
+            m_CurTime += UnityEngine.Time.deltaTime * multiplayer;
         }
 
         public void Start()
