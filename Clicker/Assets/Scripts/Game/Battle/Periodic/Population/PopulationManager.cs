@@ -8,6 +8,16 @@ namespace clicker.battle
     public class PopulationManager : MonoBehaviour
     {
         public System.Action<DataTableItems.ItemTypes, float> OnPopulationProgressChanged;
+        public System.Action<DataTableItems.ItemTypes> OnPeriodFinishedWithSuccess;
+        public System.Action<DataTableItems.ItemTypes> OnPeriodFinishedWithPopulationReduce;
+        public System.Action<DataTableItems.ItemTypes> OnPeriodFinishedWithPopulationLose;
+
+        private enum PeriodResultStates
+        {
+            Success,
+            PopulationReduce,
+            PopulationLoose
+        }
 
         private const float m_PERIOD = 1;                   //Время, за которое пройдет период из m_POPULATION_MULTIPLAYER населения
         private const float m_POPULATION_MULTIPLAYER = 10;  
@@ -28,11 +38,30 @@ namespace clicker.battle
             {
                 //Создать менеджер периода и подписаться на события
                 PeriodicManager pManager = gameObject.AddComponent<PeriodicManager>();
-                pManager.OnProgress += (float progress) => 
-                { OnPopulationProgressChanged.Invoke(itemType, progress); };
 
+                //Событие изменения прогресса периода
+                pManager.OnProgress += (float progress) => 
+                { OnPopulationProgressChanged?.Invoke(itemType, progress); };
+
+                //Сообытие окончания периода
                 pManager.OnPeriodFinished += () =>
-                { PeriodFinishedHandler(itemType); };
+                {
+                    PeriodResultStates periodResult = PeriodFinishedHandler(itemType);
+
+                    //Вызов событий для результатов завершения периода
+                    switch(periodResult)
+                    {
+                        case PeriodResultStates.Success:
+                            OnPeriodFinishedWithSuccess?.Invoke(itemType);
+                            break;
+                        case PeriodResultStates.PopulationReduce:
+                            OnPeriodFinishedWithPopulationReduce?.Invoke(itemType);
+                            break;
+                        case PeriodResultStates.PopulationLoose:
+                            OnPeriodFinishedWithPopulationLose?.Invoke(itemType);
+                            break;
+                    }
+                };
     
                 pManager.Init(m_PERIOD, true, GetMultiplayer(itemType));
                 pManager.StartPeriod();
@@ -45,18 +74,49 @@ namespace clicker.battle
         }
 
 
-        void PeriodFinishedHandler(DataTableItems.ItemTypes itemType)
+        PeriodResultStates PeriodFinishedHandler(DataTableItems.ItemTypes itemType)
         {
-            DataTableItems.Item itemData = DataTableItems.GetIemDataByType(itemType);
-            for (int i = 0; i < itemData.RequiredItems.Length; i++)
-                Debug.Log(itemData.RequiredItems[i].Type + " " + itemData.RequiredItems[i].Amount);
+            Debug.LogWarning("Period for " + itemType + " finished.");
 
-            //TODO: 
-            //Reduce amount of required products
-            //if no products
-            //  reduce population
-            //if no population
-            //  stop loop
+            bool hasEnoughtItems = true;
+            DataTableItems.Item itemData = DataTableItems.GetIemDataByType(itemType);
+
+            //Проверить, есть ли достаточное количество предметов для следующего периода
+            for (int i = 0; i < itemData.RequiredItems.Length; i++)
+            {
+                if (!DataManager.Instance.PlayerAccount.Inventory.HasAmountOfItem(itemData.RequiredItems[i].Type, itemData.RequiredItems[i].Amount))
+                {
+                    Debug.LogError("NO ITEMS FOR NEXT PERDIOD");
+                    hasEnoughtItems = false;
+                    break;
+                }
+            }
+
+            //Если есть достаточное количество предметов, необходимых для поддержания периода - отнять
+            if (hasEnoughtItems)
+            {
+                for (int i = 0; i < itemData.RequiredItems.Length; i++)
+                    DataManager.Instance.PlayerAccount.Inventory.RemoveItem(itemData.RequiredItems[i].Type, itemData.RequiredItems[i].Amount);
+
+                return PeriodResultStates.Success;
+            }
+            else
+            {
+                //Уменьшить количество населения
+                DataManager.Instance.PlayerAccount.Inventory.RemoveItem(itemType);
+
+                //Если еще есть население - пересчитать множитель 
+                if (DataManager.Instance.PlayerAccount.Inventory.HasItem(itemType))
+                {
+                    m_PopulationPeriod[itemType].SetMultiplyer(GetMultiplayer(itemType));
+
+                    return PeriodResultStates.PopulationReduce;
+                }
+                else
+                    m_PopulationPeriod[itemType].StopPerdiod(); //Остановить период
+            }
+
+            return PeriodResultStates.PopulationLoose;
         }
 
         float GetMultiplayer(DataTableItems.ItemTypes itemType)

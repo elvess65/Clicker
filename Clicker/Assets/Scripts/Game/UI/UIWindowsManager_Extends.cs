@@ -31,5 +31,8 @@ namespace FrameworkPackage.UI.Windows
 
         [Header(" - Food")]
         public UIElement_FoodSlotsController UIElement_FoodSlotControllerPrefab;
+
+        [Header(" - Population")]
+        public UIElement_PopulationProgressItem UIElement_PopulationProgressItemPrefab;
     }
 }

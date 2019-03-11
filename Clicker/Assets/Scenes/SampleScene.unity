@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1245,6 +1245,8 @@ MonoBehaviour:
   UIElement_WeaponSlotControllerPrefab: {fileID: 5768915630613340754, guid: 27f24643d8ad76e4f9412dc15de2115c,
     type: 3}
   UIElement_FoodSlotControllerPrefab: {fileID: 7234120580709525529, guid: cd731ee462c6c7347acebd61e1d2f711,
+    type: 3}
+  UIElement_PopulationProgressItemPrefab: {fileID: 6922237520465217341, guid: 48cc673d4e5d2154789e855ce42c8db8,
     type: 3}
 --- !u!4 &1215804869
 Transform:

@@ -105,7 +105,7 @@ namespace clicker.general.ui.windows
             //Пройтись по всем UI объектам и обновить количество предметов, а так же состояние требуемых для создания предметов
             foreach (UIElement_CraftItem item in m_Items.Values)
             {
-                //не обновлять предмет, который был создан
+                //Не обновлять предмет, который был создан
                 if (item.Type != craftedItemType)
                     item.SetItemAmount(DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(item.Type));
 

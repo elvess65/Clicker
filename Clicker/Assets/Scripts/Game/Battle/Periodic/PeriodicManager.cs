@@ -13,6 +13,7 @@ namespace clicker.battle
         private float m_Multiplayer;
 
         private bool m_Loop = false;
+        private bool m_WasStopped = false;
         private InterpolationData<float> m_LerpPeriod;
 
         public void Init(float actionPeriod, bool loop, float multiplayer = 1)
@@ -34,12 +35,16 @@ namespace clicker.battle
 
         public void StartPeriod()
         {
+            if (m_WasStopped)
+                m_WasStopped = false;
+
             m_LerpPeriod.Start();
         }
 
         public void StopPerdiod()
         {
             m_LerpPeriod.Stop();
+            m_WasStopped = true;
         }
 
 
@@ -55,10 +60,13 @@ namespace clicker.battle
                 {
                     OnPeriodFinished?.Invoke();
 
-                    if (m_Loop)
-                        StartPeriod();
-                    else
-                        m_LerpPeriod.Stop();
+                    if (!m_WasStopped)
+                    {
+                        if (m_Loop)
+                            StartPeriod();
+                        else
+                            m_LerpPeriod.Stop();
+                    }
                 }
             }
         }
