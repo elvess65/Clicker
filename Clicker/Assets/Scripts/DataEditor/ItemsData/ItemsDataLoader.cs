@@ -8,6 +8,7 @@ namespace clicker.datatables
     interface iItemsDataLoader
     {
         ItemsData[] GetData(int dataParam);
+        ItemsCraftIgnoreData[] GetIgnoreData(int dataParam);
     }
 
     public class ItemsDataLoader_Local : iItemsDataLoader
@@ -15,6 +16,11 @@ namespace clicker.datatables
         public ItemsData[] GetData(int dataParam)
         {
             return GameObject.FindObjectOfType<LocalItemsDataEditor>().Data_Items;
+        }
+
+        public ItemsCraftIgnoreData[] GetIgnoreData(int dataParam)
+        {
+            return GameObject.FindObjectOfType<LocalItemsDataEditor>().Data_CraftIgnoreItems;
         }
     }
 
@@ -58,5 +64,15 @@ namespace clicker.datatables
                 return string.Format("Type: {0}. Amount: {1}", Type, Amount);
             }
         }
+    }
+
+    /// <summary>
+    /// Локальная структура для передачи данных в локальную структуру
+    /// </summary>
+    [System.Serializable]
+    public struct ItemsCraftIgnoreData
+    {
+        public ItemTypes CraftItem;
+        public ItemTypes[] IgnoreItems;
     }
 }

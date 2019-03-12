@@ -46,13 +46,16 @@ namespace clicker.datatables
 
         public class Periodic
         {
-            public ItemTypes Type;
-            public float PopulationMultiplayer;
+            private ItemTypes m_Type;
+            private float m_PopulationMultiplayer;
+
+            public ItemTypes Type => m_Type;
+            public float PopulationMultiplayer => m_PopulationMultiplayer;
 
             public Periodic(ItemTypes type, float populationMultiplayer)
             {
-                Type = type;
-                PopulationMultiplayer = populationMultiplayer;
+                m_Type = type;
+                m_PopulationMultiplayer = populationMultiplayer;
             }
 
             public override string ToString()

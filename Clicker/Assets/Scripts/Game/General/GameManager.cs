@@ -67,8 +67,12 @@ namespace clicker.general
         {
             //Отнять предметы, необходимые для создания
             DataTableItems.Item itemData = DataTableItems.GetItemDataByType(type);
+            bool hasIgnorableItemsOnCraft = DataTableItems.HasIgnorableItemsOnCraft(type);
             for (int i = 0; i < itemData.RequiredItems.Length; i++)
-                DataManager.Instance.PlayerAccount.Inventory.RemoveItem(itemData.RequiredItems[i].Type, itemData.RequiredItems[i].Amount);
+            {
+                if ((hasIgnorableItemsOnCraft && !DataTableItems.ItemShouldBeIgnoredForType(type, itemData.RequiredItems[i].Type)) || !hasIgnorableItemsOnCraft)
+                    DataManager.Instance.PlayerAccount.Inventory.RemoveItem(itemData.RequiredItems[i].Type, itemData.RequiredItems[i].Amount);
+            }
 
             //Добавить созданный предмет
             DataManager.Instance.PlayerAccount.Inventory.AddItem(type);

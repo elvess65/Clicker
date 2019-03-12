@@ -6,8 +6,15 @@ namespace clicker.datatables
     public static class DataTableItems
     {
         private static Dictionary<ItemTypes, Item> m_Items;
+        private static Dictionary<ItemTypes, ItemCraftIgnore> m_IgnoreItems;
 
-        public static void SetData(ItemsData[] data)
+        public static void SetData(ItemsData[] data, ItemsCraftIgnoreData[] ignoreData)
+        {
+            SetData(data);
+            SetIgnoreData(ignoreData);
+        }
+
+        static void SetData(ItemsData[] data)
         {
             if (data == null)
                 return;
@@ -34,6 +41,23 @@ namespace clicker.datatables
             }
         }
 
+        static void SetIgnoreData(ItemsCraftIgnoreData[] data)
+        {
+            if (data == null)
+                return;
+
+            m_IgnoreItems = new Dictionary<ItemTypes, ItemCraftIgnore>();
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                //Создать предмет
+                ItemCraftIgnore item = new ItemCraftIgnore(data[i].CraftItem, data[i].IgnoreItems);
+
+                m_IgnoreItems.Add(data[i].CraftItem, item);
+            }
+        }
+
+
         /// <summary>
         /// Получить данные о предмете по типу
         /// </summary>
@@ -45,6 +69,30 @@ namespace clicker.datatables
                 return m_Items[type];
 
             return null;
+        }
+
+        /// <summary>
+        /// Должно ли удаление этого предмета быть проигнорированным при крафте указанного
+        /// </summary>
+        /// <param name="craftType">Предмет, который собирается</param>
+        /// <param name="itemType">Предмет, который нужно проверить</param>
+        /// <returns>true если удаление предмета должно быть проигнорированно</returns>
+        public static bool ItemShouldBeIgnoredForType(ItemTypes craftType, ItemTypes itemType)
+        {
+            if (m_IgnoreItems.ContainsKey(craftType))
+                return m_IgnoreItems[craftType].IgnoreItems.Contains(itemType);
+
+            return false;
+        }
+
+        /// <summary>
+        /// Должно ли при крафте указанного предмета быть проигноривоано удаление каких-то предметов
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool HasIgnorableItemsOnCraft(ItemTypes type)
+        {
+            return m_IgnoreItems.ContainsKey(type);
         }
 
         #region Data Structures
@@ -189,6 +237,26 @@ namespace clicker.datatables
             public override string ToString()
             {
                 return string.Format("Type: {0}. Amount: {1}", m_Type, m_Amount);
+            }
+        }
+
+        /// <summary>
+        /// Представляет связи между тем, удаление каких предметов должно быть игнорировано при крафте
+        /// При крафте Child игнорируется удаление Wife. Таким образом для создания Chile необходимо наличие
+        /// Wife, но Wife не удаляется после создания Child.
+        /// </summary>
+        public class ItemCraftIgnore
+        {
+            private ItemTypes m_CraftItem;
+            private List<ItemTypes> m_IgnoreItems;
+
+            public ItemTypes CraftItem => m_CraftItem;
+            public List<ItemTypes> IgnoreItems => m_IgnoreItems;
+
+            public ItemCraftIgnore(ItemTypes craftItem, ItemTypes[] ignoreItems)
+            {
+                m_CraftItem = craftItem;
+                m_IgnoreItems = new List<ItemTypes>(ignoreItems);
             }
         }
         #endregion

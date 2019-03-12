@@ -10,14 +10,12 @@ namespace clicker.battle
         public System.Action OnPeriodFinished;
 
         private float m_ActionPeriod;
-        private float m_Multiplayer;
-
         private bool m_Loop = false;
         private bool m_WasStopped = false;
         private InterpolationData<float> m_LerpPeriod;
 
         public float Progress => m_LerpPeriod.Progress;
-        public float Multiplayer => m_Multiplayer;
+        public float Multiplayer { get; private set; }
 
         public void Init(float actionPeriod, bool loop, float multiplayer = 1)
         {
@@ -33,7 +31,7 @@ namespace clicker.battle
 
         public void SetMultiplyer(float multiplayer)
         {
-            m_Multiplayer = multiplayer;
+            Multiplayer = multiplayer;
         }
 
         public void StartPeriod()
@@ -55,7 +53,7 @@ namespace clicker.battle
         {
             if (GameManager.Instance.GameIsActive && m_LerpPeriod.IsStarted)
             {
-                m_LerpPeriod.Increment(m_Multiplayer);
+                m_LerpPeriod.Increment(Multiplayer);
 
                 OnProgress?.Invoke(Progress);
 

@@ -63,7 +63,7 @@ namespace clicker.general
             m_PeriodicDataLoader = new PeriodicDataLoader_Local();
 
             //Загрузить данные
-            DataTableItems.SetData(m_ItemsDataLoader.GetData(accountID));
+            DataTableItems.SetData(m_ItemsDataLoader.GetData(accountID), m_ItemsDataLoader.GetIgnoreData(accountID));
             DataTableWeapons.SetData(m_WeaponsDataLoader.GetData(accountID));
             DataTableLevels.SetData(m_LevelsDataLoader.GetData(accountID));
             DataTablePeriodic.SetData(m_PeriodicDataLoader.GetData(accountID));

@@ -164,3 +164,6 @@ MonoBehaviour:
       Amount: 15
     - Type: 15
       Amount: 20
+  Data_CraftIgnoreItems:
+  - CraftItem: 17
+    IgnoreItems: 10000000

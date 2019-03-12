@@ -28,7 +28,7 @@ namespace clicker.items
             if (m_ProcessedItems == null)
                 m_ProcessedItems = new Dictionary<ItemTypes, ItemCreationData>();
 
-            //Если предмета еще нет в списке обрадатываемых - добавить
+            //Если предмета еще нет в списке обрабатываемых - добавить
             if (!m_ProcessedItems.ContainsKey(type))
             {
                 ItemCreationData itemCreateData = new ItemCreationData(type, DataTableItems.GetItemDataByType(type).TicksToCreate);
