@@ -31,7 +31,7 @@ namespace clicker.items
             //Если предмета еще нет в списке обрадатываемых - добавить
             if (!m_ProcessedItems.ContainsKey(type))
             {
-                ItemCreationData itemCreateData = new ItemCreationData(type, DataTableItems.GetIemDataByType(type).TicksToCreate);
+                ItemCreationData itemCreateData = new ItemCreationData(type, DataTableItems.GetItemDataByType(type).TicksToCreate);
                 m_ProcessedItems.Add(type, itemCreateData);
             }
 

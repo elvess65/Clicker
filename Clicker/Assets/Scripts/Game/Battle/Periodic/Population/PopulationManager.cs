@@ -12,17 +12,19 @@ namespace clicker.battle
         public System.Action<DataTableItems.ItemTypes> OnPeriodFinishedWithPopulationReduce;
         public System.Action<DataTableItems.ItemTypes> OnPeriodFinishedWithPopulationLose;
 
-        private enum PeriodResultStates
+        public enum PeriodResultStates
         {
             Success,
             PopulationReduce,
             PopulationLoose
         }
 
-        private const float m_PERIOD = 1;                   //Время, за которое пройдет период из m_POPULATION_MULTIPLAYER населения
-        private const float m_POPULATION_MULTIPLAYER = 10;  
+        private const float m_PERIOD = 1;                   //Время, за которое пройдет период из PopulationMultiplayer населения
         private Dictionary<DataTableItems.ItemTypes, PeriodicManager> m_PopulationPeriod;
 
+        /// <summary>
+        /// Инициализация
+        /// </summary>
         public void Init()
         {
             m_PopulationPeriod = new Dictionary<DataTableItems.ItemTypes, PeriodicManager>();
@@ -32,6 +34,10 @@ namespace clicker.battle
                 AddPopulation(population[i]);
         }
 
+        /// <summary>
+        /// Добавить население
+        /// </summary>
+        /// <param name="itemType">Тип предмета</param>
         public void AddPopulation(DataTableItems.ItemTypes itemType)
         {
             if (!m_PopulationPeriod.ContainsKey(itemType))
@@ -73,13 +79,33 @@ namespace clicker.battle
                 m_PopulationPeriod[itemType].SetMultiplyer(GetMultiplayer(itemType));
         }
 
+        /// <summary>
+        /// Получить текущий прогресс для типа населения (На старте окна)
+        /// </summary>
+        public float GetProgressForPopulation(DataTableItems.ItemTypes itemType)
+        {
+            if (m_PopulationPeriod.ContainsKey(itemType))
+                return m_PopulationPeriod[itemType].Progress;
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Получить текущий множитель для населения
+        /// </summary>
+        public float GetMultiplayerForPopulation(DataTableItems.ItemTypes itemType)
+        {
+            if (m_PopulationPeriod.ContainsKey(itemType))
+                return m_PopulationPeriod[itemType].Multiplayer;
+
+            return 0;
+        }
+
 
         PeriodResultStates PeriodFinishedHandler(DataTableItems.ItemTypes itemType)
         {
-            Debug.LogWarning("Period for " + itemType + " finished.");
-
             bool hasEnoughtItems = true;
-            DataTableItems.Item itemData = DataTableItems.GetIemDataByType(itemType);
+            DataTableItems.Item itemData = DataTableItems.GetItemDataByType(itemType);
 
             //Проверить, есть ли достаточное количество предметов для следующего периода
             for (int i = 0; i < itemData.RequiredItems.Length; i++)
@@ -121,7 +147,7 @@ namespace clicker.battle
 
         float GetMultiplayer(DataTableItems.ItemTypes itemType)
         {
-            return DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(itemType) / m_POPULATION_MULTIPLAYER;
+            return DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(itemType) / DataTablePeriodic.GetPeriodicDataByItemID(itemType).PopulationMultiplayer;
         }
     }
 }

@@ -32,7 +32,7 @@ namespace clicker.general.ui.windows
                     DataTableItems.ItemTypes type = (DataTableItems.ItemTypes)i;
 
                     //Если предмет можно вывести в этой вкладке
-                    DataTableItems.Item itemData = DataTableItems.GetIemDataByType(type);
+                    DataTableItems.Item itemData = DataTableItems.GetItemDataByType(type);
                     if (itemData != null && itemData.MatchFilter(FilterType))
                     {
                         //Создать объект

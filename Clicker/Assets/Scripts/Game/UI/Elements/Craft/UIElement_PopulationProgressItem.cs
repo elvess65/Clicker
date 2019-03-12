@@ -11,22 +11,37 @@ namespace clicker.general.ui
     {
         [Header("Texts")]
         public Text Text_ItemName;
+        public Text Text_Multiplayer;
         [Header("Images")]
         public Image Image_ItemIcon;
         public Image Image_Progress;
+        public Image Image_Status;
 
         private DataTableItems.ItemTypes m_ItemType;
 
-        public void Init(DataTableItems.ItemTypes itemType, float progress)
+        public void Init(DataTableItems.ItemTypes itemType, float progress, float multiplayer)
         {
             m_ItemType = itemType;
+            Text_ItemName.text = itemType.ToString();
 
-            UpdateProgress(progress);
+            SetProgress(progress);
+            SetMultiplayer(multiplayer);
+            SetStatus(false);
         }
 
-        public void UpdateProgress(float progress)
+        public void SetProgress(float progress)
         {
             Image_Progress.fillAmount = progress;
+        }
+
+        public void SetMultiplayer(float multiplayer)
+        {
+            Text_Multiplayer.text = multiplayer.ToString();
+        }
+
+        public void SetStatus(bool isReducingPopulation)
+        {
+            Image_Status.color = isReducingPopulation ? Color.red : Color.green;
         }
     }
 }

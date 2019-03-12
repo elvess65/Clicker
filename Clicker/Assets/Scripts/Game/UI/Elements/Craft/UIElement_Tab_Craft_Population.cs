@@ -1,4 +1,5 @@
 ﻿using clicker.datatables;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace clicker.general.ui.windows
@@ -27,7 +28,7 @@ namespace clicker.general.ui.windows
         {
             base.ItemCrafted_Handler(craftedItemType);
 
-            Debug.Log("Population crafted");
+            //Добавить население
             GameManager.Instance.Manager_Battle.PopulationManager.AddPopulation(craftedItemType);
 
             //Обновить локальную панель 
@@ -55,28 +56,37 @@ namespace clicker.general.ui.windows
         }
 
 
+        private Dictionary<DataTableItems.ItemTypes, UIElement_PopulationProgressItem> m_PopulationUIIems;
         void UpdatePopulationItems()
         {
+            if (m_PopulationUIIems == null)
+                m_PopulationUIIems = new Dictionary<DataTableItems.ItemTypes, UIElement_PopulationProgressItem>();
+
             DataTableItems.ItemTypes[] population = DataManager.Instance.PlayerAccount.Inventory.GetItemsByFilterType(DataTableItems.ItemFilterTypes.Population);
             for (int i = 0; i < population.Length; i++)
             {
-                UIElement_PopulationProgressItem item = Instantiate(GameManager.Instance.Manager_UI.WindowsManager.UIElement_PopulationProgressItemPrefab, ProgressParent);
-                item.Init(population[i], 0.5f);
-            }
+                DataTableItems.ItemTypes itemType = population[i];
 
-            //TODO:
-            //Create items
-            //Create dictionary
-            //Match progress with items
+                //Если такого типа населения еще нет - создать
+                if (!m_PopulationUIIems.ContainsKey(population[i]))
+                {
+                    UIElement_PopulationProgressItem item = Instantiate(GameManager.Instance.Manager_UI.WindowsManager.UIElement_PopulationProgressItemPrefab, ProgressParent);
+                    item.Init(population[i], 
+                              GameManager.Instance.Manager_Battle.PopulationManager.GetProgressForPopulation(population[i]),
+                              GameManager.Instance.Manager_Battle.PopulationManager.GetMultiplayerForPopulation(population[i]));
+
+                    m_PopulationUIIems.Add(population[i], item);
+                }
+                else //Если такой тип населения есть - обновить данные
+                    m_PopulationUIIems[itemType].SetMultiplayer(GameManager.Instance.Manager_Battle.PopulationManager.GetMultiplayerForPopulation(itemType));
+            }
         }
 
 
         void PopulationProgressChangedHandler(DataTableItems.ItemTypes itemType, float progress)
         {
-            Debug.Log(itemType + " " + DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(itemType) + " " + progress);
-
-            //TODO: 
-            //Update progress
+            if (m_PopulationUIIems.ContainsKey(itemType))
+                m_PopulationUIIems[itemType].SetProgress(progress);
         }
 
         void PopulationPerdionFinished_Success(DataTableItems.ItemTypes itemType)
@@ -85,8 +95,8 @@ namespace clicker.general.ui.windows
 
             PeriodFinishedHandler();
 
-            //TODO: 
-            //Update progress
+            if (m_PopulationUIIems.ContainsKey(itemType))
+                m_PopulationUIIems[itemType].SetStatus(false);
         }
 
         void PopulationPerdionFinished_PopulationReduce(DataTableItems.ItemTypes itemType)
@@ -95,8 +105,11 @@ namespace clicker.general.ui.windows
 
             PeriodFinishedHandler();
 
-            //TODO: 
-            //Update progress
+            if (m_PopulationUIIems.ContainsKey(itemType))
+            {
+                m_PopulationUIIems[itemType].SetMultiplayer(GameManager.Instance.Manager_Battle.PopulationManager.GetMultiplayerForPopulation(itemType));
+                m_PopulationUIIems[itemType].SetStatus(true);
+            }
         }
 
         void PopulationPerdionFinished_PopulationLose(DataTableItems.ItemTypes itemType)
@@ -105,8 +118,11 @@ namespace clicker.general.ui.windows
 
             PeriodFinishedHandler();
 
-            //TODO: 
-            //Update progress
+            if (m_PopulationUIIems.ContainsKey(itemType))
+            {
+                Destroy(m_PopulationUIIems[itemType].gameObject);
+                m_PopulationUIIems.Remove(itemType);
+            }
         }
 
         void PeriodFinishedHandler()

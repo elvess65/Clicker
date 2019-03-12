@@ -66,7 +66,7 @@ namespace clicker.general
         void ItemCrafted_Handler(DataTableItems.ItemTypes type)
         {
             //Отнять предметы, необходимые для создания
-            DataTableItems.Item itemData = DataTableItems.GetIemDataByType(type);
+            DataTableItems.Item itemData = DataTableItems.GetItemDataByType(type);
             for (int i = 0; i < itemData.RequiredItems.Length; i++)
                 DataManager.Instance.PlayerAccount.Inventory.RemoveItem(itemData.RequiredItems[i].Type, itemData.RequiredItems[i].Amount);
 

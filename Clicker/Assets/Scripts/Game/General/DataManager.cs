@@ -15,6 +15,7 @@ namespace clicker.general
         private iItemsDataLoader m_ItemsDataLoader;
         private iWeaponsDataLoader m_WeaponsDataLoader;
         private iLevelDataLoader m_LevelsDataLoader;
+        private iPeriodicDataLoader m_PeriodicDataLoader;
 
         void Awake()
         {
@@ -59,18 +60,21 @@ namespace clicker.general
             m_ItemsDataLoader = new ItemsDataLoader_Local();
             m_WeaponsDataLoader = new WeaponsDataLoader_Local();
             m_LevelsDataLoader = new LevelDataLoader_Local();
+            m_PeriodicDataLoader = new PeriodicDataLoader_Local();
 
             //Загрузить данные
             DataTableItems.SetData(m_ItemsDataLoader.GetData(accountID));
             DataTableWeapons.SetData(m_WeaponsDataLoader.GetData(accountID));
             DataTableLevels.SetData(m_LevelsDataLoader.GetData(accountID));
+            DataTablePeriodic.SetData(m_PeriodicDataLoader.GetData(accountID));
 
             //Создать акканту
             PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN, SELECTED_FOOD, MAX_FOOD_IN_SLOT);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 1);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Berries, 3);
-            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.GrilledMeat, 20);
-            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Water, 10);
+            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.GrilledMeat, 30);
+            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Water, 50);
+            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Fire, 10);
 
             Debug.Log("Initialize");
         }

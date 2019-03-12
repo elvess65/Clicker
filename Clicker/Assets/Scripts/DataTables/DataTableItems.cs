@@ -39,7 +39,7 @@ namespace clicker.datatables
         /// </summary>
         /// <param name="type">Тип предмета</param>
         /// <returns>Данные о предмете</returns>
-        public static Item GetIemDataByType(ItemTypes type)
+        public static Item GetItemDataByType(ItemTypes type)
         {
             if (m_Items.ContainsKey(type))
                 return m_Items[type];

@@ -16,6 +16,9 @@ namespace clicker.battle
         private bool m_WasStopped = false;
         private InterpolationData<float> m_LerpPeriod;
 
+        public float Progress => m_LerpPeriod.Progress;
+        public float Multiplayer => m_Multiplayer;
+
         public void Init(float actionPeriod, bool loop, float multiplayer = 1)
         {
             SetMultiplyer(multiplayer);
@@ -54,7 +57,7 @@ namespace clicker.battle
             {
                 m_LerpPeriod.Increment(m_Multiplayer);
 
-                OnProgress?.Invoke(m_LerpPeriod.Progress);
+                OnProgress?.Invoke(Progress);
 
                 if (m_LerpPeriod.Overtime())
                 {

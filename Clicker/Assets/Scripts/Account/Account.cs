@@ -142,7 +142,7 @@ namespace clicker.account
             public bool CanCraftItem(ItemTypes type)
             {
                 int hasItemCount = 0;
-                DataTableItems.Item itemData = DataTableItems.GetIemDataByType(type);
+                DataTableItems.Item itemData = DataTableItems.GetItemDataByType(type);
                 for(int i = 0; i < itemData.RequiredItems.Length; i++)
                 {
                     //Если есть достаточное количество предметов указанного типа
@@ -164,7 +164,7 @@ namespace clicker.account
                     m_Items.Add(type, new ItemAmountContainer(type, amount));
 
                     //Данные о добавленном предмете
-                    DataTableItems.Item itemData = DataTableItems.GetIemDataByType(type);
+                    DataTableItems.Item itemData = DataTableItems.GetItemDataByType(type);
 
                     //Если добаленный предмет - оружие
                     if (itemData.MatchFilter(ItemFilterTypes.Weapons))
@@ -189,7 +189,7 @@ namespace clicker.account
                         m_Items.Remove(type);
 
                         //Данные об удаленном предмете
-                        DataTableItems.Item itemData = DataTableItems.GetIemDataByType(type);
+                        DataTableItems.Item itemData = DataTableItems.GetItemDataByType(type);
 
                         //Если удаленный предмет - оружие
                         if (itemData.MatchFilter(ItemFilterTypes.Weapons))
@@ -212,7 +212,7 @@ namespace clicker.account
                     if (HasItem(itemType))
                     {
                         //Данные о предмете
-                        DataTableItems.Item itemData = DataTableItems.GetIemDataByType(itemType);
+                        DataTableItems.Item itemData = DataTableItems.GetItemDataByType(itemType);
                         if (itemData.MatchFilter(filterType))
                             result.Add(itemType);
                     }
