@@ -11,6 +11,7 @@ namespace clicker.battle.level
     public class EnemySpawnPoint : MonoBehaviour
     {
         public Action<EnemySpawnPoint> OnDestroyedAllEnemiesFromSpawn;
+        public Action OnDestroyEnemy;
 
         public PathCreator PathController;
 
@@ -19,7 +20,6 @@ namespace clicker.battle.level
         private int m_HPSpreadPercent;
 
         //Spawn
-        private int m_SpawnCount;
         private float m_SpawnRate;
 
         //Enemies
@@ -37,7 +37,9 @@ namespace clicker.battle.level
         private int m_CurSpawnCount = 0;
         private int m_DestroyedEnemiesCount = 0;
         private bool m_CanSpawn = false;
-                           
+
+        public int ActualSpawnCount { get; private set; }
+
         public void Init(//HP 
                          int hp, int hpSpreadPercent,
                          //Spawn 
@@ -56,7 +58,7 @@ namespace clicker.battle.level
             m_HPSpreadPercent = hpSpreadPercent;
 
             //Spawn
-            m_SpawnCount = GetSpread(spawnCount, spawnCountSpread);
+            ActualSpawnCount = GetSpread(spawnCount, spawnCountSpread);
             m_SpawnRate =  GetSpread(spawnRate, spawnRateSpread);
 
             //Enemies
@@ -70,7 +72,7 @@ namespace clicker.battle.level
             m_DestroyedEnemiesCount = 0;
             m_CurSpawnCount = 0;
 
-            Debug.Log(string.Format("SpawnPoint. Name: {0}. SpawnCount: {1}. SpawnRate: {2}", gameObject.name, m_SpawnCount, m_SpawnRate));
+            Debug.Log(string.Format("SpawnPoint. Name: {0}. SpawnCount: {1}. SpawnRate: {2}", gameObject.name, ActualSpawnCount, m_SpawnRate));
         }
 
         public void StartSpawn()
@@ -82,7 +84,7 @@ namespace clicker.battle.level
         public override string ToString()
         {
             StringBuilder strBuilder = new StringBuilder(100);
-            strBuilder.AppendFormat("Spawn Point\nRate: {0}\nCount: {1}\n", m_SpawnRate, m_SpawnCount);
+            strBuilder.AppendFormat("Spawn Point\nRate: {0}\nCount: {1}\n", m_SpawnRate, ActualSpawnCount);
 
             return strBuilder.ToString();
         }
@@ -92,7 +94,7 @@ namespace clicker.battle.level
         {
             m_CurSpawnCount++;
 
-            if (m_CurSpawnCount >= m_SpawnCount)
+            if (m_CurSpawnCount >= ActualSpawnCount)
                 m_CanSpawn = false;
 
             int randomHP = GetSpreadByPercent(m_HP, m_HPSpreadPercent);
@@ -111,13 +113,15 @@ namespace clicker.battle.level
         {
             m_DestroyedEnemiesCount++;
 
-            if (m_DestroyedEnemiesCount == m_SpawnCount)
+            OnDestroyEnemy?.Invoke();
+
+            if (m_DestroyedEnemiesCount == ActualSpawnCount)
                 OnDestroyedAllEnemiesFromSpawn?.Invoke(this);
         }
 
         void Update()
         {
-            if (GameManager.Instance.GameIsActive && m_CanSpawn && m_CurSpawnCount < m_SpawnCount)
+            if (GameManager.Instance.GameIsActive && m_CanSpawn && m_CurSpawnCount < ActualSpawnCount)
             {
                 if ((m_SpawnTime - DateTime.Now).TotalSeconds <= 0)
                 {

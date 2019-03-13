@@ -21,6 +21,7 @@ namespace FrameworkPackage.UI.Windows
         [Header("UIElements")]
         public UIElement_ItemSlot UIElement_ItemSlotPrefab;
         public UIElement_AddItemSlot UIElement_AddItemSlotPrefab;
+        public UIElement_LevelProgressBar UIElement_LevelProgressBarPrefab;
 
         [Header(" - Craft")]
         public UIElement_CraftItem UIElement_CraftItemPrefab;

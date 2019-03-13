@@ -2,6 +2,7 @@
 using clicker.datatables;
 using static clicker.datatables.DataTableEnemies;
 using static clicker.datatables.DataTableLevels;
+using clicker.general;
 
 namespace clicker.battle.level
 {
@@ -11,8 +12,11 @@ namespace clicker.battle.level
 
         public EnemySpawnPoint[] SpawnPoints;
 
+        //Spawnpoints destroy
         private int m_SpawnpointsDestroyedEnemiesCount = 0;
-
+        //Level progress
+        private int m_TotalEnemiesOnLevel = 0;
+        private int m_DestroyedEnemiesOnLevel = 0;
 
         public void Init(AgeTypes age, int level)
         {
@@ -49,13 +53,19 @@ namespace clicker.battle.level
             for (int i = 0; i < SpawnPoints.Length; i++) 
             {
                 SpawnPoints[i].OnDestroyedAllEnemiesFromSpawn += DestroyedAllEnemiesFromSpawn;
+                SpawnPoints[i].OnDestroyEnemy += DestroyEnemyHandler;
                 SpawnPoints[i].Init(hp,             hpSpreadPercent,            //HP
                                     spawnCount,     spawnCountSpread,           //Spawn
                                     rate,           rateSpread, 
                                     speed,          speedSpreadPercent,         //Enemies
                                     maxSpeed,
                                     enemies);
+
+                m_TotalEnemiesOnLevel += SpawnPoints[i].ActualSpawnCount;
             }
+
+            //UI
+            GameManager.Instance.Manager_UI.CreateLevelProgressBar(GameManager.Instance.Manager_UI.UIParent_MiddleTop);
         }
 
         public void StartSpawn()
@@ -64,6 +74,13 @@ namespace clicker.battle.level
                 SpawnPoints[i].StartSpawn();
         }
 
+
+        void DestroyEnemyHandler()
+        {
+            m_DestroyedEnemiesOnLevel++;
+
+            GameManager.Instance.Manager_UI.LevelProgressBar.SetProgress(m_DestroyedEnemiesOnLevel / (float)m_TotalEnemiesOnLevel);
+        }
 
         void DestroyedAllEnemiesFromSpawn(EnemySpawnPoint spawnPoint)
         {

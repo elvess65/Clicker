@@ -13,10 +13,12 @@ namespace clicker.general.ui
         public UIWindowsManager WindowsManager { get; private set; }
         public UIElement_WeaponSlotsController WeaponSlotController { get; private set; }
         public UIElement_FoodSlotsController FoodSlotController { get; private set; }
+        public UIElement_LevelProgressBar LevelProgressBar { get; private set; }
 
         [Header("Buttons")]
         public Button Button_ShowCraft;
         [Header("UI Parents")]
+        public RectTransform UIParent_MiddleTop;
         public RectTransform UIParent_MiddleLeft;
         public RectTransform UIParent_MiddleRight;
 
@@ -56,6 +58,12 @@ namespace clicker.general.ui
                                      GameManager.Instance.Manager_Battle.SelectedWeaponManager.TotalAddSlot);
 
             return addWeaponSlotButton;
+        }
+
+        public void CreateLevelProgressBar(RectTransform parent)
+        {
+            LevelProgressBar = Instantiate(WindowsManager.UIElement_LevelProgressBarPrefab, parent);
+            LevelProgressBar.Init();
         }
 
 
