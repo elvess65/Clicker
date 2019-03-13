@@ -105,18 +105,36 @@ namespace clicker.general
         {
             GameIsActive = false;
 
-            //Очистить прогресс игрока
-            DataManager.Instance.ResetProgress();
-
             //Спрятать все окна
             Manager_UI.WindowsManager.HideAllWindows();
 
             //Показать окно
-            UIWindow_CloseButton wnd = Manager_UI.WindowsManager.ShowWindow(Manager_UI.WindowsManager.UIWindow_GameOver) as UIWindow_CloseButton;
-            wnd.Button_Close.onClick.AddListener(() =>
+            UIWindow_GameOver wnd = Manager_UI.WindowsManager.ShowWindow(Manager_UI.WindowsManager.UIWindow_GameOver) as UIWindow_GameOver;
+
+            bool canWatchAd = Random.Range(0, 100) > 50;
+            int childrenAmount = DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(DataTableItems.ItemTypes.Child);
+            wnd.SetContinueStatus(canWatchAd, childrenAmount);
+
+            wnd.OnButtonClosePress += () =>
             {
-                ReloadLevel();
-            });
+                //Очистить прогресс игрока
+                DataManager.Instance.ResetProgress();
+            };
+            wnd.OnButtonContinueAdPress += () =>
+            {
+                //TODO
+                //Show Ad
+
+                Debug.Log("Show ad");
+            };
+            wnd.OnButtonContinueChildPress += () =>
+            {
+                DataManager.Instance.PlayerAccount.Inventory.RemoveItem(DataTableItems.ItemTypes.Child);
+
+                Debug.Log("Remove child");
+            };
+
+            wnd.OnUIHided += () => { ReloadLevel(); };
         }
 
         public void HandleFinishLevel()
