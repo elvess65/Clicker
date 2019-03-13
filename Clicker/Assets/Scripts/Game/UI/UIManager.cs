@@ -60,10 +60,10 @@ namespace clicker.general.ui
             return addWeaponSlotButton;
         }
 
-        public void CreateLevelProgressBar(RectTransform parent)
+        public void CreateLevelProgressBar(RectTransform parent, int level)
         {
             LevelProgressBar = Instantiate(WindowsManager.UIElement_LevelProgressBarPrefab, parent);
-            LevelProgressBar.Init();
+            LevelProgressBar.Init(level);
         }
 
 

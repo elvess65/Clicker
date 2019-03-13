@@ -65,7 +65,7 @@ namespace clicker.battle.level
             }
 
             //UI
-            GameManager.Instance.Manager_UI.CreateLevelProgressBar(GameManager.Instance.Manager_UI.UIParent_MiddleTop);
+            GameManager.Instance.Manager_UI.CreateLevelProgressBar(GameManager.Instance.Manager_UI.UIParent_MiddleTop, level);
         }
 
         public void StartSpawn()

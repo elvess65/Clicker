@@ -10,9 +10,12 @@ namespace clicker.general.ui
         public Image Image_Icon;
         [Header("Texts")]
         public Text Text_Progress;
+        public Text Text_Level;
 
-        public void Init()
+        public void Init(int level)
         {
+            Text_Level.text = string.Format("Lvl. {0}", level + 1);
+
             SetProgress(0);
         }
 
