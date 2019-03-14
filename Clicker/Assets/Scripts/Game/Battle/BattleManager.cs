@@ -46,7 +46,7 @@ namespace clicker.battle
             m_LevelController = GetComponent<level.LevelController>();
             m_LevelController.OnLevelFinished += LevelFinishedHandler;
             m_LevelController.Init(age, level);
-            m_LevelController.StartSpawn();
+            //m_LevelController.StartSpawn();
         }
 
 

@@ -1186,6 +1186,7 @@ GameObject:
   - component: {fileID: 1111469507}
   - component: {fileID: 1111469508}
   - component: {fileID: 1111469509}
+  - component: {fileID: 1111469510}
   m_Layer: 0
   m_Name: Tools
   m_TagString: Untagged
@@ -1229,6 +1230,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe9116a2676b75b47a67fe2dbc307786, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1111469510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1111469506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94186bf355472fd4ba6e90e6f9a511da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1215804866
@@ -2350,6 +2363,7 @@ MonoBehaviour:
   Manager_Input: {fileID: 168950209}
   AssetsLibrary: {fileID: 943816935}
   CraftItemFactory: {fileID: 1111469509}
+  AutoCraftItemsController: {fileID: 1111469510}
   TimeMultiplayerController: {fileID: 1111469508}
 --- !u!4 &1961181557
 Transform:

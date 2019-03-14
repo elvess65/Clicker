@@ -26,6 +26,7 @@ namespace clicker.general
         public InputManager Manager_Input;
         public AssetsLibrary AssetsLibrary;
         public ItemsFactory CraftItemFactory;
+        public AutoCraftController AutoCraftItemsController;
         public TimeMultiplayerController TimeMultiplayerController;
 
         public bool GameIsActive { get; private set; }
@@ -55,6 +56,9 @@ namespace clicker.general
             //Изменение множителя времени
             TimeMultiplayerController.OnMultiplayerValueChanged += MultiplayerValueChanged_Handler;
             TimeMultiplayerController.Init();
+
+            //Инициализация автоматического добывания
+            AutoCraftItemsController.Init(2, 1);
 
             //Инициализация боя
             Manager_Battle.Init(DataManager.Instance.PlayerAccount.HP, DataManager.Instance.PlayerAccount.Age, DataManager.Instance.PlayerAccount.Level);
