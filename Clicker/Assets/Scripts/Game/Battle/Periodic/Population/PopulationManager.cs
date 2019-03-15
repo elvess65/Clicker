@@ -139,7 +139,7 @@ namespace clicker.battle
                     return PeriodResultStates.PopulationReduce;
                 }
                 else
-                    m_PopulationPeriod[itemType].StopPerdiod(); //Остановить период
+                    m_PopulationPeriod[itemType].StopPeriod(); //Остановить период
             }
 
             return PeriodResultStates.PopulationLoose;

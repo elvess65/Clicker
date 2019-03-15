@@ -39,6 +39,7 @@ namespace clicker.general.ui.windows
                         UIElement_CraftItem item = Instantiate(GameManager.Instance.Manager_UI.WindowsManager.UIElement_CraftItemPrefab, ItemsParent);
                         item.Init(type, DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(type), GameManager.Instance.CraftItemFactory.GetProgressForItem(type), itemData.RequiredItems);
                         item.OnItemPress += Item_PressHanlder;
+                        item.OnAutoCraftToggled += ItemToggle_TryChangeValueHandle;
 
                         //Добавить объект в словарь для последующего доступа
                         if (!m_Items.ContainsKey(type))
@@ -76,6 +77,49 @@ namespace clicker.general.ui.windows
                 GameManager.Instance.CraftItemFactory.AddTickToItem(type);
             else
                 Debug.LogError("Cant craft item");
+        }
+
+        protected virtual void ItemToggle_TryChangeValueHandle(DataTableItems.ItemTypes type, bool isToggled, UIElement_Toggle sender)
+        {
+            //TODO
+            //Remove sender
+            //Replace sender with func
+
+            //Если необходимо добавить предмет в автодобычу
+            if (isToggled)
+            {
+                if (!DataManager.Instance.PlayerAccount.Inventory.CanCraftItem(type))
+                {
+                    Debug.LogError("CANT CRAFT ITEM");
+                    sender.PlayErrorAnimation();
+                    return;
+                }
+
+                //Попытаться добавить предмет
+                //Если нельзя
+                if (!GameManager.Instance.AutoCraftItemsController.AddItemToProcessing(type))
+                {
+                    Debug.LogError("CANNT PROCESS ITEM. MAX ITEMS PROCESSED");
+                    sender.PlayErrorAnimation();
+                }
+                else //Если можно
+                {
+                    //Изменить состояние Toggle
+                    sender.SetValue(isToggled);
+                }
+            }
+            else //Если необходимо убрать предмет из автодобычи
+            {
+                //Убрать предмет из автодобычи
+                GameManager.Instance.AutoCraftItemsController.RemoveItemFromProcessing(type);
+
+                //Изменить состояние Toggle
+                sender.SetValue(isToggled);
+                
+            }
+
+            //В любом случае обнулить прогресс индикатора тика автодобычи
+            SetAutoCraftTickProgress(type, 0);
         }
 
         /// <summary>
@@ -124,6 +168,10 @@ namespace clicker.general.ui.windows
 
             //Подписаться на событие создания предмета
             GameManager.Instance.CraftItemFactory.OnItemCrafted += ItemCrafted_Handler;
+
+            GameManager.Instance.AutoCraftItemsController.OnProgress += AutoCraftProgressChangedHandler;
+            GameManager.Instance.AutoCraftItemsController.OnPeriodFinished_Success += AutoCraftPeriodFinishedHandler_Success;
+            GameManager.Instance.AutoCraftItemsController.OnPeriodFinished_Error += AutoCraftPeriodFinishedHandler_Error;
         }
 
         /// <summary>
@@ -133,8 +181,13 @@ namespace clicker.general.ui.windows
         {
             //Отписаться на событие добавления тиков
             GameManager.Instance.CraftItemFactory.OnTickToItemAdded -= TickToItemAdded_Handler;
+            
             //Отписаться на событие создания предмета
             GameManager.Instance.CraftItemFactory.OnItemCrafted -= ItemCrafted_Handler;
+
+            GameManager.Instance.AutoCraftItemsController.OnProgress -= AutoCraftProgressChangedHandler;
+            GameManager.Instance.AutoCraftItemsController.OnPeriodFinished_Success -= AutoCraftPeriodFinishedHandler_Success;
+            GameManager.Instance.AutoCraftItemsController.OnPeriodFinished_Error -= AutoCraftPeriodFinishedHandler_Error;
         }
 
 
@@ -152,6 +205,32 @@ namespace clicker.general.ui.windows
                 //Обновить состояние необходимых для создания предмета предметов
                 item.UpdateRequireItemsState();
             }
+        }
+
+
+        void AutoCraftProgressChangedHandler(DataTableItems.ItemTypes type, float progress)
+        {
+            SetAutoCraftTickProgress(type, progress);
+        }
+
+        void AutoCraftPeriodFinishedHandler_Success(DataTableItems.ItemTypes type)
+        {
+            SetAutoCraftTickProgress(type, 0);
+        }
+
+        void AutoCraftPeriodFinishedHandler_Error(DataTableItems.ItemTypes type)
+        {
+            //TODO
+            //Replace with func
+
+            if (m_Items.ContainsKey(type))
+                m_Items[type].Toggle_AutoCraft.PlayErrorAnimation();
+        }
+
+        void SetAutoCraftTickProgress(DataTableItems.ItemTypes type, float progress)
+        {
+            if (m_Items.ContainsKey(type))
+                m_Items[type].SetAutoCraftProgress(progress);
         }
     }
 }

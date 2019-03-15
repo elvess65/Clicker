@@ -42,7 +42,7 @@ namespace clicker.battle
             m_LerpPeriod.Start();
         }
 
-        public void StopPerdiod()
+        public void StopPeriod()
         {
             m_LerpPeriod.Stop();
             m_WasStopped = true;

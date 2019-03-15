@@ -12,6 +12,7 @@ namespace clicker.general.ui
     /// </summary>
     public class UIElement_CraftItem : UIElement_ClickableItem, IDragHandler, IPointerDownHandler, IPointerUpHandler
     {
+        public System.Action<DataTableItems.ItemTypes, bool, UIElement_Toggle> OnAutoCraftToggled;
         public System.Action<DataTableItems.ItemTypes> OnItemPress;
         public System.Action<PointerEventData, DataTableItems.ItemTypes> OnPoinerDownEvent;
         public System.Action<PointerEventData, DataTableItems.ItemTypes> OnDragEvent;
@@ -25,6 +26,10 @@ namespace clicker.general.ui
         public Image Image_Progress;
         [Header("Required Items")]
         public RectTransform RequiredItemsParent;
+        [Header("Auto Craft")]
+        public UIElement_Toggle Toggle_AutoCraft;
+        public Image Image_AutoCraftProgress;
+
         private float m_CurTime;
         private float m_TotalTime = 0.2f;
         private bool m_IsAnimating = false;
@@ -72,6 +77,12 @@ namespace clicker.general.ui
                     m_RequiredItems.Add(requiredItems[i].Type, item);
                 }
             }
+
+            if (Toggle_AutoCraft != null)
+                Toggle_AutoCraft.OnTryChangeValue += Toggle_TryChangeValueHandler;
+
+            if (Image_AutoCraftProgress != null)
+                Image_AutoCraftProgress.fillAmount = 0;
 
             base.Init();
         }
@@ -130,6 +141,14 @@ namespace clicker.general.ui
             Image_Progress.fillAmount = progress;
         }
 
+        /// <summary>
+        /// Задать прогресс тику автодобывания
+        /// </summary>
+        public void SetAutoCraftProgress(float progress)
+        {
+            Image_AutoCraftProgress.fillAmount = progress;
+        }
+
 
         public void OnPointerDown(PointerEventData eventData)
         {
@@ -156,6 +175,16 @@ namespace clicker.general.ui
                 return;
 
             OnItemPress?.Invoke(Type);
+        }
+
+        /// <summary>
+        /// Обработчик выбора калочки для добавления в автосбор
+        /// </summary>
+        void Toggle_TryChangeValueHandler(UIElement_Toggle sender, bool isToggled)
+        {
+            //TODO
+            //Remove sender
+            OnAutoCraftToggled?.Invoke(Type, isToggled, sender);
         }
 
         /// <summary>
