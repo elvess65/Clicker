@@ -19,9 +19,12 @@ namespace FrameworkPackage.UI.Windows
         public Button Button_Main;
         [Header("Settings")]
         public bool IsToggled = false;
+        public Animator AnimationController;
 
         private bool m_Value = false;
 
+        private const string m_ANIMATION_KEY_SUCCESS = "Success";
+        private const string m_ANIMATION_KEY_ERROR = "Error";
 
         public void Init()
         {
@@ -37,9 +40,16 @@ namespace FrameworkPackage.UI.Windows
             UpdateVisual();
         }
 
+        public void PlaySuccessAnimation()
+        {
+            if (AnimationController != null)
+                AnimationController.SetTrigger(m_ANIMATION_KEY_SUCCESS);
+        }
+
         public void PlayErrorAnimation()
         {
-            StartCoroutine(Wait());
+            if (AnimationController != null)
+                AnimationController.SetTrigger(m_ANIMATION_KEY_ERROR);
         }
 
 
@@ -51,15 +61,6 @@ namespace FrameworkPackage.UI.Windows
         void UpdateVisual()
         {
             Image_Checkbox.gameObject.SetActive(m_Value);
-        }
-
-        IEnumerator Wait()
-        {
-            Image bg = Image_Checkbox.transform.parent.gameObject.GetComponent<Image>();
-            Color initColor = bg.color;
-            bg.color = Color.red;
-            yield return new WaitForSeconds(0.2f);
-            bg.color = initColor;
         }
     }
 }

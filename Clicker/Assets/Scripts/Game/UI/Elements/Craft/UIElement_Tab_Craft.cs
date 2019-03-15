@@ -97,7 +97,7 @@ namespace clicker.general.ui.windows
                 if (!DataManager.Instance.PlayerAccount.Inventory.CanCraftItem(type))
                 {
                     Debug.LogError("CANT CRAFT ITEM");
-                    PlayAutoCraftErrorAnimation(type);
+                    PlayAutoCraftAnimation_Error(type);
                     return;
                 }
 
@@ -106,7 +106,7 @@ namespace clicker.general.ui.windows
                 if (!GameManager.Instance.AutoCraftItemsController.AddItemToProcessing(type))
                 {
                     Debug.LogError("CANNT PROCESS ITEM. MAX ITEMS PROCESSED");
-                    PlayAutoCraftErrorAnimation(type);
+                    PlayAutoCraftAnimation_Error(type);
                 }
                 else //Если можно
                 {
@@ -230,11 +230,12 @@ namespace clicker.general.ui.windows
         void AutoCraft_PeriodFinished_Success_Handler(DataTableItems.ItemTypes type)
         {
             SetAutoCraftTickProgress(type, 0);
+            PlayAutoCraftAnimation_Success(type);
         }
 
         void AutoCraft_PeriodFinished__Error_Handler(DataTableItems.ItemTypes type)
         {
-            PlayAutoCraftErrorAnimation(type);
+            PlayAutoCraftAnimation_Error(type);
         }
 
 
@@ -248,13 +249,23 @@ namespace clicker.general.ui.windows
         }
 
         /// <summary>
+        /// Проигрыать анимацию успеха автодобывания
+        /// </summary>
+        void PlayAutoCraftAnimation_Success(DataTableItems.ItemTypes type)
+        {
+            if (m_Items.ContainsKey(type))
+                m_Items[type].Toggle_AutoCraft.PlaySuccessAnimation();
+        }
+
+        /// <summary>
         /// Проигрыать анимацию ошибки автодобывания
         /// </summary>
-        void PlayAutoCraftErrorAnimation(DataTableItems.ItemTypes type)
+        void PlayAutoCraftAnimation_Error(DataTableItems.ItemTypes type)
         {
             if (m_Items.ContainsKey(type))
                 m_Items[type].Toggle_AutoCraft.PlayErrorAnimation();
         }
+
 
         /// <summary>
         /// Изменить состояние Toggle автодобывания
