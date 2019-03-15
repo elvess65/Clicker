@@ -11,7 +11,7 @@ namespace FrameworkPackage.UI.Windows
     [RequireComponent(typeof(Image))]
     public class UIElement_Toggle : MonoBehaviour
     {
-        public System.Action<UIElement_Toggle, bool> OnTryChangeValue;
+        public System.Action<bool> OnTryChangeValue;
 
         [Header("Images")]
         public Image Image_Checkbox;
@@ -22,7 +22,8 @@ namespace FrameworkPackage.UI.Windows
 
         private bool m_Value = false;
 
-        void Start()
+
+        public void Init()
         {
             m_Value = IsToggled;
             SetValue(m_Value);
@@ -30,9 +31,21 @@ namespace FrameworkPackage.UI.Windows
             Button_Main.onClick.AddListener(Button_Main_PressHandler);
         }
 
+        public void SetValue(bool isToggled)
+        {
+            m_Value = isToggled;
+            UpdateVisual();
+        }
+
+        public void PlayErrorAnimation()
+        {
+            StartCoroutine(Wait());
+        }
+
+
         void Button_Main_PressHandler()
         {
-            OnTryChangeValue?.Invoke(this, !m_Value);
+            OnTryChangeValue?.Invoke(!m_Value);
         }
 
         void UpdateVisual()
@@ -47,18 +60,6 @@ namespace FrameworkPackage.UI.Windows
             bg.color = Color.red;
             yield return new WaitForSeconds(0.2f);
             bg.color = initColor;
-        }
-
-
-        public void SetValue(bool isToggled)
-        {
-            m_Value = isToggled;
-            UpdateVisual();
-        }
-
-        public void PlayErrorAnimation()
-        {
-            StartCoroutine(Wait());
         }
     }
 }

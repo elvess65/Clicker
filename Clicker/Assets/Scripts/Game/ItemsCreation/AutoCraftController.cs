@@ -91,6 +91,14 @@ namespace clicker.items
             }
         }
 
-        public bool ItemIsProcessed(ItemTypes itemType) => m_ProcessedItems.ContainsKey(itemType);
+        public float GetProcessedItemProgress(ItemTypes itemType)
+        {
+            if (ItemIsProcessing(itemType))
+                return m_ProcessedItems[itemType].Progress;
+
+            return 0;
+        }
+
+        public bool ItemIsProcessing(ItemTypes itemType) => m_ProcessedItems.ContainsKey(itemType);
     }
 }

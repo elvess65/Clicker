@@ -12,7 +12,7 @@ namespace clicker.general.ui
     /// </summary>
     public class UIElement_CraftItem : UIElement_ClickableItem, IDragHandler, IPointerDownHandler, IPointerUpHandler
     {
-        public System.Action<DataTableItems.ItemTypes, bool, UIElement_Toggle> OnAutoCraftToggled;
+        public System.Action<DataTableItems.ItemTypes, bool> OnAutoCraftToggled;
         public System.Action<DataTableItems.ItemTypes> OnItemPress;
         public System.Action<PointerEventData, DataTableItems.ItemTypes> OnPoinerDownEvent;
         public System.Action<PointerEventData, DataTableItems.ItemTypes> OnDragEvent;
@@ -78,9 +78,14 @@ namespace clicker.general.ui
                 }
             }
 
+            //Toggle автокрафта
             if (Toggle_AutoCraft != null)
+            {
                 Toggle_AutoCraft.OnTryChangeValue += Toggle_TryChangeValueHandler;
+                Toggle_AutoCraft.Init();
+            }
 
+            //Прогресс тиков автокрафта
             if (Image_AutoCraftProgress != null)
                 Image_AutoCraftProgress.fillAmount = 0;
 
@@ -180,11 +185,9 @@ namespace clicker.general.ui
         /// <summary>
         /// Обработчик выбора калочки для добавления в автосбор
         /// </summary>
-        void Toggle_TryChangeValueHandler(UIElement_Toggle sender, bool isToggled)
+        void Toggle_TryChangeValueHandler(bool isToggled)
         {
-            //TODO
-            //Remove sender
-            OnAutoCraftToggled?.Invoke(Type, isToggled, sender);
+            OnAutoCraftToggled?.Invoke(Type, isToggled);
         }
 
         /// <summary>
