@@ -84,10 +84,10 @@ namespace clicker.battle
                     GameManager.Instance.Manager_UI.FoodSlotController.UpdateItemAmount(selectedFoodType, amount);
 
                     //Найти UI слот и обновить прогресс
-                    GameManager.Instance.Manager_UI.FoodSlotController.UpdateItemProgress(selectedFoodType, GetFoodProgress(amount)); 
+                    GameManager.Instance.Manager_UI.FoodSlotController.UpdateItemProgress(selectedFoodType, GetFoodProgress(amount));
                 }
 
-                return 10;
+                return 1;
             }
 
             return 0;
@@ -125,7 +125,7 @@ namespace clicker.battle
 
         float GetFoodProgress(int amount)
         {
-            return (float)amount / DataManager.Instance.PlayerAccount.Inventory.FoodState.MaxFoodInSlot;
+            return (float)amount / DataManager.Instance.PlayerAccount.Inventory.BagsState.GetBagSize(DataTableItems.ItemFilterTypes.Food);
         }
     }
 }

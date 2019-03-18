@@ -49,7 +49,7 @@ namespace clicker.battle
         {
             try
             {
-                //Если пытаемся добавить прредмет, а такое же оружие есть в другом слоте
+                //Если пытаемся добавить предмет, а такой же есть в другом слоте - убираем его с занятого слота
                 for (int i = 0; i < GetTargetItemList().Count; i++)
                 {
                     if (i != index && GetTargetItemList()[i].Equals(weaponType))

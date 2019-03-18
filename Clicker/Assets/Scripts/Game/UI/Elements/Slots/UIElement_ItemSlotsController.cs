@@ -40,8 +40,8 @@ namespace clicker.general.ui
         {
             for (int i = 0; i < selectedItemTypes.Length; i++)
             {
-                var amountAndDurData = GetAmountAndProgressForItem(selectedItemTypes[i]);
-                ItemSlots[i].SetItem(selectedItemTypes[i], amountAndDurData.amount, amountAndDurData.progress);
+                var amountAndProgressData = GetAmountAndProgressForItem(selectedItemTypes[i]);
+                ItemSlots[i].SetItem(selectedItemTypes[i], amountAndProgressData.amount, amountAndProgressData.progress);
             }
         }
 

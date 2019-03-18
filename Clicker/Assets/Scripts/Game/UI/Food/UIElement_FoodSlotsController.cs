@@ -16,12 +16,13 @@ namespace clicker.general.ui
         protected override (int amount, float progress) GetAmountAndProgressForItem(DataTableItems.ItemTypes type)
         {
             int amount = DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(type);
+
             return (amount, GetFoodProgress(amount));
         }
 
         float GetFoodProgress(int amount)
         {
-            return (float)amount / DataManager.Instance.PlayerAccount.Inventory.FoodState.MaxFoodInSlot;
+            return (float)amount / DataManager.Instance.PlayerAccount.Inventory.BagsState.GetBagSize(DataTableItems.ItemFilterTypes.Food);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using clicker.account;
 using clicker.datatables;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -33,11 +34,13 @@ namespace clicker.general
             StartCoroutine(Wait());
         }
 
-        public static DataTableItems.ItemTypes[] SELECTED_WPN;  //Иммитация сохранения
-        public static DataTableItems.ItemTypes[] SELECTED_FOOD; //Иммитация сохранения
-        public static int PLAYER_HP = 20;                       //Иммитация сохранения
-        public static int CRAFT_TIME = 15;                      //Иммитация сохранения
-        public static int MAX_FOOD_IN_SLOT = 5;                 //Иммитация сохранения
+        //Иммитация сохранения
+        public static DataTableItems.ItemTypes[] SELECTED_WPN;  
+        public static DataTableItems.ItemTypes[] SELECTED_FOOD; 
+        public Dictionary<DataTableItems.ItemFilterTypes, int> BAGS;
+        public static int PLAYER_HP = 20;                      
+        public static int CRAFT_TIME = 15;                      
+        public static int MAX_FOOD_IN_SLOT = 5;                
 
         void Initialize()
         {
@@ -56,6 +59,10 @@ namespace clicker.general
             for (int i = 0; i < SELECTED_FOOD.Length; i++)
                 SELECTED_FOOD[i] = DataTableItems.ItemTypes.Max;
 
+            defaultSlotsCount = 3;
+            BAGS = new Dictionary<DataTableItems.ItemFilterTypes, int>();
+            BAGS.Add(DataTableItems.ItemFilterTypes.Food, defaultSlotsCount);
+
             //Инициализировать загрузчики данных
             m_ItemsDataLoader = new ItemsDataLoader_Local();
             m_WeaponsDataLoader = new WeaponsDataLoader_Local();
@@ -69,7 +76,7 @@ namespace clicker.general
             DataTablePeriodic.SetData(m_PeriodicDataLoader.GetData(accountID));
 
             //Создать акканту
-            PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN, SELECTED_FOOD, MAX_FOOD_IN_SLOT);
+            PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN, SELECTED_FOOD, BAGS);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 1);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Berries, 3);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.GrilledMeat, 3);
@@ -99,8 +106,12 @@ namespace clicker.general
             for (int i = 0; i < SELECTED_FOOD.Length; i++)
                 SELECTED_FOOD[i] = DataTableItems.ItemTypes.Max;
 
+            defaultSlotsCount = 3;
+            BAGS = new Dictionary<DataTableItems.ItemFilterTypes, int>();
+            BAGS.Add(DataTableItems.ItemFilterTypes.Food, defaultSlotsCount);
+
             //Создать акканту
-            PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN, SELECTED_FOOD, MAX_FOOD_IN_SLOT);
+            PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN, SELECTED_FOOD, BAGS);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 1);
         }
 

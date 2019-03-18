@@ -12,15 +12,13 @@ namespace clicker.battle
         public override void Init()
         {
             //UI
-            GameManager.Instance.Manager_UI.CreateWeaponSlots(DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray(), 
-                                                              GameManager.Instance.Manager_UI.UIParent_MiddleLeft, 
-                                                              true, 
+            GameManager.Instance.Manager_UI.CreateWeaponSlots(DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray(),
+                                                              GameManager.Instance.Manager_UI.UIParent_MiddleLeft,
+                                                              true,
                                                               true);
 
             //Подписаться на события изменения состояния оружия
-            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnUseWeapon += UseWeaponHandler;
-            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnWeaponBroken += BrokeWeaponHandler;
-            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnRemoveWeapon += RemoveWeaponHandler;
+            SubcribeForGlobalEvents();
 
             //Подписать UI на событие
             OnAddItem += GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemsState;
@@ -28,13 +26,6 @@ namespace clicker.battle
             OnAddSlot += GameManager.Instance.Manager_UI.WeaponSlotController.AddSlot;
 
             base.Init();
-        }
-
-        public void UnscribeFromGlobalEvents()
-        {
-            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnUseWeapon -= UseWeaponHandler;
-            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnWeaponBroken -= BrokeWeaponHandler;
-            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnRemoveWeapon -= RemoveWeaponHandler;
         }
 
         /// <summary>
@@ -85,6 +76,27 @@ namespace clicker.battle
             }
 
             return strBuilder.ToString();
+        }
+
+
+        public void SubcribeForGlobalEvents()
+        {
+            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnUseWeapon += UseWeaponHandler;
+            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnWeaponBroken += BrokeWeaponHandler;
+            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnRemoveWeapon += RemoveWeaponHandler;
+        }
+
+        public void UnscribeFromGlobalEvents()
+        {
+            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnUseWeapon -= UseWeaponHandler;
+            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnWeaponBroken -= BrokeWeaponHandler;
+            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnRemoveWeapon -= RemoveWeaponHandler;
+        }
+
+
+        protected override List<DataTableItems.ItemTypes> GetTargetItemList()
+        {
+            return DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon;
         }
 
 
@@ -151,18 +163,11 @@ namespace clicker.battle
             OnRemoveItem?.Invoke(DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.ToArray());
         }
 
-
-        protected override List<DataTableItems.ItemTypes> GetTargetItemList()
-        {
-            return DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon;
-        }
-
-
         void Update()
         {
             //Test
             if (Input.GetKeyDown(KeyCode.U))
-                Debug.Log("Take damage: " + UseItem());
+                UseItem();
 
             if (Input.GetKeyDown(KeyCode.S))
                 AddSlot();

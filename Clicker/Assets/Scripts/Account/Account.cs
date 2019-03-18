@@ -21,7 +21,7 @@ namespace clicker.account
         public int Level { get; private set; }
         
         public Account(int accountID, int hp, int craftTime, DataTableLevels.AgeTypes age, int level, 
-            DataTableItems.ItemTypes[] selectedWeapon, DataTableItems.ItemTypes[] selectedFood, int maxFoodInSlot)
+            DataTableItems.ItemTypes[] selectedWeapon, DataTableItems.ItemTypes[] selectedFood, Dictionary<ItemFilterTypes, int> bags)
         {
             //Base
             AccountID = accountID;
@@ -33,7 +33,7 @@ namespace clicker.account
             Level = level;
 
             //Other
-            Inventory = new AccountInventory(selectedWeapon, selectedFood, maxFoodInSlot);
+            Inventory = new AccountInventory(selectedWeapon, selectedFood, bags);
         }
 
         public void IncrementAge()
@@ -61,17 +61,17 @@ namespace clicker.account
             private Dictionary<ItemTypes, ItemAmountContainer> m_Items;
 
             public AccountWeapons WeaponState { get; private set; }
-            public AccountFoods FoodState { get; private set; }
+            public AccountBags BagsState { get; private set; }
 
             public List<DataTableItems.ItemTypes> SelectedWeapon { get; private set; }
             public List<DataTableItems.ItemTypes> SelectedFood { get; private set; }
 
             public const ItemTypes DEFAULT_ITEM = ItemTypes.Hand;
 
-            public AccountInventory(DataTableItems.ItemTypes[] selectedWeapon, DataTableItems.ItemTypes[] selectedFood, int maxFoodInSlot)
+            public AccountInventory(DataTableItems.ItemTypes[] selectedWeapon, DataTableItems.ItemTypes[] selectedFood, Dictionary<ItemFilterTypes, int> bags)
             {
-                //Состояние еды
-                FoodState = new AccountFoods(maxFoodInSlot);
+                //Состояние сумок
+                BagsState = new AccountBags(bags);
 
                 //Состояние оружия
                 WeaponState = new AccountWeapons();
@@ -94,10 +94,6 @@ namespace clicker.account
                 AddItem(DEFAULT_ITEM);
             }
 
-            void WeaponBrokenHandler(ItemTypes type)
-            {
-                RemoveItem(type);
-            }
 
             /// <summary>
             /// Получить количество определенного предмета
@@ -219,6 +215,12 @@ namespace clicker.account
                 }
 
                 return result.ToArray();
+            }
+
+
+            void WeaponBrokenHandler(ItemTypes type)
+            {
+                RemoveItem(type);
             }
 
             public override string ToString()
@@ -393,15 +395,23 @@ namespace clicker.account
             }
 
             /// <summary>
-            /// Состояние еды в игрока
+            /// Сумки для вещей игрока
             /// </summary>
-            public class AccountFoods
+            public class AccountBags
             {
-                public int MaxFoodInSlot { get; private set; }
+                private Dictionary<ItemFilterTypes, int> m_Bags;
 
-                public AccountFoods(int maxFoodInSlot)
+                public AccountBags(Dictionary<ItemFilterTypes, int> bags)
                 {
-                    MaxFoodInSlot = maxFoodInSlot;
+                    m_Bags = new Dictionary<ItemFilterTypes, int>(bags);
+                }
+
+                public int GetBagSize(ItemFilterTypes itemFilterType)
+                {
+                    if (m_Bags.ContainsKey(itemFilterType))
+                        return m_Bags[itemFilterType];
+
+                    return 0;
                 }
             }
         }
