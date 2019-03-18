@@ -221,6 +221,9 @@ namespace clicker.account
             void WeaponBrokenHandler(ItemTypes type)
             {
                 RemoveItem(type);
+
+                if (HasItem(type))
+                    UnityEngine.Debug.Log("Still have items");
             }
 
             public override string ToString()
