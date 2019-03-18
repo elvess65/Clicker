@@ -26,6 +26,7 @@ namespace FrameworkPackage.UI.Windows
         [Header(" - Craft")]
         public UIElement_CraftItem UIElement_CraftItemPrefab;
         public UIElement_CraftItem_RequireItem UIElement_CraftRequireItemPrefab;
+        public UIElement_CraftItem_AbsorbItem UIElement_CraftAbsorbItemPrefab;
 
         [Header(" - Weapon")]
         public UIElement_WeaponSlotsController UIElement_WeaponSlotControllerPrefab;

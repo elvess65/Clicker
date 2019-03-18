@@ -171,7 +171,6 @@ namespace clicker.general.ui.windows
         {
             //Подписаться на событие добавления тиков
             GameManager.Instance.CraftItemFactory.OnTickToItemAdded += TickToItemAdded_Handler;
-
             //Подписаться на событие создания предмета
             GameManager.Instance.CraftItemFactory.OnItemCrafted += ItemCrafted_Handler;
 

@@ -62,7 +62,7 @@ namespace clicker.general.ui
             //Текущий прогресс создания
             SetItemProgress(progress);
 
-            //Вывод необходимый для создания предметов
+            //Вывод необходимых для создания предметов
             m_RequiredItems = new Dictionary<DataTableItems.ItemTypes, UIElement_CraftItem_RequireItem>();
 
             if (requiredItems.Length == 0)

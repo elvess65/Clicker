@@ -7,6 +7,7 @@ namespace clicker.battle
 {
     public class PopulationManager : MonoBehaviour
     {
+        public System.Action OnPeriodChangedItemsAmount;
         public System.Action<DataTableItems.ItemTypes, float> OnPopulationProgressChanged;
         public System.Action<DataTableItems.ItemTypes> OnPeriodFinishedWithSuccess;
         public System.Action<DataTableItems.ItemTypes> OnPeriodFinishedWithPopulationReduce;
@@ -46,7 +47,7 @@ namespace clicker.battle
                 PeriodicManager pManager = gameObject.AddComponent<PeriodicManager>();
 
                 //Событие изменения прогресса периода
-                pManager.OnProgress += (float progress) => 
+                pManager.OnProgress += (float progress) =>
                 { OnPopulationProgressChanged?.Invoke(itemType, progress); };
 
                 //Сообытие окончания периода
@@ -55,7 +56,7 @@ namespace clicker.battle
                     PeriodResultStates periodResult = PeriodFinishedHandler(itemType);
 
                     //Вызов событий для результатов завершения периода
-                    switch(periodResult)
+                    switch (periodResult)
                     {
                         case PeriodResultStates.Success:
                             OnPeriodFinishedWithSuccess?.Invoke(itemType);
@@ -68,15 +69,22 @@ namespace clicker.battle
                             break;
                     }
                 };
-    
+
                 pManager.Init(m_PERIOD, true, GetMultiplayer(itemType));
                 pManager.StartPeriod();
 
                 //Добавить в словарь тип населения
                 m_PopulationPeriod.Add(itemType, pManager);
             }
-            else //Если такой тип населения уже есть - изменить множитель периода
+            else //Если такой тип населения уже есть 
+            {
+                //Если период уже останавливался - запустить
+                if (m_PopulationPeriod[itemType].WasStopped)
+                    m_PopulationPeriod[itemType].StartPeriod();
+
+                //Изменить множитель периода
                 m_PopulationPeriod[itemType].SetMultiplyer(GetMultiplayer(itemType));
+            }
         }
 
         /// <summary>
@@ -107,12 +115,12 @@ namespace clicker.battle
             bool hasEnoughtItems = true;
             DataTableItems.Item itemData = DataTableItems.GetItemDataByType(itemType);
 
-            //Проверить, есть ли достаточное количество предметов для следующего периода
+            //Проверить, есть ли достаточное количество предметов для следующего периода для всего населения
             for (int i = 0; i < itemData.RequiredItems.Length; i++)
             {
-                if (!DataManager.Instance.PlayerAccount.Inventory.HasAmountOfItem(itemData.RequiredItems[i].Type, itemData.RequiredItems[i].Amount))
+                if (!DataManager.Instance.PlayerAccount.Inventory.HasAmountOfItem(itemData.RequiredItems[i].Type, 
+                    itemData.RequiredItems[i].Amount * DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(itemType)))
                 {
-                    Debug.LogError("NO ITEMS FOR NEXT PERDIOD");
                     hasEnoughtItems = false;
                     break;
                 }
@@ -121,8 +129,8 @@ namespace clicker.battle
             //Если есть достаточное количество предметов, необходимых для поддержания периода - отнять
             if (hasEnoughtItems)
             {
-                for (int i = 0; i < itemData.RequiredItems.Length; i++)
-                    DataManager.Instance.PlayerAccount.Inventory.RemoveItem(itemData.RequiredItems[i].Type, itemData.RequiredItems[i].Amount);
+                //Снять ресурсы, которые необходимы для поддержки текущего количества населения
+                RemoveAbsorbedItems(itemData, itemType);
 
                 return PeriodResultStates.Success;
             }
@@ -131,9 +139,13 @@ namespace clicker.battle
                 //Уменьшить количество населения
                 DataManager.Instance.PlayerAccount.Inventory.RemoveItem(itemType);
 
-                //Если еще есть население - пересчитать множитель 
+                //Если еще есть население 
                 if (DataManager.Instance.PlayerAccount.Inventory.HasItem(itemType))
                 {
+                    //Снять ресурсы, которые необходимы для поддержки текущего количества населения
+                    RemoveAbsorbedItems(itemData, itemType);
+
+                    //Пересчитать множитель 
                     m_PopulationPeriod[itemType].SetMultiplyer(GetMultiplayer(itemType));
 
                     return PeriodResultStates.PopulationReduce;
@@ -143,6 +155,17 @@ namespace clicker.battle
             }
 
             return PeriodResultStates.PopulationLoose;
+        }
+
+        void RemoveAbsorbedItems(DataTableItems.Item itemData, DataTableItems.ItemTypes itemType)
+        {
+            for (int i = 0; i < itemData.RequiredItems.Length; i++)
+            {
+                DataManager.Instance.PlayerAccount.Inventory.RemoveItem(itemData.RequiredItems[i].Type,
+                            itemData.RequiredItems[i].Amount * DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(itemType));
+            }
+
+            OnPeriodChangedItemsAmount?.Invoke();
         }
 
         float GetMultiplayer(DataTableItems.ItemTypes itemType)

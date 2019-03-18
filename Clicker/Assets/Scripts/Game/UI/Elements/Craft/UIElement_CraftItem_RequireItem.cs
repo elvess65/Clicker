@@ -5,29 +5,39 @@ using UnityEngine.UI;
 namespace clicker.general.ui
 {
     /// <summary>
-    /// UI необходимого для создания предмета обїекта
+    /// UI необходимого для создания предмета объекта
     /// </summary>
     public class UIElement_CraftItem_RequireItem : MonoBehaviour
     {
         public Text Text_RequireItem;
 
-        private DataTableItems.ItemTypes m_Type;
-        private int m_Amount;
+        public DataTableItems.ItemTypes Type { get; private set; }
+        public int Amount { get; private set; }
 
         public void Init(DataTableItems.ItemTypes type, int amount)
         {
-            m_Type = type;
-            m_Amount = amount;
+            Type = type;
+            Amount = amount;
 
-            Text_RequireItem.text = string.Format("{0}: {1}", type, amount);
-
+            ShowAmountText(amount); 
             UpdateState();
         }
 
         public void UpdateState()
         {
-            bool accountHasItem = DataManager.Instance.PlayerAccount.Inventory.HasAmountOfItem(m_Type, m_Amount);
+            UpdateState(Amount);
+        }
+
+
+        protected void UpdateState(int amount)
+        {
+            bool accountHasItem = DataManager.Instance.PlayerAccount.Inventory.HasAmountOfItem(Type, amount);
             Text_RequireItem.color = accountHasItem ? Color.black : Color.red;
+        }
+
+        protected virtual void ShowAmountText(int amount)
+        {
+            Text_RequireItem.text = string.Format("{0}: {1}", Type, amount);
         }
     }
 }

@@ -16,6 +16,7 @@ namespace clicker.battle
 
         public float Progress => m_LerpPeriod.Progress;
         public float Multiplayer { get; private set; }
+        public bool WasStopped => m_WasStopped;
 
         public void Init(float actionPeriod, bool loop, float multiplayer = 1)
         {

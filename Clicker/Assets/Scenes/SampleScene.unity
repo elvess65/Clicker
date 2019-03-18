@@ -1318,6 +1318,8 @@ MonoBehaviour:
     type: 3}
   UIElement_CraftRequireItemPrefab: {fileID: 942627447139561413, guid: 1660f9c374923cc468bca423d3a82234,
     type: 3}
+  UIElement_CraftAbsorbItemPrefab: {fileID: 1992552619845641026, guid: 92aaf0e92582448409be262fc74d1de2,
+    type: 3}
   UIElement_WeaponSlotControllerPrefab: {fileID: 5768915630613340754, guid: 27f24643d8ad76e4f9412dc15de2115c,
     type: 3}
   UIElement_FoodSlotControllerPrefab: {fileID: 7234120580709525529, guid: cd731ee462c6c7347acebd61e1d2f711,

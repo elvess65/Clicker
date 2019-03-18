@@ -66,20 +66,30 @@ namespace clicker.general.ui.windows
 
             //Подписатья на событие добавления оружия
             GameManager.Instance.Manager_Battle.SelectedFoodManager.OnAddItem += UpdateLocalSlotsControllerState;
-
             //Подписатья на событие добавления слота
             GameManager.Instance.Manager_Battle.SelectedFoodManager.OnAddSlot += AddSlotToLocalSlotsController;
+
+            //Подписатся на событие изменения количества предметов периодом потребления населения
+            GameManager.Instance.Manager_Battle.PopulationManager.OnPeriodChangedItemsAmount += PopulationPeriodChangedItemsAmountHandler;
         }
 
         protected override void UnscribeFromEvents()
         {
             base.UnscribeFromEvents();
 
-            //Отписаться от событие добавления оружия
+            //Отписаться от события добавления оружия
             GameManager.Instance.Manager_Battle.SelectedFoodManager.OnAddItem -= UpdateLocalSlotsControllerState;
-
-            //Отписаться от событие добавления слота
+            //Отписаться от события добавления слота
             GameManager.Instance.Manager_Battle.SelectedFoodManager.OnAddSlot -= AddSlotToLocalSlotsController;
+
+            //Отписатся от события изменения количества предметов периодом потребления населения
+            GameManager.Instance.Manager_Battle.PopulationManager.OnPeriodChangedItemsAmount -= PopulationPeriodChangedItemsAmountHandler;
+        }
+
+
+        void PopulationPeriodChangedItemsAmountHandler()
+        {
+            UpdateTabState();
         }
     }
 }

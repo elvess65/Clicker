@@ -72,9 +72,10 @@ namespace clicker.general
             PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN, SELECTED_FOOD, MAX_FOOD_IN_SLOT);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 1);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Berries, 3);
-            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.GrilledMeat, 30);
+            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.GrilledMeat, 3);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Water, 50);
-            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Fire, 10);
+            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Meat, 50);
+            PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Fire, 50);
 
             Debug.Log("Initialize");
         }

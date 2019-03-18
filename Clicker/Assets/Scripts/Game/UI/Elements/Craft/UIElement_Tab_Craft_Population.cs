@@ -1,12 +1,15 @@
 ﻿using clicker.datatables;
 using System.Collections.Generic;
 using UnityEngine;
+using static clicker.datatables.DataTableItems;
 
 namespace clicker.general.ui.windows
 {
     public class UIElement_Tab_Craft_Population : UIElement_Tab_Craft
     {
         public RectTransform ProgressParent;
+
+        private Dictionary<DataTableItems.ItemTypes, UIElement_PopulationProgressItem> m_PopulationUIIems;
 
         public override void InitTab()
         {
@@ -28,11 +31,19 @@ namespace clicker.general.ui.windows
         {
             base.ItemCrafted_Handler(craftedItemType);
 
-            //Добавить население
-            GameManager.Instance.Manager_Battle.PopulationManager.AddPopulation(craftedItemType);
+            DataTableItems.Item itemData = DataTableItems.GetItemDataByType(craftedItemType);
 
-            //Обновить локальную панель 
-            UpdatePopulationItems();
+            //Если созданный предмет удовлетворяет текущему фильтру - добавить население
+            if (itemData.MatchFilter(ItemFilterTypes.Population))
+            {
+                //Добавить население
+                GameManager.Instance.Manager_Battle.PopulationManager.AddPopulation(craftedItemType);
+
+                //Обновить локальную панель 
+                UpdatePopulationItems();
+            }
+            else //Если был создан какой-то другой предмет - обновить текущее состояние вкладки
+                UpdateTabState();
         }
 
         protected override void SubscribeForEvents()
@@ -55,13 +66,21 @@ namespace clicker.general.ui.windows
             GameManager.Instance.Manager_Battle.PopulationManager.OnPeriodFinishedWithPopulationLose -= PopulationPerdionFinished_PopulationLose;
         }
 
+        protected override void UpdateTabState()
+        {
+            base.UpdateTabState();
 
-        private Dictionary<DataTableItems.ItemTypes, UIElement_PopulationProgressItem> m_PopulationUIIems;
+            //Обновить всем UI элементам населения состояние потребляемых ресурсов
+            UpdateAbsorbedResourceItems();
+        }
+
+
         void UpdatePopulationItems()
         {
             if (m_PopulationUIIems == null)
                 m_PopulationUIIems = new Dictionary<DataTableItems.ItemTypes, UIElement_PopulationProgressItem>();
 
+            //Пройтись по всему доступному населению
             DataTableItems.ItemTypes[] population = DataManager.Instance.PlayerAccount.Inventory.GetItemsByFilterType(DataTableItems.ItemFilterTypes.Population);
             for (int i = 0; i < population.Length; i++)
             {
@@ -71,17 +90,22 @@ namespace clicker.general.ui.windows
                 if (!m_PopulationUIIems.ContainsKey(population[i]))
                 {
                     UIElement_PopulationProgressItem item = Instantiate(GameManager.Instance.Manager_UI.WindowsManager.UIElement_PopulationProgressItemPrefab, ProgressParent);
-                    item.Init(population[i], 
+                    item.Init(population[i],
                               GameManager.Instance.Manager_Battle.PopulationManager.GetProgressForPopulation(population[i]),
                               GameManager.Instance.Manager_Battle.PopulationManager.GetMultiplayerForPopulation(population[i]));
 
                     m_PopulationUIIems.Add(population[i], item);
                 }
                 else //Если такой тип населения есть - обновить данные
+                {
+                    //Вывести текущий множитель скорости
                     m_PopulationUIIems[itemType].SetMultiplayer(GameManager.Instance.Manager_Battle.PopulationManager.GetMultiplayerForPopulation(itemType));
+
+                    //Обновить состояние потребляемых ресурсов
+                    m_PopulationUIIems[itemType].UpdateAbsorbedResourceItems();
+                }
             }
         }
-
 
         void PopulationProgressChangedHandler(DataTableItems.ItemTypes itemType, float progress)
         {
@@ -93,30 +117,24 @@ namespace clicker.general.ui.windows
         {
             Debug.Log(itemType + " PopulationPerdionFinished_Success");
 
-            PeriodFinishedHandler();
-
-            if (m_PopulationUIIems.ContainsKey(itemType))
-                m_PopulationUIIems[itemType].SetStatus(false);
+            UpdateTabState();
         }
 
         void PopulationPerdionFinished_PopulationReduce(DataTableItems.ItemTypes itemType)
         {
             Debug.Log(itemType + " PopulationPerdionFinished_PopulationReduce");
 
-            PeriodFinishedHandler();
+            UpdateTabState();
 
             if (m_PopulationUIIems.ContainsKey(itemType))
-            {
                 m_PopulationUIIems[itemType].SetMultiplayer(GameManager.Instance.Manager_Battle.PopulationManager.GetMultiplayerForPopulation(itemType));
-                m_PopulationUIIems[itemType].SetStatus(true);
-            }
         }
 
         void PopulationPerdionFinished_PopulationLose(DataTableItems.ItemTypes itemType)
         {
             Debug.Log(itemType + " PopulationPerdionFinished_PopulationLose");
 
-            PeriodFinishedHandler();
+            UpdateTabState();
 
             if (m_PopulationUIIems.ContainsKey(itemType))
             {
@@ -125,17 +143,10 @@ namespace clicker.general.ui.windows
             }
         }
 
-        void PeriodFinishedHandler()
+        void UpdateAbsorbedResourceItems()
         {
-            //Пройтись по всем UI объектам и обновить количество предметов, а так же состояние требуемых для создания предметов
-            foreach (UIElement_CraftItem item in m_Items.Values)
-            {
-                //Количество предметов
-                item.SetItemAmount(DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(item.Type));
-
-                //Состояние требуемых для создания предметов
-                item.UpdateRequireItemsState();
-            }
+            foreach (UIElement_PopulationProgressItem item in m_PopulationUIIems.Values)
+                item.UpdateAbsorbedResourceItems();
         }
     }
 }
