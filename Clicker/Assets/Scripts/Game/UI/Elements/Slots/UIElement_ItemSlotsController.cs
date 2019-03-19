@@ -20,12 +20,15 @@ namespace clicker.general.ui
 
         private int m_SelectedSlotIndex = -1;
         private bool m_AllowClickable = false;
+        protected int m_ItemBagSize = 0;
 
         public void Init(DataTableItems.ItemTypes[] selectedItemTypes, bool allowClickable)
         {
             m_AllowClickable = allowClickable;
             Image_Selection.enabled = false;
             ItemSlots = new List<UIElement_ItemSlot>();
+
+            CacheItemBagSize(GetFilterType());
 
             //Создать слоты
             for (int i = 0; i < selectedItemTypes.Length; i++)
@@ -41,7 +44,7 @@ namespace clicker.general.ui
             for (int i = 0; i < selectedItemTypes.Length; i++)
             {
                 var amountAndProgressData = GetAmountAndProgressForItem(selectedItemTypes[i]);
-                ItemSlots[i].SetItem(selectedItemTypes[i], amountAndProgressData.amount, amountAndProgressData.progress);
+                ItemSlots[i].SetItem(selectedItemTypes[i], amountAndProgressData.amount, amountAndProgressData.progress, m_ItemBagSize);
             }
         }
 
@@ -79,7 +82,6 @@ namespace clicker.general.ui
             }
         }
 
-
         /// <summary>
         /// Выделить слот с предметом либо первый слот (в случае ошибки)
         /// </summary>
@@ -106,6 +108,14 @@ namespace clicker.general.ui
                 StartCoroutine(WaitFrameToSelectItem(m_SelectedSlotIndex));
         }
 
+        /// <summary>
+        /// Кешировать размер сумки для последующего вывода
+        /// </summary>
+        public void CacheItemBagSize(DataTableItems.ItemFilterTypes itemFilter)
+        {
+            m_ItemBagSize = DataManager.Instance.PlayerAccount.Inventory.BagsState.GetBagSize(itemFilter);
+        }
+
         public override string ToString()
         {
             StringBuilder strBuilder = new StringBuilder(50);
@@ -127,7 +137,12 @@ namespace clicker.general.ui
             var amountAndProgressData = GetAmountAndProgressForItem(type);
 
             UIElement_ItemSlot item = Instantiate(GameManager.Instance.Manager_UI.WindowsManager.UIElement_ItemSlotPrefab, SlotParent);
-            item.Init(type, slotIndex, amountAndProgressData.amount, amountAndProgressData.progress);
+            item.Init(type, 
+                      slotIndex, 
+                      amountAndProgressData.amount, 
+                      amountAndProgressData.progress,
+                      m_ItemBagSize);
+
             item.OnSlotPress += Item_PressHandler;
             item.EnableButton(allowClickable);
 
@@ -142,14 +157,17 @@ namespace clicker.general.ui
             Image_Selection.transform.position = rTransform.position;
         }
 
-        protected abstract void Item_PressHandler(int index);
-
-        protected abstract (int amount, float progress) GetAmountAndProgressForItem(DataTableItems.ItemTypes type);
-
         IEnumerator WaitFrameToSelectItem(int index)
         {
             yield return null;
             ShowSelection(ItemSlots[index].ItemRectTransform);
         }
+
+
+        protected abstract void Item_PressHandler(int index);
+
+        protected abstract (int amount, float progress) GetAmountAndProgressForItem(DataTableItems.ItemTypes type);
+
+        protected abstract DataTableItems.ItemFilterTypes GetFilterType();
     }
 }

@@ -1,6 +1,5 @@
 ﻿using clicker.datatables;
 using clicker.general;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -107,7 +106,7 @@ namespace clicker.battle
         /// <param name="durabilityProgress">Текущий прогресс до поломки</param>
         void UseWeaponHandler(DataTableItems.ItemTypes weaponType, float durabilityProgress)
         {
-            Debug.LogWarning("WeaponManager: USE WEAPON: " + weaponType + ". Durability: " + durabilityProgress);
+            Debug.Log("WeaponManager: USE WEAPON: " + weaponType + ". Durability: " + durabilityProgress);
 
             //Найти слот и обновить прогресс
             GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemProgress(weaponType, durabilityProgress);
@@ -119,7 +118,7 @@ namespace clicker.battle
         /// <param name="weaponType">Тип использованного оружия</param>
         void BrokeWeaponHandler(DataTableItems.ItemTypes weaponType)
         {
-            Debug.LogError("WeaponManager: BROKE WEAPON: " + weaponType + 
+            Debug.LogWarning("WeaponManager: BROKE WEAPON: " + weaponType + 
                            ". Amount: " + DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(weaponType));
 
             //Переключить на оружие по умолчанию

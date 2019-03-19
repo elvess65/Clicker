@@ -1,4 +1,5 @@
 ﻿using clicker.datatables;
+using clicker.general;
 using System.Collections.Generic;
 using System.Text;
 using static clicker.datatables.DataTableItems;
@@ -218,14 +219,6 @@ namespace clicker.account
             }
 
 
-            void WeaponBrokenHandler(ItemTypes type)
-            {
-                RemoveItem(type);
-
-                if (HasItem(type))
-                    UnityEngine.Debug.Log("Still have items");
-            }
-
             public override string ToString()
             {
                 StringBuilder strBuilder = new StringBuilder(100);
@@ -240,6 +233,24 @@ namespace clicker.account
                 }
 
                 return strBuilder.ToString();
+            }
+
+
+            void WeaponBrokenHandler(ItemTypes type)
+            {
+                //Удалить предмет
+                RemoveItem(type);
+
+                //Если после удаления предмета еще остаются предметы, но сумка может быть опустошена
+                if (HasItem(type))
+                {
+                    //Отнять предмет из сумки (из сумки удаляются только тогда, когда предмет закончился)
+                    BagsState.RemoveItemFromBag(type, false);
+
+                    //Если сумка была опустошена
+                    if (!BagsState.HasItemsInBag(type))
+                        WeaponState.CallRemoveEventAndRemoveFromBag(type);
+                }
             }
 
 
@@ -275,7 +286,7 @@ namespace clicker.account
                     if (m_Weapons.ContainsKey(type))
                     {
                         m_Weapons.Remove(type);
-                        OnRemoveWeapon?.Invoke(type);
+                        CallRemoveEventAndRemoveFromBag(type);
                     }
                 }
 
@@ -312,6 +323,16 @@ namespace clicker.account
 
                     return 1;
                 }
+
+                /// <summary>
+                /// Вызвать событие удаления оружия, не удаляя его
+                /// </summary>
+                public void CallRemoveEventAndRemoveFromBag(ItemTypes type)
+                {
+                    OnRemoveWeapon?.Invoke(type);
+                    DataManager.Instance.PlayerAccount.Inventory.BagsState.RemoveItemFromBag(type, true);
+                }
+
 
                 public override string ToString()
                 {
@@ -403,10 +424,12 @@ namespace clicker.account
             public class AccountBags
             {
                 private Dictionary<ItemFilterTypes, int> m_Bags;
+                private Dictionary<ItemTypes, int> m_BagState;
 
                 public AccountBags(Dictionary<ItemFilterTypes, int> bags)
                 {
                     m_Bags = new Dictionary<ItemFilterTypes, int>(bags);
+                    m_BagState = new Dictionary<ItemTypes, int>();
                 }
 
                 public int GetBagSize(ItemFilterTypes itemFilterType)
@@ -415,6 +438,54 @@ namespace clicker.account
                         return m_Bags[itemFilterType];
 
                     return 0;
+                }
+
+                public int GetItemAmountInBag(ItemTypes item)
+                {
+                    if (m_BagState.ContainsKey(item))
+                        return m_BagState[item];
+
+                    return 0;
+                }
+
+                public bool HasItemsInBag(ItemTypes item)
+                {
+                    return GetItemAmountInBag(item) > 0; 
+                }
+
+                public void AddItemToBag(ItemTypes item)
+                {
+                    int itemAmount = DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(item);
+                    ItemFilterTypes itemBagType = DataTableItems.GetItemDataByType(item).SingleFilter;
+                    int itemBagSize = GetBagSize(itemBagType);
+                    int amountInBag = UnityEngine.Mathf.Clamp(itemAmount, 0, itemBagSize);
+
+                    //Если в сумке еще нет предмета
+                    if (!m_BagState.ContainsKey(item))
+                        m_BagState.Add(item, amountInBag);
+                    else
+                        m_BagState[item] = amountInBag;
+
+                    UnityEngine.Debug.Log("Add item to bag: " + GetItemAmountInBag(item) + "/" + GetBagSize(itemBagType));
+                }
+
+                public void RemoveItemFromBag(ItemTypes item, bool removeAll)
+                {
+                    if (m_BagState.ContainsKey(item))
+                    {
+                        if (removeAll)
+                            m_BagState.Remove(item);
+                        else
+                        {
+                            m_BagState[item]--;
+
+                            if (m_BagState[item] <= 0)
+                                m_BagState.Remove(item);
+                        }
+                    }
+
+                    if (m_BagState.ContainsKey(item))
+                        UnityEngine.Debug.Log(m_BagState[item]);
                 }
             }
         }

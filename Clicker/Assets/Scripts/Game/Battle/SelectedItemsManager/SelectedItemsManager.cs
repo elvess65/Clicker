@@ -1,4 +1,5 @@
 ﻿using clicker.datatables;
+using clicker.general;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -44,20 +45,26 @@ namespace clicker.battle
         /// Добавить предмет в слот
         /// </summary>
         /// <param name="index">Индекс слота</param>
-        /// <param name="weaponType">Тип предмета</param>
-        public void AddItem(int index, DataTableItems.ItemTypes weaponType)
+        /// <param name="itemType">Тип предмета</param>
+        public void AddItem(int index, DataTableItems.ItemTypes itemType)
         {
             try
             {
                 //Если пытаемся добавить предмет, а такой же есть в другом слоте - убираем его с занятого слота
                 for (int i = 0; i < GetTargetItemList().Count; i++)
                 {
-                    if (i != index && GetTargetItemList()[i].Equals(weaponType))
+                    if (i != index && GetTargetItemList()[i].Equals(itemType))
+                    {
                         GetTargetItemList()[i] = GetDefaultItem();
+                        DataManager.Instance.PlayerAccount.Inventory.BagsState.RemoveItemFromBag(GetTargetItemList()[i], true);
+                    }
                 }
 
                 //Изменить список выбранных предметов
-                GetTargetItemList()[index] = weaponType;
+                GetTargetItemList()[index] = itemType;
+
+                //Добавить предмет в сумку
+                DataManager.Instance.PlayerAccount.Inventory.BagsState.AddItemToBag(itemType);
 
                 //Вызвать событие изменения списка
                 OnAddItem?.Invoke(GetTargetItemList().ToArray());

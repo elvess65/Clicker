@@ -24,5 +24,10 @@ namespace clicker.general.ui
         {
             return (float)amount / DataManager.Instance.PlayerAccount.Inventory.BagsState.GetBagSize(DataTableItems.ItemFilterTypes.Food);
         }
+
+        protected override DataTableItems.ItemFilterTypes GetFilterType()
+        {
+            return DataTableItems.ItemFilterTypes.Food;
+        }
     }
 }

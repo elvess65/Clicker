@@ -62,6 +62,8 @@ namespace clicker.general
             defaultSlotsCount = 3;
             BAGS = new Dictionary<DataTableItems.ItemFilterTypes, int>();
             BAGS.Add(DataTableItems.ItemFilterTypes.Food, defaultSlotsCount);
+            defaultSlotsCount = 2;
+            BAGS.Add(DataTableItems.ItemFilterTypes.Weapons, defaultSlotsCount);
 
             //Инициализировать загрузчики данных
             m_ItemsDataLoader = new ItemsDataLoader_Local();
@@ -109,6 +111,8 @@ namespace clicker.general
             defaultSlotsCount = 3;
             BAGS = new Dictionary<DataTableItems.ItemFilterTypes, int>();
             BAGS.Add(DataTableItems.ItemFilterTypes.Food, defaultSlotsCount);
+            defaultSlotsCount = 2;
+            BAGS.Add(DataTableItems.ItemFilterTypes.Weapons, defaultSlotsCount);
 
             //Создать акканту
             PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN, SELECTED_FOOD, BAGS);

@@ -141,6 +141,7 @@ namespace clicker.datatables
 
             public ItemTypes Type => m_Type;
             public int TicksToCreate => m_TicksToCreate;
+            public ItemFilterTypes SingleFilter => m_FilterTypes[0];
             public ItemAmountContainer[] RequiredItems => m_RequiredItems.ToArray();
 
             public Item(ItemTypes type, int ticksToCreate, List<ItemFilterTypes> filterType)
@@ -172,6 +173,7 @@ namespace clicker.datatables
             /// <param name="filterType">Тип фильтра</param>
             /// <returns>true если принадлежит</returns>
             public bool MatchFilter(ItemFilterTypes filterType) => m_FilterTypes.Contains(filterType);
+
 
             public override string ToString()
             {
