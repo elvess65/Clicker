@@ -19,10 +19,7 @@ namespace clicker.battle
                                                             true,
                                                             true);
 
-            //Подписать UI на событие
-            OnAddItem += GameManager.Instance.Manager_UI.FoodSlotController.UpdateItemsState;
-            OnRemoveItem += GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemsState;
-            OnAddSlot += GameManager.Instance.Manager_UI.FoodSlotController.AddSlot;
+
 
             base.Init();
         }
@@ -93,6 +90,16 @@ namespace clicker.battle
             return 0;
         }
 
+
+        protected override void SubscribeForLocalEvents()
+        {
+            base.SubscribeForLocalEvents();
+
+            //Подписать UI на событие
+            OnAddItem += GameManager.Instance.Manager_UI.FoodSlotController.UpdateItemsState;
+            OnRemoveItem += GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemsState;
+            OnAddSlot += GameManager.Instance.Manager_UI.FoodSlotController.AddSlot;
+        }
 
         protected override List<DataTableItems.ItemTypes> GetTargetItemList()
         {

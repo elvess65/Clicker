@@ -16,14 +16,6 @@ namespace clicker.battle
                                                               true,
                                                               true);
 
-            //Подписаться на события изменения состояния оружия
-            SubcribeForGlobalEvents();
-
-            //Подписать UI на событие
-            OnAddItem += GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemsState;
-            OnRemoveItem += GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemsState;
-            OnAddSlot += GameManager.Instance.Manager_UI.WeaponSlotController.AddSlot;
-
             base.Init();
         }
 
@@ -62,6 +54,15 @@ namespace clicker.battle
             return 0;
         }
 
+        public override void UnscribeFromGlobalEvents()
+        {
+            base.UnscribeFromGlobalEvents();
+
+            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnUseWeapon -= UseWeaponHandler;
+            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnWeaponBroken -= BrokeWeaponHandler;
+            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnRemoveWeapon -= RemoveWeaponHandler;
+        }
+
         public override string ToString()
         {
             StringBuilder strBuilder = new StringBuilder(50);
@@ -78,20 +79,25 @@ namespace clicker.battle
         }
 
 
-        public void SubcribeForGlobalEvents()
+        protected override void SubcribeForGlobalEvents()
         {
+            base.SubcribeForGlobalEvents();
+
+            //Подписаться на события изменения состояния оружия
             DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnUseWeapon += UseWeaponHandler;
             DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnWeaponBroken += BrokeWeaponHandler;
             DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnRemoveWeapon += RemoveWeaponHandler;
         }
 
-        public void UnscribeFromGlobalEvents()
+        protected override void SubscribeForLocalEvents()
         {
-            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnUseWeapon -= UseWeaponHandler;
-            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnWeaponBroken -= BrokeWeaponHandler;
-            DataManager.Instance.PlayerAccount.Inventory.WeaponState.OnRemoveWeapon -= RemoveWeaponHandler;
-        }
+            base.SubscribeForLocalEvents();
 
+            //Подписать UI на события
+            OnAddItem += GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemsState;
+            OnRemoveItem += GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemsState;
+            OnAddSlot += GameManager.Instance.Manager_UI.WeaponSlotController.AddSlot;
+        }
 
         protected override List<DataTableItems.ItemTypes> GetTargetItemList()
         {
@@ -119,10 +125,11 @@ namespace clicker.battle
         void BrokeWeaponHandler(DataTableItems.ItemTypes weaponType)
         {
             Debug.LogWarning("WeaponManager: BROKE WEAPON: " + weaponType + 
-                           ". Amount: " + DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(weaponType));
+                           ". Total Amount: " + DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(weaponType) + 
+                           ". Amount in Bag: " + DataManager.Instance.PlayerAccount.Inventory.BagsState.GetItemAmountInBag(weaponType));
 
             //Переключить на оружие по умолчанию
-            if (!DataManager.Instance.PlayerAccount.Inventory.HasItem(weaponType))
+            if (!DataManager.Instance.PlayerAccount.Inventory.BagsState.HasItemInBag(weaponType))
             {
                 //Найти слот с оружием, которое использовалось
                 for (int i = 0; i < DataManager.Instance.PlayerAccount.Inventory.SelectedWeapon.Count; i++)
@@ -140,10 +147,12 @@ namespace clicker.battle
             else
             {
                 //Найти UI слот и обновить количество предметов
-                GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemAmount(weaponType, DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(weaponType));
-                
+                int amount = DataManager.Instance.PlayerAccount.Inventory.BagsState.GetItemAmountInBag(weaponType);
+                GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemAmount(weaponType, amount);
+
                 //Найти UI слот и обновить прочность
-                GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemProgress(weaponType, DataManager.Instance.PlayerAccount.Inventory.WeaponState.GetDurabilityProgress(weaponType));
+                float progress = DataManager.Instance.PlayerAccount.Inventory.WeaponState.GetDurabilityProgress(weaponType);
+                GameManager.Instance.Manager_UI.WeaponSlotController.UpdateItemProgress(weaponType, progress);
             }
         }
 

@@ -1,5 +1,4 @@
 ﻿using clicker.datatables;
-using UnityEngine;
 
 namespace clicker.general.ui
 {
@@ -15,14 +14,14 @@ namespace clicker.general.ui
 
         protected override (int amount, float progress) GetAmountAndProgressForItem(DataTableItems.ItemTypes type)
         {
-            int amount = DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(type);
+            int amount = DataManager.Instance.PlayerAccount.Inventory.BagsState.GetItemAmountInBag(type);
 
             return (amount, GetFoodProgress(amount));
         }
 
         float GetFoodProgress(int amount)
         {
-            return (float)amount / DataManager.Instance.PlayerAccount.Inventory.BagsState.GetBagSize(DataTableItems.ItemFilterTypes.Food);
+            return (float)amount / DataManager.Instance.PlayerAccount.Inventory.BagsState.GetBagSize(GetFilterType());
         }
 
         protected override DataTableItems.ItemFilterTypes GetFilterType()

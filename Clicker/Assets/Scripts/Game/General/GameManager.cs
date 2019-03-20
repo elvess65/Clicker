@@ -80,6 +80,10 @@ namespace clicker.general
 
             //Добавить созданный предмет
             DataManager.Instance.PlayerAccount.Inventory.AddItem(type);
+
+            //Обновить состояние сумки если такой же предмет находился в сумке
+            if (DataManager.Instance.PlayerAccount.Inventory.BagsState.HasItemInBag(type))
+                DataManager.Instance.PlayerAccount.Inventory.BagsState.AddItemToBag(type);
         }
 
         void ShowCraftWindow_Handler(UIWindow_Base wnd)

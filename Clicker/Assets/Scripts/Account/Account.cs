@@ -248,7 +248,7 @@ namespace clicker.account
                     BagsState.RemoveItemFromBag(type, false);
 
                     //Если сумка была опустошена
-                    if (!BagsState.HasItemsInBag(type))
+                    if (!BagsState.HasItemInBag(type))
                         WeaponState.CallRemoveEventAndRemoveFromBag(type);
                 }
             }
@@ -448,7 +448,7 @@ namespace clicker.account
                     return 0;
                 }
 
-                public bool HasItemsInBag(ItemTypes item)
+                public bool HasItemInBag(ItemTypes item)
                 {
                     return GetItemAmountInBag(item) > 0; 
                 }
@@ -484,8 +484,9 @@ namespace clicker.account
                         }
                     }
 
+                    UnityEngine.Debug.Log("RemoveItemFromBag " + item);
                     if (m_BagState.ContainsKey(item))
-                        UnityEngine.Debug.Log(m_BagState[item]);
+                        UnityEngine.Debug.Log("Amount after removing: " + m_BagState[item]);
                 }
             }
         }

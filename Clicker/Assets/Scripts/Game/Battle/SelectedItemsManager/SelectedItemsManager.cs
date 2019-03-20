@@ -19,6 +19,9 @@ namespace clicker.battle
 
         public virtual void Init()
         {
+            SubcribeForGlobalEvents();
+            SubscribeForLocalEvents();
+
             //Выделение с задержкой
             StartCoroutine(WaitFrameToSelectWeapon(0));
         }
@@ -85,6 +88,18 @@ namespace clicker.battle
             OnAddSlot?.Invoke(GetDefaultItem());
         }
 
+        public virtual void UnscribeFromGlobalEvents()
+        {
+        }
+
+
+        protected virtual void SubcribeForGlobalEvents()
+        {
+        }
+
+        protected virtual void SubscribeForLocalEvents()
+        {
+        }
 
         protected virtual DataTableItems.ItemTypes GetDefaultItem()
         {
