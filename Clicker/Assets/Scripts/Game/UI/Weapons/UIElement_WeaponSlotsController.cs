@@ -14,9 +14,6 @@ namespace clicker.general.ui
 
         protected override (int amount, float progress) GetAmountAndProgressForItem(DataTableItems.ItemTypes type)
         {
-            UnityEngine.Debug.Log(DataManager.Instance.PlayerAccount.Inventory.BagsState.GetItemAmountInBag(type));
-            UnityEngine.Debug.Log(DataManager.Instance.PlayerAccount.Inventory.WeaponState.GetDurabilityProgress(type));
-
             return (DataManager.Instance.PlayerAccount.Inventory.BagsState.GetItemAmountInBag(type),
                     DataManager.Instance.PlayerAccount.Inventory.WeaponState.GetDurabilityProgress(type));
         }

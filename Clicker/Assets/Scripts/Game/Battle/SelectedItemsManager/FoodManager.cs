@@ -56,9 +56,14 @@ namespace clicker.battle
 
                 //Удалить использованный предмет
                 DataManager.Instance.PlayerAccount.Inventory.RemoveItem(selectedFoodType);
+                //Удалить использованный предмет из сумки
+                DataManager.Instance.PlayerAccount.Inventory.BagsState.RemoveItemFromBag(selectedFoodType, false);
 
-                //Если после использования предмета еще остались предметы этого типа
-                if (!DataManager.Instance.PlayerAccount.Inventory.HasItem(selectedFoodType))
+                Debug.Log("Has Amount: " + DataManager.Instance.PlayerAccount.Inventory.HasItem(selectedFoodType));
+                Debug.Log("Has Amount in bag: " + DataManager.Instance.PlayerAccount.Inventory.BagsState.HasItemInBag(selectedFoodType));
+
+                //Если после использования предмета в сумке не осталось предметов
+                if (!DataManager.Instance.PlayerAccount.Inventory.BagsState.HasItemInBag(selectedFoodType))
                 {
                     //Найти слот с предметом, который использовался
                     for (int i = 0; i < DataManager.Instance.PlayerAccount.Inventory.SelectedFood.Count; i++)
@@ -75,13 +80,15 @@ namespace clicker.battle
                 }
                 else 
                 {
-                    int amount = DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(selectedFoodType);
+                    int amount = DataManager.Instance.PlayerAccount.Inventory.BagsState.GetItemAmountInBag(selectedFoodType);
 
                     //Найти UI слот и обновить количество предметов
                     GameManager.Instance.Manager_UI.FoodSlotController.UpdateItemAmount(selectedFoodType, amount);
 
                     //Найти UI слот и обновить прогресс
-                    GameManager.Instance.Manager_UI.FoodSlotController.UpdateItemProgress(selectedFoodType, GetFoodProgress(amount));
+                    GameManager.Instance.Manager_UI.FoodSlotController.UpdateItemProgress(selectedFoodType, 
+                                                                                          DataManager.Instance.PlayerAccount.Inventory.BagsState.GetFillBagProgress(selectedFoodType, 
+                                                                                                                                                                    DataTableItems.ItemFilterTypes.Food));
                 }
 
                 return 1;
@@ -128,11 +135,6 @@ namespace clicker.battle
 
                 m_LastClickTime = 0;
             }
-        }
-
-        float GetFoodProgress(int amount)
-        {
-            return (float)amount / DataManager.Instance.PlayerAccount.Inventory.BagsState.GetBagSize(DataTableItems.ItemFilterTypes.Food);
         }
     }
 }

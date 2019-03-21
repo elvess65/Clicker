@@ -16,12 +16,7 @@ namespace clicker.general.ui
         {
             int amount = DataManager.Instance.PlayerAccount.Inventory.BagsState.GetItemAmountInBag(type);
 
-            return (amount, GetFoodProgress(amount));
-        }
-
-        float GetFoodProgress(int amount)
-        {
-            return (float)amount / DataManager.Instance.PlayerAccount.Inventory.BagsState.GetBagSize(GetFilterType());
+            return (amount, DataManager.Instance.PlayerAccount.Inventory.BagsState.GetFillBagProgress(type, GetFilterType()));
         }
 
         protected override DataTableItems.ItemFilterTypes GetFilterType()

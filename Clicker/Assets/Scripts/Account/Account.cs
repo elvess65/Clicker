@@ -191,6 +191,8 @@ namespace clicker.account
                         //Если удаленный предмет - оружие
                         if (itemData.MatchFilter(ItemFilterTypes.Weapons))
                             WeaponState.RemoveWeapon(type, amount);
+                        else if (itemData.MatchFilter(ItemFilterTypes.Food))
+                            BagsState.RemoveItemFromBag(type, true);
                     }
                 }
             }
@@ -436,6 +438,17 @@ namespace clicker.account
                 {
                     if (m_Bags.ContainsKey(itemFilterType))
                         return m_Bags[itemFilterType];
+
+                    return 0;
+                }
+
+                public float GetFillBagProgress(ItemTypes item, ItemFilterTypes itemFilterType = ItemFilterTypes.Default)
+                {
+                    if (itemFilterType == ItemFilterTypes.Default)
+                        itemFilterType = DataTableItems.GetItemDataByType(item).SingleFilter;
+
+                    if (m_Bags.ContainsKey(itemFilterType) && m_BagState.ContainsKey(item))
+                        return GetItemAmountInBag(item) / (float)GetBagSize(itemFilterType);
 
                     return 0;
                 }
