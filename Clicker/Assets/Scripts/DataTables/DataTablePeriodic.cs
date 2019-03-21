@@ -44,6 +44,7 @@ namespace clicker.datatables
             return null;
         }
 
+
         public class Periodic
         {
             private ItemTypes m_Type;

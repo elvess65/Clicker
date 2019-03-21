@@ -51,6 +51,8 @@ namespace clicker.general.ui
             return foodSlotsController;
         }
 
+        //TODO
+        //Seprate init depends on upgradeType
         public UIElement_AddItemSlot CreateAddItemSlotButton(RectTransform parent)
         {
             UIElement_AddItemSlot addWeaponSlotButton = Instantiate(WindowsManager.UIElement_AddItemSlotPrefab, parent);

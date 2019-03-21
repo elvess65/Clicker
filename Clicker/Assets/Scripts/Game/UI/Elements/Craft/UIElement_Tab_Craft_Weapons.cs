@@ -38,6 +38,14 @@ namespace clicker.general.ui.windows
 
         protected override void AddSlotButton_PressHandler(RectTransform buttonTransform)
         {
+            //TODO
+            //increment progress
+            //if result - incrementProgress
+            //  get level - account.getLevel
+            //  updateProgress (account.getProgress, dataTable.getSteps(level))
+            //else result - incrementLevel
+            //  hide
+
             GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot--;
             buttonTransform.GetComponent<UIElement_AddItemSlot>().UpdateProgress(GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot,
                                                                                  GameManager.Instance.Manager_Battle.SelectedWeaponManager.TotalAddSlot);

@@ -63,6 +63,7 @@ namespace clicker.general
             defaultSlotsCount = 3;
             BAGS = new Dictionary<DataTableItems.ItemFilterTypes, int>();
             BAGS.Add(DataTableItems.ItemFilterTypes.Food, defaultSlotsCount);
+
             defaultSlotsCount = 2;
             BAGS.Add(DataTableItems.ItemFilterTypes.Weapons, defaultSlotsCount);
 
@@ -79,6 +80,7 @@ namespace clicker.general
             DataTableLevels.SetData(m_LevelsDataLoader.GetData(accountID));
             DataTablePeriodic.SetData(m_PeriodicDataLoader.GetData(accountID));
             DataTableFood.SetData(m_FoodDataLoader.GetData(accountID));
+            DataTableUpgrades.SetData();
 
             //Создать акканту
             PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN, SELECTED_FOOD, BAGS);

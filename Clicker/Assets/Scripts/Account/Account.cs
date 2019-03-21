@@ -3,6 +3,7 @@ using clicker.general;
 using System.Collections.Generic;
 using System.Text;
 using static clicker.datatables.DataTableItems;
+using static clicker.datatables.DataTableUpgrades;
 
 namespace clicker.account
 {
@@ -499,6 +500,79 @@ namespace clicker.account
                     if (m_BagState.ContainsKey(item))
                         UnityEngine.Debug.Log("Amount after removing: " + m_BagState[item]);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Представляет таблицу состояний улучшений
+        /// </summary>
+        public class AccountUpgrades
+        {
+            public enum IncrementResult
+            {
+                IncrementProgress,
+                IncrementLevel
+            }
+
+            private Dictionary<UpgradeTypes, (int level, int progressToNext)> m_UpgradeStates;
+
+            public AccountUpgrades(Dictionary<UpgradeTypes, (int, int)> upgradeStates)
+            {
+                m_UpgradeStates = new Dictionary<UpgradeTypes, (int, int)>(upgradeStates);
+            }
+
+            /// <summary>
+            /// Получить текущее состояние уровня указанного улучшения
+            /// </summary>
+            /// <param name="type">Улучшение</param>
+            /// <returns>Текущее значение уровня</returns>
+            public int GetUpgradeLevel(UpgradeTypes type)
+            {
+                if (m_UpgradeStates.ContainsKey(type))
+                    return m_UpgradeStates[type].level;
+
+                return 1;
+            }
+
+            /// <summary>
+            /// Получить текущее состояние прогресса до следующего уровня указанного улучшения
+            /// </summary>
+            /// <param name="type">Улучшение</param>
+            /// <returns>Текущее значение прогресса</returns>
+            public int GetUpgradeProgress(UpgradeTypes type)
+            {
+                if (m_UpgradeStates.ContainsKey(type))
+                    return m_UpgradeStates[type].progressToNext;
+
+                return -1;
+            }
+
+
+            public IncrementResult IncrementUpgradeProgress(UpgradeTypes type)
+            {
+                IncrementResult result = IncrementResult.IncrementProgress;
+                if (m_UpgradeStates.ContainsKey(type))
+                {
+                    //TODO: 
+                    //Get progress to next by curLvl (nxtPrg)
+                    //Get current progress (curPrg)
+                    //increment curPrg (curPrg++)
+                    //compare curPrg >= nxtPrg (was level up)
+                    //if + 
+                    //  curLvl ++ 
+                    //  curPrg = 0
+                    //  result: incrementLevel
+                    //else 
+                    //  curPrg++
+                    //  result: incrementProgress
+
+                    (int curUpgradeLevel, int stepsToNext) state = m_UpgradeStates[type];
+                    state.Item2++;
+
+                    m_UpgradeStates[type] = state;
+                }
+
+                return result;
             }
         }
     }
