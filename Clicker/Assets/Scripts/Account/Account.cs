@@ -478,8 +478,6 @@ namespace clicker.account
                         m_BagState.Add(item, amountInBag);
                     else
                         m_BagState[item] = amountInBag;
-
-                    UnityEngine.Debug.Log("Add item to bag: " + GetItemAmountInBag(item) + "/" + GetBagSize(itemBagType));
                 }
 
                 public void RemoveItemFromBag(ItemTypes item, bool removeAll)

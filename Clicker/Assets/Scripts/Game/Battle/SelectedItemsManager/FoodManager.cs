@@ -52,15 +52,10 @@ namespace clicker.battle
 
             if (selectedFoodType != DataTableItems.ItemTypes.Max)
             {
-                Debug.Log("USE ITEM " + selectedFoodType);
-
                 //Удалить использованный предмет
                 DataManager.Instance.PlayerAccount.Inventory.RemoveItem(selectedFoodType);
                 //Удалить использованный предмет из сумки
                 DataManager.Instance.PlayerAccount.Inventory.BagsState.RemoveItemFromBag(selectedFoodType, false);
-
-                Debug.Log("Has Amount: " + DataManager.Instance.PlayerAccount.Inventory.HasItem(selectedFoodType));
-                Debug.Log("Has Amount in bag: " + DataManager.Instance.PlayerAccount.Inventory.BagsState.HasItemInBag(selectedFoodType));
 
                 //Если после использования предмета в сумке не осталось предметов
                 if (!DataManager.Instance.PlayerAccount.Inventory.BagsState.HasItemInBag(selectedFoodType))
@@ -91,7 +86,8 @@ namespace clicker.battle
                                                                                                                                                                     DataTableItems.ItemFilterTypes.Food));
                 }
 
-                return 1;
+                DataTableFood.Food foodData = DataTableFood.GetFoodDataByType(selectedFoodType);
+                return foodData == null ? 0 : foodData.RestoreHP;
             }
 
             return 0;

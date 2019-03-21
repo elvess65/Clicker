@@ -43,7 +43,6 @@ namespace clicker.general.ui
         {
             for (int i = 0; i < selectedItemTypes.Length; i++)
             {
-                Debug.Log("Update item state");
                 var amountAndProgressData = GetAmountAndProgressForItem(selectedItemTypes[i]);
                 ItemSlots[i].SetItem(selectedItemTypes[i], amountAndProgressData.amount, amountAndProgressData.progress, m_ItemBagSize);
             }

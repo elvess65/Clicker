@@ -17,6 +17,7 @@ namespace clicker.general
         private iWeaponsDataLoader m_WeaponsDataLoader;
         private iLevelDataLoader m_LevelsDataLoader;
         private iPeriodicDataLoader m_PeriodicDataLoader;
+        private iFoodDataLoader m_FoodDataLoader;
 
         void Awake()
         {
@@ -70,12 +71,14 @@ namespace clicker.general
             m_WeaponsDataLoader = new WeaponsDataLoader_Local();
             m_LevelsDataLoader = new LevelDataLoader_Local();
             m_PeriodicDataLoader = new PeriodicDataLoader_Local();
+            m_FoodDataLoader = new FoodDataLoader_Local();
 
             //Загрузить данные
             DataTableItems.SetData(m_ItemsDataLoader.GetData(accountID), m_ItemsDataLoader.GetIgnoreData(accountID));
             DataTableWeapons.SetData(m_WeaponsDataLoader.GetData(accountID));
             DataTableLevels.SetData(m_LevelsDataLoader.GetData(accountID));
             DataTablePeriodic.SetData(m_PeriodicDataLoader.GetData(accountID));
+            DataTableFood.SetData(m_FoodDataLoader.GetData(accountID));
 
             //Создать акканту
             PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN, SELECTED_FOOD, BAGS);
