@@ -1,10 +1,13 @@
-﻿using clicker.datatables;
+﻿using clicker.battle;
+using clicker.datatables;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static clicker.account.Account.AccountUpgrades;
 
 namespace clicker.general.ui.windows
 {
-    public abstract class UIElement_Tab_Craft_TabWithSlots<T> : UIElement_Tab_Craft where T : UIElement_ItemSlotsController
+    public abstract class UIElement_Tab_Craft_TabWithSlots<T, T1> : UIElement_Tab_Craft where T : UIElement_ItemSlotsController
+                                                                                        where T1 : SelectedItemsManager
     {
         public RectTransform SlotsParent;
 
@@ -15,9 +18,12 @@ namespace clicker.general.ui.windows
             //Создать панель оружия
             m_SlotsController = GetSlotsController();
 
-            //Создать кнопку добавления слотов оружия
-            UIElement_AddItemSlot addSlotButton = GameManager.Instance.Manager_UI.CreateAddItemSlotButton(m_SlotsController.AddSlotParent);
-            addSlotButton.OnItemClick += AddSlotButton_PressHandler;
+            //Создать кнопку добавления слотов оружия если не достигнут последний уровень
+            if (!DataTableUpgrades.IsLastLvl(GetUpgradeType(), DataManager.Instance.PlayerAccount.Upgrades.GetUpgradeLevel(GetUpgradeType())))
+            {
+                UIElement_AddItemSlot addSlotButton = GameManager.Instance.Manager_UI.CreateAddItemSlotButton(m_SlotsController.AddSlotParent, GetUpgradeType());
+                addSlotButton.OnItemClick += AddSlotButton_PressHandler;
+            }
 
             //Задать каждому предмету во вкладке события перетягивания
             foreach (UIElement_CraftItem item in m_Items.Values)
@@ -31,7 +37,9 @@ namespace clicker.general.ui.windows
 
         protected abstract T GetSlotsController();
 
-        protected abstract void AddSlotButton_PressHandler(RectTransform buttonTransform);
+        protected abstract T1 GetSelectedItemsManager();
+
+        protected abstract DataTableUpgrades.UpgradeTypes GetUpgradeType();
 
         protected abstract void AddItemToSlot(int index, DataTableItems.ItemTypes type);
 
@@ -50,6 +58,31 @@ namespace clicker.general.ui.windows
         protected void UpdateLocalSlotsControllerState(DataTableItems.ItemTypes[] selectedItemTypes)
         {
             m_SlotsController.UpdateItemsState(selectedItemTypes);
+        }
+
+        /// <summary>
+        /// Обработка нажатия на кнопку добавления слота
+        /// </summary>
+        /// <param name="senderTransform">Transform, на который нажали</param>
+        protected void AddSlotButton_PressHandler(RectTransform senderTransform)
+        {
+            //Повысить уровень улучшения
+            IncrementResult result = DataManager.Instance.PlayerAccount.Upgrades.IncrementUpgradeProgress(GetUpgradeType());
+            switch (result)
+            {
+                //Если в результате повышения поднялся уровень - добавить слот и выключить кнопку
+                case IncrementResult.IncrementLevel:
+                    GetSelectedItemsManager().AddSlot();
+                    senderTransform.gameObject.SetActive(false);
+                    break;
+                //Если в результате повышения повысился прогрес - обновить UI
+                case IncrementResult.IncrementProgress:
+                    senderTransform.GetComponent<UIElement_AddItemSlot>().UpdateProgress(GetUpgradeType());
+                    break;
+                //Если ничего не произошло - ничего не делать
+                default:
+                    break;
+            }
         }
 
 

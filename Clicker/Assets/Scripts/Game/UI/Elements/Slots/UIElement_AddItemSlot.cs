@@ -1,4 +1,5 @@
-﻿using FrameworkPackage.UI.Windows;
+﻿using clicker.datatables;
+using FrameworkPackage.UI.Windows;
 using UnityEngine.UI;
 
 namespace clicker.general.ui
@@ -13,18 +14,29 @@ namespace clicker.general.ui
         public Text Text_Progress;
         public Image Image_Progress;
 
-        public void Init(int curStep, int totalSteps)
+        public void Init(DataTableUpgrades.UpgradeTypes upgradeType)
         {
             Text_Title.text = "Add Slot";
-            UpdateProgress(curStep, totalSteps);
+
+            UpdateProgress(upgradeType);
 
             base.Init();
         }
 
-        public void UpdateProgress(int curStep, int totalStep)
+        public void UpdateProgress(DataTableUpgrades.UpgradeTypes upgradeType)
         {
-            Text_Progress.text = string.Format("{0}/{1}", curStep, totalStep);
-            Image_Progress.fillAmount = curStep / (float)totalStep;
+            int upgradeLvl = DataManager.Instance.PlayerAccount.Upgrades.GetUpgradeLevel(upgradeType);
+            int curProgress = DataManager.Instance.PlayerAccount.Upgrades.GetUpgradeProgress(upgradeType);
+            int totalStep = DataTableUpgrades.GetStepsToNext(upgradeType, upgradeLvl);
+
+            UpdateProgress(curProgress, totalStep);
+        }
+
+
+        void UpdateProgress(int curProgress, int totalStep)
+        {
+            Text_Progress.text = string.Format("{0}/{1}", curProgress, totalStep);
+            Image_Progress.fillAmount = curProgress / (float)totalStep;
         }
     }
 }

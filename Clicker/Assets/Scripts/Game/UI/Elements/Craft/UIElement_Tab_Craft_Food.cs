@@ -1,16 +1,15 @@
-﻿using clicker.datatables;
+﻿using clicker.battle;
+using clicker.datatables;
 using UnityEngine;
 
 namespace clicker.general.ui.windows
 {
-    public class UIElement_Tab_Craft_Food : UIElement_Tab_Craft_TabWithSlots<UIElement_FoodSlotsController>
+    public class UIElement_Tab_Craft_Food : UIElement_Tab_Craft_TabWithSlots<UIElement_FoodSlotsController, FoodManager>
     {
         public override void InitTab()
         {
             if (!m_IsInitialized)
             {
-                Debug.Log("UIElement_Tab_Craft_Food: InitTab");
-
                 base.InitTab();
 
                 InitializeSlots();
@@ -29,23 +28,20 @@ namespace clicker.general.ui.windows
                                                                    false);
         }
 
+        protected override FoodManager GetSelectedItemsManager()
+        {
+            return GameManager.Instance.Manager_Battle.SelectedFoodManager;
+        }
+
+        protected override DataTableUpgrades.UpgradeTypes GetUpgradeType()
+        {
+            return DataTableUpgrades.UpgradeTypes.FoodSlot;
+        }
+
         protected override void AddItemToSlot(int index, DataTableItems.ItemTypes type)
         {
             //Добавить еду в ячейку выбранного оружия
             GameManager.Instance.Manager_Battle.SelectedFoodManager.AddItem(index, type);
-        }
-
-        protected override void AddSlotButton_PressHandler(RectTransform buttonTransform)
-        {
-            GameManager.Instance.Manager_Battle.SelectedFoodManager.CurAddSlot--;
-            buttonTransform.GetComponent<UIElement_AddItemSlot>().UpdateProgress(GameManager.Instance.Manager_Battle.SelectedFoodManager.CurAddSlot,
-                                                                                 GameManager.Instance.Manager_Battle.SelectedFoodManager.TotalAddSlot);
-
-            if (GameManager.Instance.Manager_Battle.SelectedFoodManager.CurAddSlot <= 0)
-            {
-                GameManager.Instance.Manager_Battle.SelectedFoodManager.AddSlot();
-                buttonTransform.gameObject.SetActive(false);
-            }
         }
 
 

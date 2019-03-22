@@ -12,9 +12,6 @@ namespace clicker.battle
         public System.Action<DataTableItems.ItemTypes[]> OnRemoveItem;
         public System.Action<DataTableItems.ItemTypes> OnAddSlot;
 
-        public int CurAddSlot = 5;
-        public int TotalAddSlot = 5;
-
         protected int m_SelectedIndex = -1;
 
         public virtual void Init()

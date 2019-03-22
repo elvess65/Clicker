@@ -7,20 +7,14 @@ namespace clicker.datatables
     {
         private static Dictionary<UpgradeTypes, Upgrade> m_UpgradesData;
 
-        public static void SetData()
+        public static void SetData(UpgradesData[] data)
         {
-            //TODO
-            //Create LocalDataEditor
-            //Get data from LocalDataEditor
+            if (data == null)
+                return;
 
             m_UpgradesData = new Dictionary<UpgradeTypes, Upgrade>();
-            Dictionary<int, int> weaponSlotUpgradeValues = new Dictionary<int, int>();
-            weaponSlotUpgradeValues.Add(1, 1);
-            weaponSlotUpgradeValues.Add(2, 2);
-            weaponSlotUpgradeValues.Add(3, 3);
-            weaponSlotUpgradeValues.Add(4, 4);
-            weaponSlotUpgradeValues.Add(5, 5);
-            m_UpgradesData.Add(UpgradeTypes.WeaponSlot, new SlotUpgrade(weaponSlotUpgradeValues, 1f, 5, 5));
+            for (int i = 0; i < data.Length; i++)
+                m_UpgradesData.Add(data[i].Type, new SlotUpgrade(data[i].GetLevelsData(), data[i].StepDelta, data[i].StepConst));
         }
 
         /// <summary>
@@ -53,24 +47,38 @@ namespace clicker.datatables
             return 1;
         }
 
+        /// <summary>
+        /// Является ли указанный уровень последним
+        /// </summary>
+        /// <param name="type">Тип улучшения</param>
+        /// <param name="lvl">Уровень улучшения, который надо проверить</param>
+        public static bool IsLastLvl(UpgradeTypes type, int lvl)
+        {
+            if (m_UpgradesData.ContainsKey(type))
+                return m_UpgradesData[type].IsLastLvl(lvl);
 
+            return true;
+        }
+
+        #region Data Structures
         public enum UpgradeTypes
         {
             WeaponSlot,
             FoodSlot,
             WeaponBag,
             FoodBag
-        }
+        } 
 
+        /// <summary>
+        /// Представляет базовое описание улучшения
+        /// </summary>
         public abstract class Upgrade
         {
             protected int m_StepConst;
-            protected int m_MaxValue;
 
-            public Upgrade(int stepConst, int maxValue)
+            public Upgrade(int stepConst)
             {
                 m_StepConst = stepConst;
-                m_MaxValue = maxValue;
             }
 
             public abstract bool IsLastLvl(int lvl);
@@ -80,12 +88,15 @@ namespace clicker.datatables
             public abstract int GetValueForLevel(int level);
         }
 
+        /// <summary>
+        /// Представляет описание улучшения слотов
+        /// </summary>
         public class SlotUpgrade : Upgrade
         {
             private float m_StepDelta;
             private Dictionary<int, int> m_UpgradeValues;
 
-            public SlotUpgrade(Dictionary<int, int> upgradeValues, float stepDelta, int stepConst, int maxValue) : base(stepConst, maxValue)
+            public SlotUpgrade(Dictionary<int, int> upgradeValues, float stepDelta, int stepConst) : base(stepConst)
             {
                 m_StepDelta = stepDelta;
                 m_UpgradeValues = new Dictionary<int, int>(upgradeValues);
@@ -119,6 +130,7 @@ namespace clicker.datatables
 
             public override bool IsLastLvl(int lvl)
             {
+                Debug.Log(lvl + " " + m_UpgradeValues.Count + "  " + (lvl >= m_UpgradeValues.Count));
                 return lvl >= m_UpgradeValues.Count;
             }
         }
@@ -139,5 +151,6 @@ namespace clicker.datatables
         //in -> curValue
         //out <- stepsToNextValue
         //param: curSteps
+        #endregion
     }
 }

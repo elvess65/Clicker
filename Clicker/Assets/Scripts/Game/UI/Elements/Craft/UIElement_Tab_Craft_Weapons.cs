@@ -1,16 +1,16 @@
-﻿using clicker.datatables;
+﻿using clicker.battle;
+using clicker.datatables;
 using UnityEngine;
+using static clicker.account.Account.AccountUpgrades;
 
 namespace clicker.general.ui.windows
 {
-    public class UIElement_Tab_Craft_Weapons : UIElement_Tab_Craft_TabWithSlots<UIElement_WeaponSlotsController>
+    public class UIElement_Tab_Craft_Weapons : UIElement_Tab_Craft_TabWithSlots<UIElement_WeaponSlotsController, WeaponManager>
     {
         public override void InitTab()
         {
             if (!m_IsInitialized)
             {
-                Debug.Log("UIElement_Tab_Craft_Weapons: InitTab");
-
                 base.InitTab();
 
                 InitializeSlots();
@@ -30,31 +30,20 @@ namespace clicker.general.ui.windows
                                                                      false);
         }
 
+        protected override WeaponManager GetSelectedItemsManager()
+        {
+            return GameManager.Instance.Manager_Battle.SelectedWeaponManager;
+        }
+
+        protected override DataTableUpgrades.UpgradeTypes GetUpgradeType()
+        {
+            return DataTableUpgrades.UpgradeTypes.WeaponSlot;
+        }
+
         protected override void AddItemToSlot(int index, DataTableItems.ItemTypes type)
         {
             //Добавить оружие в ячейку выбранного оружия
             GameManager.Instance.Manager_Battle.SelectedWeaponManager.AddItem(index, type);
-        }
-
-        protected override void AddSlotButton_PressHandler(RectTransform buttonTransform)
-        {
-            //TODO
-            //increment progress
-            //if result - incrementProgress
-            //  get level - account.getLevel
-            //  updateProgress (account.getProgress, dataTable.getSteps(level))
-            //else result - incrementLevel
-            //  hide
-
-            GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot--;
-            buttonTransform.GetComponent<UIElement_AddItemSlot>().UpdateProgress(GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot,
-                                                                                 GameManager.Instance.Manager_Battle.SelectedWeaponManager.TotalAddSlot);
-
-            if (GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot <= 0)
-            {
-                GameManager.Instance.Manager_Battle.SelectedWeaponManager.AddSlot();
-                buttonTransform.gameObject.SetActive(false);
-            }
         }
 
 

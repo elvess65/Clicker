@@ -13,6 +13,7 @@ namespace clicker.account
     public class Account
     {
         public AccountInventory Inventory;
+        public AccountUpgrades Upgrades;
 
         public int AccountID { get; private set; }
         public int HP { get; private set; }
@@ -23,7 +24,8 @@ namespace clicker.account
         public int Level { get; private set; }
         
         public Account(int accountID, int hp, int craftTime, DataTableLevels.AgeTypes age, int level, 
-            DataTableItems.ItemTypes[] selectedWeapon, DataTableItems.ItemTypes[] selectedFood, Dictionary<ItemFilterTypes, int> bags)
+            DataTableItems.ItemTypes[] selectedWeapon, DataTableItems.ItemTypes[] selectedFood, Dictionary<ItemFilterTypes, int> bags,
+            Dictionary<UpgradeTypes, (int, int)> upgradeStates)
         {
             //Base
             AccountID = accountID;
@@ -36,6 +38,7 @@ namespace clicker.account
 
             //Other
             Inventory = new AccountInventory(selectedWeapon, selectedFood, bags);
+            Upgrades = new AccountUpgrades(upgradeStates);
         }
 
         public void IncrementAge()
@@ -511,7 +514,8 @@ namespace clicker.account
             public enum IncrementResult
             {
                 IncrementProgress,
-                IncrementLevel
+                IncrementLevel,
+                None
             }
 
             private Dictionary<UpgradeTypes, (int level, int progressToNext)> m_UpgradeStates;
@@ -547,29 +551,50 @@ namespace clicker.account
                 return -1;
             }
 
-
+            /// <summary>
+            /// Увеличить прогресс улучшения
+            /// </summary>
+            /// <param name="type">Тип улучшения</param>
+            /// <returns>Результат выполнения</returns>
             public IncrementResult IncrementUpgradeProgress(UpgradeTypes type)
             {
-                IncrementResult result = IncrementResult.IncrementProgress;
+                IncrementResult result = IncrementResult.None;
                 if (m_UpgradeStates.ContainsKey(type))
                 {
-                    //TODO: 
-                    //Get progress to next by curLvl (nxtPrg)
-                    //Get current progress (curPrg)
-                    //increment curPrg (curPrg++)
-                    //compare curPrg >= nxtPrg (was level up)
-                    //if + 
-                    //  curLvl ++ 
-                    //  curPrg = 0
-                    //  result: incrementLevel
-                    //else 
-                    //  curPrg++
-                    //  result: incrementProgress
+                    //Получить текущий уровень 
+                    int curLvl = GetUpgradeLevel(type);
 
-                    (int curUpgradeLevel, int stepsToNext) state = m_UpgradeStates[type];
-                    state.Item2++;
+                    //Получить шаги к следующему уровню
+                    int stepsToNext = DataTableUpgrades.GetStepsToNext(type, curLvl);
 
-                    m_UpgradeStates[type] = state;
+                    //Если к следующему уровню 0 шагов - достигнут максимальный уровень
+                    if (stepsToNext == 0)
+                        return result;
+
+                    //Получить текущий прогресс до следующего уровня
+                    int curProgress = GetUpgradeProgress(type);
+
+                    //Увеличить прогресс
+                    curProgress++;
+
+                    //Задать результат выполнения - повышение прогресса (перезапишется если было повышение уровня)
+                    result = IncrementResult.IncrementProgress;
+
+                    //Если новый прогресс достаточен для повышения уровня
+                    if (curProgress >= stepsToNext)
+                    {
+                        //Повысить уровень
+                        curLvl++;
+                        
+                        //Обнулить текущий прогрес
+                        curProgress = 0;
+
+                        //Задать результат выполнения - повышение уровня
+                        result = IncrementResult.IncrementLevel;
+                    }
+
+                    //Изменить состояние улучшения
+                    m_UpgradeStates[type] = (curLvl, curProgress);
                 }
 
                 return result;

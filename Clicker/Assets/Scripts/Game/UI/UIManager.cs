@@ -51,16 +51,15 @@ namespace clicker.general.ui
             return foodSlotsController;
         }
 
-        //TODO
-        //Seprate init depends on upgradeType
-        public UIElement_AddItemSlot CreateAddItemSlotButton(RectTransform parent)
+
+        public UIElement_AddItemSlot CreateAddItemSlotButton(RectTransform parent, DataTableUpgrades.UpgradeTypes upgradeType)
         {
             UIElement_AddItemSlot addWeaponSlotButton = Instantiate(WindowsManager.UIElement_AddItemSlotPrefab, parent);
-            addWeaponSlotButton.Init(GameManager.Instance.Manager_Battle.SelectedWeaponManager.CurAddSlot,
-                                     GameManager.Instance.Manager_Battle.SelectedWeaponManager.TotalAddSlot);
+            addWeaponSlotButton.Init(upgradeType);
 
             return addWeaponSlotButton;
         }
+
 
         public void CreateLevelProgressBar(RectTransform parent, int level)
         {
