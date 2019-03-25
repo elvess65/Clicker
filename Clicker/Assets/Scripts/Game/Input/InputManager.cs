@@ -12,7 +12,7 @@ namespace clicker.battle
 
         void Update()
         {
-            if (GameManager.Instance.GameIsActive && m_IsActive && Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+            if (/*GameManager.Instance.GameIsActive && */m_IsActive && Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
                 OnInput?.Invoke(Input.mousePosition);
         }
 

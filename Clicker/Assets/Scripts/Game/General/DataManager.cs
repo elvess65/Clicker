@@ -20,6 +20,15 @@ namespace clicker.general
         private iFoodDataLoader m_FoodDataLoader;
         private iUpgradesDataLoader m_UpgradesDataLoader;
 
+        //Иммитация сохранения
+        public static DataTableItems.ItemTypes[] SELECTED_WPN;
+        public static DataTableItems.ItemTypes[] SELECTED_FOOD;
+        public Dictionary<DataTableItems.ItemFilterTypes, int> BAGS;
+        Dictionary<DataTableUpgrades.UpgradeTypes, (int, int)> UPGRADES;
+        public static int PLAYER_HP = 20;
+        public static int CRAFT_TIME = 15;
+        public static int MAX_FOOD_IN_SLOT = 5;
+
         void Awake()
         {
             if (Instance != null)
@@ -34,16 +43,7 @@ namespace clicker.general
         {
             Initialize();
             StartCoroutine(Wait());
-        }
-
-        //Иммитация сохранения
-        public static DataTableItems.ItemTypes[] SELECTED_WPN;  
-        public static DataTableItems.ItemTypes[] SELECTED_FOOD; 
-        public Dictionary<DataTableItems.ItemFilterTypes, int> BAGS;
-        Dictionary<DataTableUpgrades.UpgradeTypes, (int, int)> UPGRADES;
-        public static int PLAYER_HP = 20;                      
-        public static int CRAFT_TIME = 15;                      
-        public static int MAX_FOOD_IN_SLOT = 5;                
+        }           
 
         void Initialize()
         {
@@ -51,6 +51,7 @@ namespace clicker.general
             int accountID = 1;
             DataTableLevels.AgeTypes age = DataTableLevels.AgeTypes.FirstAge;
             int level = 0;
+            int coins = 0;
 
             //Слоты оружия
             int defaultSlotsCount = 1;
@@ -97,7 +98,7 @@ namespace clicker.general
             DataTableUpgrades.SetData(m_UpgradesDataLoader.GetData(accountID));
 
             //Создать акканту
-            PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN, SELECTED_FOOD, BAGS, UPGRADES);
+            PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, coins, SELECTED_WPN, SELECTED_FOOD, BAGS, UPGRADES);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 1);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Berries, 2);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.GrilledMeat, 3);
@@ -116,6 +117,7 @@ namespace clicker.general
             int accountID = 1;
             DataTableLevels.AgeTypes age = DataTableLevels.AgeTypes.FirstAge;
             int level = 0;
+            int coins = 0;
 
             //Слоты оружия
             int defaultSlotsCount = 1;
@@ -146,7 +148,7 @@ namespace clicker.general
             UPGRADES.Add(DataTableUpgrades.UpgradeTypes.FoodBag, (1, 0));
 
             //Создать акканту
-            PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, SELECTED_WPN, SELECTED_FOOD, BAGS, UPGRADES);
+            PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, coins, SELECTED_WPN, SELECTED_FOOD, BAGS, UPGRADES);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 1);
         }
 

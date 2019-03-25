@@ -58,3 +58,4 @@ MonoBehaviour:
     MaxSpeed: 15
     NewEnemyEachAmountOfLevels: 2
     EnemyTypes: 0000000001000000020000000300000004000000
+    BaseCoinCount: 3

@@ -38,6 +38,9 @@ namespace clicker.battle
             PopulationManager = GetComponent<PopulationManager>();
             PopulationManager.Init();
 
+            //UI собранной награды
+            GameManager.Instance.Manager_UI.CreateUI_Coins(GameManager.Instance.Manager_UI.UIParent_LeftTop, DataManager.Instance.PlayerAccount.Coins);
+
             //Инициализация ввода для атаки
             GameManager.Instance.Manager_Input.OnInput += InputHandler;
             GameManager.Instance.Manager_Input.EnableInput(true);
@@ -46,7 +49,7 @@ namespace clicker.battle
             m_LevelController = GetComponent<level.LevelController>();
             m_LevelController.OnLevelFinished += LevelFinishedHandler;
             m_LevelController.Init(age, level);
-            //m_LevelController.StartSpawn();
+            m_LevelController.StartSpawn();
         }
 
 
@@ -71,7 +74,18 @@ namespace clicker.battle
                 //Нанести урон врагу
                 Enemy enemy = hit.collider.gameObject.GetComponent<Enemy>();
                 if (enemy != null)
+                {
                     enemy.HPController.TakeDamage(SelectedWeaponManager.UseItem());
+                    return;
+                }
+
+                //Поднять объект
+                PickableObject pickableObj = hit.collider.gameObject.GetComponent<PickableObject>();
+                if (pickableObj != null)
+                {
+                    pickableObj.Pick();
+                    return;
+                }
             }
         }
     }

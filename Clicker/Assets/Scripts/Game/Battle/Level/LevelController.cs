@@ -38,6 +38,9 @@ namespace clicker.battle.level
 
             EnemyTypes[] enemies = DataTableLevels.GetEnemiesForLevel(age, level);
 
+            //Loot
+            int maxCoinCount = DataTableLevels.GetMaxCoinCount(age, level);
+
             Debug.LogWarning(string.Format("LevelController: Start level. Age: {0}. Level: {1}", age, level));           
             Debug.Log(string.Format(" - HP {0}. HPSpreadPercent {1} \n - SpawnCount: {2}. SpawnCountSpread: {3} \n SpawnRate: {4}. SpawnRateSpread: {5} \n - Speed: {6}. SpeedSpread: {7}. MaxSpeed: {8}",
                                     hp, hpSpreadPercent,
@@ -59,7 +62,8 @@ namespace clicker.battle.level
                                     rate,           rateSpread, 
                                     speed,          speedSpreadPercent,         //Enemies
                                     maxSpeed,
-                                    enemies);
+                                    enemies,
+                                    maxCoinCount);                              //Loot
 
                 m_TotalEnemiesOnLevel += SpawnPoints[i].ActualSpawnCount;
             }

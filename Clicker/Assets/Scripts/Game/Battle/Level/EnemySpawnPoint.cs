@@ -26,8 +26,10 @@ namespace clicker.battle.level
         private float m_Speed;
         private float m_SpeedSpreadPercent;
         private float m_MaxSpeed;
-
         private datatables.DataTableEnemies.EnemyTypes[] m_EnemyTypes;
+
+        //Loot 
+        private int m_MaxCoinCount;
 
         private const int m_RANDOM_VALUE_FOR_ADD = 35;
         private const int m_RANDOM_VALUE_FOR_REMOVE = 70;
@@ -51,7 +53,9 @@ namespace clicker.battle.level
                          // - Speed
                          float speed, float speedSpreadPercent, float maxSpeed,
                          // - Enemy
-                         datatables.DataTableEnemies.EnemyTypes[] enemyTypes) 
+                         datatables.DataTableEnemies.EnemyTypes[] enemyTypes,
+                         //Loot
+                         int maxCoinCount) 
         {
             //HP 
             m_HP = hp;
@@ -65,8 +69,10 @@ namespace clicker.battle.level
             m_Speed = speed;
             m_SpeedSpreadPercent = speedSpreadPercent;
             m_MaxSpeed = maxSpeed;
-
             m_EnemyTypes = enemyTypes;
+
+            //Loot
+            m_MaxCoinCount = maxCoinCount;
 
             //Other
             m_DestroyedEnemiesCount = 0;
@@ -97,6 +103,7 @@ namespace clicker.battle.level
             if (m_CurSpawnCount >= ActualSpawnCount)
                 m_CanSpawn = false;
 
+            int coinReward = GetCoinReward(m_MaxCoinCount);
             int randomHP = GetSpreadByPercent(m_HP, m_HPSpreadPercent);
             float randomSpeed = GetSpreadByPercent(m_Speed, m_SpeedSpreadPercent);
             randomSpeed = Mathf.Clamp(randomSpeed, 0, m_MaxSpeed);
@@ -104,7 +111,8 @@ namespace clicker.battle.level
 
             Enemy enemy = Instantiate(GameManager.Instance.AssetsLibrary.GetPrefab_Enemy(randomEnemyType), transform.position, Quaternion.identity);
             enemy.OnCharacterDestroyed += EnemyDestroyedHandler;
-            enemy.Init(randomHP, randomSpeed, PathController);
+            enemy.OnPickReward += PickReward_Handler;
+            enemy.Init(randomHP, randomSpeed, PathController, coinReward);
 
             Debug.Log(string.Format("EnemySpawnPoint: Spawn enemy {0} with HP: {1} and speed: {2}", randomEnemyType, randomHP, randomSpeed));
         }
@@ -132,6 +140,25 @@ namespace clicker.battle.level
             }
         }
 
+
+        /// <summary>
+        /// Обработчик поднятия награды
+        /// </summary>
+        /// <param name="reward">Награда</param>
+        void PickReward_Handler(int reward)
+        {
+            DataManager.Instance.PlayerAccount.IncrementCoins(reward);
+            GameManager.Instance.Manager_UI.UIElement_Coins.UpdateAmount(DataManager.Instance.PlayerAccount.Coins);
+        }
+
+        /// <summary>
+        /// Награда за врага
+        /// </summary>
+        /// <param name="maxCoinCount">Максимально возможная награда</param>
+        int GetCoinReward(int maxCoinCount)
+        {
+            return UnityEngine.Random.Range(0, maxCoinCount + 1);
+        }
 
         /// <summary>
         /// Разброс процентного значения. Версия для int

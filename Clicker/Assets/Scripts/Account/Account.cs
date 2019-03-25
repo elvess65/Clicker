@@ -18,12 +18,13 @@ namespace clicker.account
         public int AccountID { get; private set; }
         public int HP { get; private set; }
         public int CraftTime { get; private set; }
+        public int Coins { get; private set; }
 
         //Level
         public DataTableLevels.AgeTypes Age { get; private set; }
         public int Level { get; private set; }
         
-        public Account(int accountID, int hp, int craftTime, DataTableLevels.AgeTypes age, int level, 
+        public Account(int accountID, int hp, int craftTime, DataTableLevels.AgeTypes age, int level, int coins, 
             DataTableItems.ItemTypes[] selectedWeapon, DataTableItems.ItemTypes[] selectedFood, Dictionary<ItemFilterTypes, int> bags,
             Dictionary<UpgradeTypes, (int, int)> upgradeStates)
         {
@@ -31,6 +32,7 @@ namespace clicker.account
             AccountID = accountID;
             HP = hp;
             CraftTime = craftTime;
+            Coins = coins;
 
             //Level
             Age = age;
@@ -55,6 +57,16 @@ namespace clicker.account
         {
             Age = DataTableLevels.AgeTypes.FirstAge;
             Level = 0;
+        }
+
+        public void IncrementCoins(int amount)
+        {
+            Coins += amount;
+        }
+
+        public void DecrementCoint(int amount)
+        {
+            Coins = UnityEngine.Mathf.Clamp(Coins - amount, 0, Coins);
         }
 
 

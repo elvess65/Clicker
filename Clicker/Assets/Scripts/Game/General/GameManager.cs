@@ -1,4 +1,4 @@
-﻿using clicker.account;
+﻿ using clicker.account;
 using clicker.battle;
 using clicker.datatables;
 using clicker.general.ui;
@@ -6,6 +6,7 @@ using clicker.general.ui.windows;
 using clicker.items;
 using clicker.tools;
 using FrameworkPackage.UI.Windows;
+using UnityEditor;
 using UnityEngine;
 
 namespace clicker.general
@@ -182,13 +183,13 @@ namespace clicker.general
 
             //Показать окно повышения уровня
             UIWindow_CloseButton wnd = Manager_UI.WindowsManager.ShowWindow(Manager_UI.WindowsManager.UIWindow_LevelFinished) as UIWindow_CloseButton;
-            wnd.Button_Close.onClick.AddListener(() => 
+            wnd.Button_Close.onClick.AddListener(() =>
             {
                 //Запустить окно, которое показывает скольво времени для крафта осталось
                 UIWindow_CraftTime craftTimeWnd = Manager_UI.WindowsManager.ShowWindowWithoutFade(Manager_UI.WindowsManager.UIWindow_CraftTime) as UIWindow_CraftTime;
                 craftTimeWnd.OnUIHided += ReloadLevel;
                 craftTimeWnd.OnUIHided += () =>
-                { 
+                {
                     m_State = GameStates.Level;
                 };
                 craftTimeWnd.Init(DataManager.Instance.PlayerAccount.CraftTime);
@@ -200,5 +201,5 @@ namespace clicker.general
             Manager_Battle.SelectedWeaponManager.UnscribeFromGlobalEvents();
             UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
         }
-    }
+    } 
 }

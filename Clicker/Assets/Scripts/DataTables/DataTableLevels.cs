@@ -24,6 +24,7 @@ namespace clicker.datatables
                                         data[i].BaseSpeed, data[i].BaseSpeedSpreadPercent, data[i].MaxSpeed,        //Enemies
                                         data[i].NewEnemyEachAmountOfLevels,
                                         data[i].EnemyTypes,
+                                        data[i].BaseCoinCount,                                                      //Loot
                                         GetWinConditionControllerForAge(data[i].AgeType));                          //Win condition
 
                 m_Levels.Add(data[i].AgeType, level);
@@ -172,6 +173,18 @@ namespace clicker.datatables
             return new DataTableEnemies.EnemyTypes[] { DataTableEnemies.EnemyTypes.Enemy1, DataTableEnemies.EnemyTypes.Enemy2, DataTableEnemies.EnemyTypes.Enemy3 };
         }
 
+        //Loot
+        public static int GetMaxCoinCount(AgeTypes age, int lvl)
+        {
+            if (m_Levels.ContainsKey(age))
+            {
+                int baseCointCount = m_Levels[age].BaseCoinCount;
+                return baseCointCount + baseCointCount * lvl;
+            }
+
+            return 1;
+        }
+
         //Win condition
         public static AgeWinConditionController GetWinConditionController(AgeTypes age)
         {
@@ -229,6 +242,8 @@ namespace clicker.datatables
             // - Enemy
             private float m_NewEnemyEachAmountOfLevels;   //CurLvl = 7. 7 / 2 = 3.5 = 4; Enemies [0] [1] [2] [3]
             private DataTableEnemies.EnemyTypes[] m_EnemyTypes;
+            //Loot
+            private int m_BaseCoinCount;
 
             public AgeTypes AgeType => m_AgeType;
             //HP
@@ -251,6 +266,8 @@ namespace clicker.datatables
             // - Enemy
             public float NewEnemyEachAmountOfLevels => m_NewEnemyEachAmountOfLevels;
             public DataTableEnemies.EnemyTypes[] EnemyTypes => m_EnemyTypes;
+            //Loot
+            public int BaseCoinCount => m_BaseCoinCount;
             //Win condition
             public AgeWinConditionController WinConditionController { get; private set; }
 
@@ -269,6 +286,8 @@ namespace clicker.datatables
                         // - Enemy
                         float newEnemyEachAmountOfLevels,
                         DataTableEnemies.EnemyTypes[] enemyTypes,
+                        //Loot
+                        int baseCoinCount,
                         //Win condition
                         AgeWinConditionController winConditionController)
             {
@@ -296,6 +315,8 @@ namespace clicker.datatables
                 // - Enemy
                 m_NewEnemyEachAmountOfLevels = newEnemyEachAmountOfLevels;
                 m_EnemyTypes = enemyTypes;
+                //Loot
+                m_BaseCoinCount = baseCoinCount;
                 //Win condition
                 WinConditionController = winConditionController;
             }

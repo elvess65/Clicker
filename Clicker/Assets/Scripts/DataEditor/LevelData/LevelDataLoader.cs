@@ -44,5 +44,7 @@ namespace clicker.datatables
         [Header(" - Enemy")]
         public float NewEnemyEachAmountOfLevels = 2;      //CurLvl = 7. 7 / 2 = 3.5 = 4; Enemies [0] [1] [2] [3]
         public EnemyTypes[] EnemyTypes;
+        [Header("Loot")]
+        public int BaseCoinCount = 1;
     }
 }

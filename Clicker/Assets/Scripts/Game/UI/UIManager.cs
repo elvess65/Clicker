@@ -14,6 +14,7 @@ namespace clicker.general.ui
         public UIElement_WeaponSlotsController WeaponSlotController { get; private set; }
         public UIElement_FoodSlotsController FoodSlotController { get; private set; }
         public UIElement_LevelProgressBar LevelProgressBar { get; private set; }
+        public UIElement_Coins UIElement_Coins { get; private set; }
 
         [Header("Buttons")]
         public Button Button_ShowCraft;
@@ -21,6 +22,7 @@ namespace clicker.general.ui
         public RectTransform UIParent_MiddleTop;
         public RectTransform UIParent_MiddleLeft;
         public RectTransform UIParent_MiddleRight;
+        public RectTransform UIParent_LeftTop;
 
         public void Init()
         {
@@ -65,6 +67,12 @@ namespace clicker.general.ui
         {
             LevelProgressBar = Instantiate(WindowsManager.UIElement_LevelProgressBarPrefab, parent);
             LevelProgressBar.Init(level);
+        }
+
+        public void CreateUI_Coins(RectTransform parent, int amount)
+        {
+            UIElement_Coins = Instantiate(WindowsManager.UIElement_CoinsPrefab, parent);
+            UIElement_Coins.UpdateAmount(amount);
         }
 
 

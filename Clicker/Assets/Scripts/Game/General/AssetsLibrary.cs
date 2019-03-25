@@ -1,4 +1,5 @@
-﻿using clicker.battle.character;
+﻿using clicker.battle;
+using clicker.battle.character;
 using System.Collections.Generic;
 using UnityEngine;
 using static clicker.datatables.DataTableEnemies;
@@ -7,6 +8,7 @@ namespace clicker.general
 {
     public class AssetsLibrary : MonoBehaviour
     {
+        public Behaviour_CoinReward CoinRewardPrefab;
         public EnemyData[] Enemies;
 
         private Dictionary<EnemyTypes, EnemyData> m_Enemies;
