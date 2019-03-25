@@ -50,7 +50,7 @@ namespace clicker.general.ui
         /// <param name="type">Тип предмета</param>
         /// <param name="amount">Количество предметов</param>
         /// <param name="progress">Текущий прогресс создания</param>
-        public void Init(DataTableItems.ItemTypes type, int amount, float progress, DataTableItems.ItemAmountContainer[] requiredItems)
+        public void Init(DataTableItems.ItemTypes type, int amount, float progress, bool allowAutocraft, DataTableItems.ItemAmountContainer[] requiredItems)
         {
             //Тип предмета
             Type = type;
@@ -78,16 +78,21 @@ namespace clicker.general.ui
                 }
             }
 
-            //Toggle автокрафта
-            if (Toggle_AutoCraft != null)
+            if (!allowAutocraft)
+                Toggle_AutoCraft.gameObject.SetActive(false);
+            else
             {
-                Toggle_AutoCraft.OnTryChangeValue += Toggle_TryChangeValueHandler;
-                Toggle_AutoCraft.Init();
-            }
+                //Toggle автокрафта
+                if (Toggle_AutoCraft != null)
+                {
+                    Toggle_AutoCraft.OnTryChangeValue += Toggle_TryChangeValueHandler;
+                    Toggle_AutoCraft.Init();
+                }
 
-            //Прогресс тиков автокрафта
-            if (Image_AutoCraftProgress != null)
-                Image_AutoCraftProgress.fillAmount = 0;
+                //Прогресс тиков автокрафта
+                if (Image_AutoCraftProgress != null)
+                    Image_AutoCraftProgress.fillAmount = 0;
+            }
 
             base.Init();
         }

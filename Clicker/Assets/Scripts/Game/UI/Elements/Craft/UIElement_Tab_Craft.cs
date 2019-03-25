@@ -37,7 +37,12 @@ namespace clicker.general.ui.windows
                     {
                         //Создать объект
                         UIElement_CraftItem item = Instantiate(GameManager.Instance.Manager_UI.WindowsManager.UIElement_CraftItemPrefab, ItemsParent);
-                        item.Init(type, DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(type), GameManager.Instance.CraftItemFactory.GetProgressForItem(type), itemData.RequiredItems);
+                        item.Init(type, 
+                                  DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(type),
+                                  GameManager.Instance.CraftItemFactory.GetProgressForItem(type),
+                                  itemData.AllowAutocraft,
+                                  itemData.RequiredItems);
+
                         item.OnItemPress += Item_PressHanlder;
                         item.OnAutoCraftToggled += ItemToggle_TryChangeValueHandle;
 

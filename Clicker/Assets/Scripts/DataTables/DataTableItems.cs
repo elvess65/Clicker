@@ -26,7 +26,7 @@ namespace clicker.datatables
                 for (int i = 0; i < data.Length; i++)
                 {
                     //Создать предмет
-                    Item item = new Item(data[i].Type, data[i].TickToCreate, data[i].FilterTypes);
+                    Item item = new Item(data[i].Type, data[i].TickToCreate, data[i].AllowAutocraft, data[i].FilterTypes);
 
                     //Создать необходимые для создания предмета предметы
                     for (int j = 0; j < data[i].RequiredItems.Length; j++)
@@ -136,18 +136,21 @@ namespace clicker.datatables
         {  
             private ItemTypes m_Type;                           //Тип предмета
             private int m_TicksToCreate;                        //Количество шагов для создания
+            private bool m_AllowAutocraft;                      //Можно ли автодобывать данный предмет
             private List<ItemFilterTypes> m_FilterTypes;        //Фильтр для определения типа предмета (для вывода во вкладках и использования)
             private List<ItemAmountContainer> m_RequiredItems;  //Количество предметов, необходимые для создания этого предмета
 
             public ItemTypes Type => m_Type;
             public int TicksToCreate => m_TicksToCreate;
+            public bool AllowAutocraft => m_AllowAutocraft;
             public ItemFilterTypes SingleFilter => m_FilterTypes[0];
             public ItemAmountContainer[] RequiredItems => m_RequiredItems.ToArray();
 
-            public Item(ItemTypes type, int ticksToCreate, List<ItemFilterTypes> filterType)
+            public Item(ItemTypes type, int ticksToCreate, bool allowAutocraft, List<ItemFilterTypes> filterType)
             {
                 m_Type = type;
                 m_TicksToCreate = ticksToCreate;
+                m_AllowAutocraft = allowAutocraft;
                 m_FilterTypes = new List<ItemFilterTypes>();
 
                 for (int i = 0; i < filterType.Count; i++)

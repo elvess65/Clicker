@@ -708,6 +708,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIElement - Toggle - AutoCraft
       objectReference: {fileID: 0}
+    - target: {fileID: 4811134503307878188, guid: aa4ed4906eff8b945b51f5404243c106,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2379027169336689839, guid: aa4ed4906eff8b945b51f5404243c106,
         type: 3}
       propertyPath: m_LocalPosition.x

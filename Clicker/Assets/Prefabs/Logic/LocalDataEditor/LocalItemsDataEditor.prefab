@@ -46,24 +46,29 @@ MonoBehaviour:
   Data_Items:
   - Type: 0
     TickToCreate: 0
+    AllowAutocraft: 0
     FilterTypes: 00000000
     RequiredItems: []
   - Type: 1
     TickToCreate: 2
+    AllowAutocraft: 1
     FilterTypes: 02000000
     RequiredItems: []
   - Type: 2
     TickToCreate: 3
+    AllowAutocraft: 1
     FilterTypes: 02000000
     RequiredItems: []
   - Type: 3
     TickToCreate: 5
+    AllowAutocraft: 1
     FilterTypes: 02000000
     RequiredItems:
     - Type: 1
       Amount: 3
   - Type: 4
     TickToCreate: 5
+    AllowAutocraft: 1
     FilterTypes: 02000000
     RequiredItems:
     - Type: 1
@@ -74,16 +79,19 @@ MonoBehaviour:
       Amount: 1
   - Type: 5
     TickToCreate: 7
+    AllowAutocraft: 1
     FilterTypes: 01000000
     RequiredItems: []
   - Type: 6
     TickToCreate: 5
+    AllowAutocraft: 1
     FilterTypes: 03000000
     RequiredItems:
     - Type: 1
       Amount: 2
   - Type: 7
     TickToCreate: 15
+    AllowAutocraft: 1
     FilterTypes: 02000000
     RequiredItems:
     - Type: 5
@@ -92,12 +100,14 @@ MonoBehaviour:
       Amount: 5
   - Type: 8
     TickToCreate: 5
+    AllowAutocraft: 1
     FilterTypes: 01000000
     RequiredItems:
     - Type: 1
       Amount: 3
   - Type: 9
     TickToCreate: 7
+    AllowAutocraft: 1
     FilterTypes: 03000000
     RequiredItems:
     - Type: 8
@@ -108,6 +118,7 @@ MonoBehaviour:
       Amount: 1
   - Type: 10
     TickToCreate: 7
+    AllowAutocraft: 1
     FilterTypes: 02000000
     RequiredItems:
     - Type: 3
@@ -118,6 +129,7 @@ MonoBehaviour:
       Amount: 3
   - Type: 11
     TickToCreate: 20
+    AllowAutocraft: 0
     FilterTypes: 01000000
     RequiredItems:
     - Type: 2
@@ -126,14 +138,17 @@ MonoBehaviour:
       Amount: 10
   - Type: 12
     TickToCreate: 10
+    AllowAutocraft: 1
     FilterTypes: 04000000
     RequiredItems: []
   - Type: 13
     TickToCreate: 20
+    AllowAutocraft: 1
     FilterTypes: 04000000
     RequiredItems: []
   - Type: 14
     TickToCreate: 10
+    AllowAutocraft: 1
     FilterTypes: 04000000
     RequiredItems:
     - Type: 13
@@ -142,10 +157,12 @@ MonoBehaviour:
       Amount: 1
   - Type: 15
     TickToCreate: 5
+    AllowAutocraft: 1
     FilterTypes: 04000000
     RequiredItems: []
   - Type: 16
     TickToCreate: 5
+    AllowAutocraft: 0
     FilterTypes: 05000000
     RequiredItems:
     - Type: 14
@@ -154,6 +171,7 @@ MonoBehaviour:
       Amount: 5
   - Type: 17
     TickToCreate: 5
+    AllowAutocraft: 0
     FilterTypes: 05000000
     RequiredItems:
     - Type: 16

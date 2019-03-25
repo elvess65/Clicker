@@ -32,6 +32,7 @@ namespace clicker.datatables
     {
         public ItemTypes Type;
         public int TickToCreate;
+        public bool AllowAutocraft;
         public List<ItemFilterTypes> FilterTypes;
         public ItemDataAmountContainer[] RequiredItems;
 
