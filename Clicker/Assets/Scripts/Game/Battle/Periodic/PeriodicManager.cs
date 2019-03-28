@@ -9,25 +9,24 @@ namespace clicker.battle
         public System.Action<float> OnProgress;
         public System.Action OnPeriodFinished;
 
-        private float m_ActionPeriod;
         private bool m_Loop = false;
-        private bool m_WasStopped = false;
         private InterpolationData<float> m_LerpPeriod;
 
         public float Progress => m_LerpPeriod.Progress;
         public float Multiplayer { get; private set; }
-        public bool WasStopped => m_WasStopped;
+        public bool WasStopped { get; private set; }
 
         public void Init(float actionPeriod, bool loop, float multiplayer = 1)
         {
             SetMultiplyer(multiplayer);
 
-            m_Loop = loop;
-            SetPeriod(actionPeriod);
-
-            m_LerpPeriod = new InterpolationData<float>(actionPeriod);
+            m_LerpPeriod = new InterpolationData<float>();
             m_LerpPeriod.From = 0;
             m_LerpPeriod.To = 1;
+
+            m_Loop = loop;
+
+            SetPeriod(actionPeriod);
         }
 
         public void SetMultiplyer(float multiplayer)
@@ -37,14 +36,13 @@ namespace clicker.battle
 
         public void SetPeriod(float actionPeriod)
         {
-            m_ActionPeriod = actionPeriod;
-            m_LerpPeriod.TotalTime = m_ActionPeriod;
+            m_LerpPeriod.TotalTime = actionPeriod;
         }
 
         public void StartPeriod()
         {
-            if (m_WasStopped)
-                m_WasStopped = false;
+            if (WasStopped)
+                WasStopped = false;
 
             m_LerpPeriod.Start();
         }
@@ -52,7 +50,7 @@ namespace clicker.battle
         public void StopPeriod()
         {
             m_LerpPeriod.Stop();
-            m_WasStopped = true;
+            WasStopped = true;
         }
 
 
@@ -68,7 +66,7 @@ namespace clicker.battle
                 {
                     OnPeriodFinished?.Invoke();
 
-                    if (!m_WasStopped)
+                    if (!WasStopped)
                     {
                         if (m_Loop)
                             StartPeriod();
