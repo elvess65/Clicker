@@ -23,7 +23,7 @@ namespace clicker.battle
             SetMultiplyer(multiplayer);
 
             m_Loop = loop;
-            m_ActionPeriod = actionPeriod;
+            SetPeriod(actionPeriod);
 
             m_LerpPeriod = new InterpolationData<float>(actionPeriod);
             m_LerpPeriod.From = 0;
@@ -33,6 +33,12 @@ namespace clicker.battle
         public void SetMultiplyer(float multiplayer)
         {
             Multiplayer = multiplayer;
+        }
+
+        public void SetPeriod(float actionPeriod)
+        {
+            m_ActionPeriod = actionPeriod;
+            m_LerpPeriod.TotalTime = m_ActionPeriod;
         }
 
         public void StartPeriod()

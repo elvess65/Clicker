@@ -1,12 +1,10 @@
-﻿ using clicker.account;
-using clicker.battle;
+﻿using clicker.battle;
 using clicker.datatables;
 using clicker.general.ui;
 using clicker.general.ui.windows;
 using clicker.items;
 using clicker.tools;
 using FrameworkPackage.UI.Windows;
-using UnityEditor;
 using UnityEngine;
 
 namespace clicker.general
@@ -59,7 +57,7 @@ namespace clicker.general
             TimeMultiplayerController.Init();
 
             //Инициализация автоматического добывания
-            AutoCraftItemsController.Init(2, 1);
+            AutoCraftItemsController.Init(0, 5, 1, 3);
 
             //Инициализация боя
             Manager_Battle.Init(DataManager.Instance.PlayerAccount.HP, DataManager.Instance.PlayerAccount.Age, DataManager.Instance.PlayerAccount.Level);

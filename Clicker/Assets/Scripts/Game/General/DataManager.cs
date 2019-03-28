@@ -19,6 +19,7 @@ namespace clicker.general
         private iPeriodicDataLoader m_PeriodicDataLoader;
         private iFoodDataLoader m_FoodDataLoader;
         private iUpgradesDataLoader m_UpgradesDataLoader;
+        private iWorkersDataLoader m_WorkersDataLoader;
 
         //Иммитация сохранения
         public static DataTableItems.ItemTypes[] SELECTED_WPN;
@@ -88,6 +89,7 @@ namespace clicker.general
             m_PeriodicDataLoader = new PeriodicDataLoader_Local();
             m_FoodDataLoader = new FoodDataLoader_Local();
             m_UpgradesDataLoader = new UpgradesDataLoader_Local();
+            m_WorkersDataLoader = new WorkersDataLoader_Local();
 
             //Загрузить данные
             DataTableItems.SetData(m_ItemsDataLoader.GetData(accountID), m_ItemsDataLoader.GetIgnoreData(accountID));
@@ -96,6 +98,7 @@ namespace clicker.general
             DataTablePeriodic.SetData(m_PeriodicDataLoader.GetData(accountID));
             DataTableFood.SetData(m_FoodDataLoader.GetData(accountID));
             DataTableUpgrades.SetData(m_UpgradesDataLoader.GetData(accountID));
+            DataTableWorkers.SetData(m_WorkersDataLoader.GetData(accountID));
 
             //Создать акканту
             PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, coins, SELECTED_WPN, SELECTED_FOOD, BAGS, UPGRADES);

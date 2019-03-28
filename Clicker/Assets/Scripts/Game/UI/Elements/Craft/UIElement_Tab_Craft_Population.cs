@@ -8,6 +8,7 @@ namespace clicker.general.ui.windows
     public class UIElement_Tab_Craft_Population : UIElement_Tab_Craft
     {
         public RectTransform ProgressParent;
+        public UIElement_Workers WorkersController;
 
         private Dictionary<DataTableItems.ItemTypes, UIElement_PopulationProgressItem> m_PopulationUIIems;
 
@@ -18,6 +19,7 @@ namespace clicker.general.ui.windows
                 Debug.Log("UIElement_Tab_Craft_Population: InitTab");
 
                 UpdatePopulationItems();
+                WorkersController.Init();
 
                 base.InitTab();
             }
@@ -72,6 +74,9 @@ namespace clicker.general.ui.windows
 
             //Обновить всем UI элементам населения состояние потребляемых ресурсов
             UpdateAbsorbedResourceItems();
+
+            //Обновить состояние панели рабочих
+            WorkersController.UpdateState();
         }
 
 

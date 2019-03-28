@@ -15,19 +15,26 @@ namespace clicker.items
         public System.Action<ItemTypes> OnPeriodFinished_Success;
         public System.Action<ItemTypes> OnPeriodFinished_Error;
 
-        private int m_MaxWorkers;
-        private float m_TickPeriod;
+        private int m_MaxPossibleLvl;
+        private int m_MaxPossibleWorkers;
         private Dictionary<ItemTypes, PeriodicManager> m_ProcessedItems;
 
-        public void Init(int maxWorkers, float tickPeriod)
+        public int WorkersAmount { get; private set; }
+        public float TickPeriod { get; private set; }
+        public int WorkersLvl { get; private set; }
+        public int OccupitedWorkers => m_ProcessedItems.Count;
+
+
+        public void Init(int workersAmount, int maxPossibleWorkers, int lvl, int maxPossibleLvl)
         {
             m_ProcessedItems = new Dictionary<ItemTypes, PeriodicManager>();
+            m_MaxPossibleWorkers = maxPossibleWorkers;
+            WorkersLvl = lvl;
+            m_MaxPossibleLvl = maxPossibleLvl;
 
-            //TODO
-            //Load items from save
+            WorkersAmount = workersAmount;
 
-            m_MaxWorkers = maxWorkers;
-            m_TickPeriod = tickPeriod;
+            SetTickPeriod();
         }
 
         public bool AddItemToProcessing(ItemTypes itemType)
@@ -35,7 +42,7 @@ namespace clicker.items
             PeriodicManager period = null;
             if (!m_ProcessedItems.ContainsKey(itemType))
             {
-                if (m_ProcessedItems.Count == m_MaxWorkers)
+                if (m_ProcessedItems.Count == WorkersAmount)
                 {
                     Debug.LogError("CANNT PROCESS ITEM. MAX ITEMS PROCESSED");
                     return false;
@@ -43,7 +50,7 @@ namespace clicker.items
 
                 //Создать и инициализировать период
                 period = gameObject.AddComponent<PeriodicManager>();
-                period.Init(m_TickPeriod, true);
+                period.Init(TickPeriod, true);
 
                 //Прогресс периода
                 period.OnProgress += (float progress) => { OnProgress?.Invoke(itemType, progress); };
@@ -61,7 +68,7 @@ namespace clicker.items
                         OnPeriodFinished_Success?.Invoke(itemType);
                     }
                     else //Если нельзя скрафтить предмет - вызвать соответствующее событие
-                        OnPeriodFinished_Error.Invoke(itemType);
+                        OnPeriodFinished_Error?.Invoke(itemType);
                 };
 
                 //Добавить в список
@@ -100,5 +107,50 @@ namespace clicker.items
         }
 
         public bool ItemIsProcessing(ItemTypes itemType) => m_ProcessedItems.ContainsKey(itemType);
+
+
+        public void AddWorker()
+        {
+            //TODO 
+            //Get cost
+            //Compare cost with gold
+
+            if (!CanAddWorker())
+                return;
+
+            WorkersAmount = Mathf.Clamp(WorkersAmount + 1, 0, m_MaxPossibleWorkers);
+        }
+
+        public void UpgradeWorker()
+        {
+            //TODO 
+            //Get cost
+            //Compare cost with gold
+
+            if (!CanUpgradeWorker())
+                return;
+
+            WorkersLvl = Mathf.Clamp(WorkersLvl + 1, 0, m_MaxPossibleWorkers);
+            SetTickPeriod();
+
+            foreach (PeriodicManager periodic in m_ProcessedItems.Values)
+                periodic.SetPeriod(TickPeriod);
+        }
+
+        public bool CanAddWorker()
+        {
+            return WorkersAmount < m_MaxPossibleWorkers;
+        }
+
+        public bool CanUpgradeWorker()
+        {
+            return WorkersAmount > 0 && WorkersLvl < m_MaxPossibleLvl;
+        }
+
+
+        void SetTickPeriod()
+        {
+            TickPeriod = datatables.DataTableWorkers.GetTickPeriodForLvl(DataManager.Instance.PlayerAccount.Age, WorkersLvl);
+        }
     }
 }
