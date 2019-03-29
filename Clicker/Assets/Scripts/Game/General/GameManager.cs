@@ -4,6 +4,7 @@ using clicker.general.ui;
 using clicker.general.ui.windows;
 using clicker.items;
 using clicker.tools;
+using FrameworkPackage.UI;
 using FrameworkPackage.UI.Windows;
 using UnityEngine;
 
@@ -27,6 +28,7 @@ namespace clicker.general
         public ItemsFactory CraftItemFactory;
         public AutoCraftController AutoCraftItemsController;
         public TimeMultiplayerController TimeMultiplayerController;
+        public LevelLoader LevelLoader;
 
         public bool GameIsActive { get; private set; }
 
@@ -64,48 +66,6 @@ namespace clicker.general
             Manager_Battle.Init(DataManager.Instance.PlayerAccount.HP, DataManager.Instance.PlayerAccount.Age, DataManager.Instance.PlayerAccount.Level);
 
             GameIsActive = true;
-        }
-
-
-        void ItemCrafted_Handler(DataTableItems.ItemTypes type)
-        {
-            //Отнять предметы, необходимые для создания
-            DataTableItems.Item itemData = DataTableItems.GetItemDataByType(type);
-            bool hasIgnorableItemsOnCraft = DataTableItems.HasIgnorableItemsOnCraft(type);
-            for (int i = 0; i < itemData.RequiredItems.Length; i++)
-            {
-                if ((hasIgnorableItemsOnCraft && !DataTableItems.ItemShouldBeIgnoredForType(type, itemData.RequiredItems[i].Type)) || !hasIgnorableItemsOnCraft)
-                    DataManager.Instance.PlayerAccount.Inventory.RemoveItem(itemData.RequiredItems[i].Type, itemData.RequiredItems[i].Amount);
-            }
-
-            //Добавить созданный предмет
-            DataManager.Instance.PlayerAccount.Inventory.AddItem(type);
-
-            //Обновить состояние сумки если такой же предмет находился в сумке
-            if (DataManager.Instance.PlayerAccount.Inventory.BagsState.HasItemInBag(type))
-                DataManager.Instance.PlayerAccount.Inventory.BagsState.AddItemToBag(type);
-        }
-
-        void ShowCraftWindow_Handler(UIWindow_Base wnd)
-        {
-            Debug.Log("ShowCraftWindow_Handler: state " + m_State);
-
-            switch (m_State)
-            {
-                case GameStates.Level:
-                    TimeMultiplayerController.StartChangeMultiplayer(m_LEVEL_TIME_MULTIPLAYER);
-
-                    wnd.OnUIHided += () =>
-                    {
-                        TimeMultiplayerController.StartResetingMultiplayer();
-                    };
-                    break;
-            }
-        }
-
-        void MultiplayerValueChanged_Handler(float curValue)
-        {
-            OnTimeMultiplayerValueChanged?.Invoke(curValue);
         }
 
 
@@ -195,11 +155,55 @@ namespace clicker.general
             });
         }
 
+
+        void ItemCrafted_Handler(DataTableItems.ItemTypes type)
+        {
+            //Отнять предметы, необходимые для создания
+            DataTableItems.Item itemData = DataTableItems.GetItemDataByType(type);
+            bool hasIgnorableItemsOnCraft = DataTableItems.HasIgnorableItemsOnCraft(type);
+            for (int i = 0; i < itemData.RequiredItems.Length; i++)
+            {
+                if ((hasIgnorableItemsOnCraft && !DataTableItems.ItemShouldBeIgnoredForType(type, itemData.RequiredItems[i].Type)) || !hasIgnorableItemsOnCraft)
+                    DataManager.Instance.PlayerAccount.Inventory.RemoveItem(itemData.RequiredItems[i].Type, itemData.RequiredItems[i].Amount);
+            }
+
+            //Добавить созданный предмет
+            DataManager.Instance.PlayerAccount.Inventory.AddItem(type);
+
+            //Обновить состояние сумки если такой же предмет находился в сумке
+            if (DataManager.Instance.PlayerAccount.Inventory.BagsState.HasItemInBag(type))
+                DataManager.Instance.PlayerAccount.Inventory.BagsState.AddItemToBag(type);
+        }
+
+        void ShowCraftWindow_Handler(UIWindow_Base wnd)
+        {
+            Debug.Log("ShowCraftWindow_Handler: state " + m_State);
+
+            switch (m_State)
+            {
+                case GameStates.Level:
+                    TimeMultiplayerController.StartChangeMultiplayer(m_LEVEL_TIME_MULTIPLAYER);
+
+                    wnd.OnUIHided += () =>
+                    {
+                        TimeMultiplayerController.StartResetingMultiplayer();
+                    };
+                    break;
+            }
+        }
+
+        void MultiplayerValueChanged_Handler(float curValue)
+        {
+            OnTimeMultiplayerValueChanged?.Invoke(curValue);
+        }
+
+
         void ReloadLevel()
         {
             Manager_Battle.SelectedWeaponManager.UnscribeFromGlobalEvents();
             Manager_Battle.UnscribeFromGlobalevents();
-            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+
+            LevelLoader.LoadLevel(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
         }
     } 
 }

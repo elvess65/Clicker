@@ -1,15 +1,15 @@
 ﻿using clicker.account;
 using clicker.datatables;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace clicker.general
 {
     public class DataManager : MonoBehaviour
     {
         public static DataManager Instance;
+
+        public System.Action OnInitializationFinished;
 
         public Account PlayerAccount { get; private set; }
 
@@ -43,7 +43,6 @@ namespace clicker.general
         void Start()
         {
             Initialize();
-            StartCoroutine(Wait());
         }           
 
         void Initialize()
@@ -111,6 +110,8 @@ namespace clicker.general
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Meat, 50);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Fire, 50);
 
+            OnInitializationFinished?.Invoke();
+
             Debug.Log("Initialize");
         }
 
@@ -157,15 +158,7 @@ namespace clicker.general
             //Создать акканту
             PlayerAccount = new Account(accountID, PLAYER_HP, CRAFT_TIME, age, level, coins, workersAmount, workersLvl, SELECTED_WPN, SELECTED_FOOD, BAGS, UPGRADES);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Stone, 1);
-        }
-
-
-        IEnumerator Wait()
-        {
-            yield return new WaitForSeconds(1);
-
-            SceneManager.LoadScene(1);
-        }
+        } 
     }
 }
 
