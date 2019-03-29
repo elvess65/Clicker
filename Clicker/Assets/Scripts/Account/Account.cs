@@ -2,6 +2,7 @@
 using clicker.general;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 using static clicker.datatables.DataTableItems;
 using static clicker.datatables.DataTableUpgrades;
 
@@ -12,6 +13,8 @@ namespace clicker.account
     /// </summary>
     public class Account
     {
+        public System.Action<int> OnCoinsValueChanged;
+
         public AccountInventory Inventory;
         public AccountUpgrades Upgrades;
 
@@ -23,8 +26,12 @@ namespace clicker.account
         //Level
         public DataTableLevels.AgeTypes Age { get; private set; }
         public int Level { get; private set; }
-        
-        public Account(int accountID, int hp, int craftTime, DataTableLevels.AgeTypes age, int level, int coins, 
+
+        //Workers
+        public int WorkersAmount { get; private set; }
+        public int WorkersLvl { get; private set; }
+
+        public Account(int accountID, int hp, int craftTime, DataTableLevels.AgeTypes age, int level, int coins, int workersAmount, int workersLvl,
             DataTableItems.ItemTypes[] selectedWeapon, DataTableItems.ItemTypes[] selectedFood, Dictionary<ItemFilterTypes, int> bags,
             Dictionary<UpgradeTypes, (int, int)> upgradeStates)
         {
@@ -37,6 +44,10 @@ namespace clicker.account
             //Level
             Age = age;
             Level = level;
+
+            //Workers
+            WorkersAmount = workersAmount;
+            WorkersLvl = workersLvl;
 
             //Other
             Inventory = new AccountInventory(selectedWeapon, selectedFood, bags);
@@ -62,11 +73,27 @@ namespace clicker.account
         public void IncrementCoins(int amount)
         {
             Coins += amount;
+
+            OnCoinsValueChanged?.Invoke(Coins);
         }
 
-        public void DecrementCoint(int amount)
+        public void DecrementCoins(int amount)
         {
-            Coins = UnityEngine.Mathf.Clamp(Coins - amount, 0, Coins);
+            Coins = Mathf.Clamp(Coins - amount, 0, Coins);
+
+            OnCoinsValueChanged?.Invoke(Coins);
+        }
+
+        public void AddWorker()
+        {
+            DataTableWorkers.Workers workersData = DataTableWorkers.GetWorkersData(Age);
+            WorkersAmount = Mathf.Clamp(WorkersAmount + 1, 0, workersData.MaxWorkers);
+        }
+
+        public void UpgradeWorker()
+        {
+            DataTableWorkers.Workers workersData = DataTableWorkers.GetWorkersData(Age);
+            WorkersLvl = Mathf.Clamp(WorkersLvl + 1, 0, workersData.MaxWorkerLvl);
         }
 
 

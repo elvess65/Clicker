@@ -31,28 +31,27 @@ namespace clicker.general.ui
             Button_ShowCraft.onClick.AddListener(Button_ShowCraft_PressHandler);
         }
 
-        public UIElement_WeaponSlotsController CreateWeaponSlots(DataTableItems.ItemTypes[] selectedWeapons, RectTransform parent, bool cacheSlots, bool allowClickable)
+        public UIElement_WeaponSlotsController CreateWeaponSlots(DataTableItems.ItemTypes[] selectedWeapons, RectTransform parent, bool cacheResult, bool allowClickable)
         {
             UIElement_WeaponSlotsController weaponSlotsController = Instantiate(WindowsManager.UIElement_WeaponSlotControllerPrefab, parent);
             weaponSlotsController.Init(selectedWeapons, allowClickable);
 
-            if (cacheSlots)
+            if (cacheResult)
                 WeaponSlotController = weaponSlotsController;
 
             return weaponSlotsController;
         }
 
-        public UIElement_FoodSlotsController CreateFoodSlots(DataTableItems.ItemTypes[] selectedFood, RectTransform parent, bool cacheSlots, bool allowClickable)
+        public UIElement_FoodSlotsController CreateFoodSlots(DataTableItems.ItemTypes[] selectedFood, RectTransform parent, bool cacheResult, bool allowClickable)
         {
             UIElement_FoodSlotsController foodSlotsController = Instantiate(WindowsManager.UIElement_FoodSlotControllerPrefab, parent);
             foodSlotsController.Init(selectedFood, allowClickable);
 
-            if (cacheSlots)
+            if (cacheResult)
                 FoodSlotController = foodSlotsController;
 
             return foodSlotsController;
         }
-
 
         public UIElement_AddItemSlot CreateAddItemSlotButton(RectTransform parent, DataTableUpgrades.UpgradeTypes upgradeType)
         {
@@ -62,17 +61,21 @@ namespace clicker.general.ui
             return addWeaponSlotButton;
         }
 
+        public UIElement_Coins CreateUI_Coins(RectTransform parent, int amount, bool cacheResult)
+        {
+            UIElement_Coins coins = Instantiate(WindowsManager.UIElement_CoinsPrefab, parent);
+            coins.UpdateAmount(amount);
+
+            if (cacheResult)
+                UIElement_Coins = coins;
+
+            return coins;
+        }
 
         public void CreateLevelProgressBar(RectTransform parent, int level)
         {
             LevelProgressBar = Instantiate(WindowsManager.UIElement_LevelProgressBarPrefab, parent);
             LevelProgressBar.Init(level);
-        }
-
-        public void CreateUI_Coins(RectTransform parent, int amount)
-        {
-            UIElement_Coins = Instantiate(WindowsManager.UIElement_CoinsPrefab, parent);
-            UIElement_Coins.UpdateAmount(amount);
         }
 
 

@@ -128,11 +128,7 @@ namespace clicker.datatables
                 return 1;
             }
 
-            public override bool IsLastLvl(int lvl)
-            {
-                Debug.Log(lvl + " " + m_UpgradeValues.Count + "  " + (lvl >= m_UpgradeValues.Count));
-                return lvl >= m_UpgradeValues.Count;
-            }
+            public override bool IsLastLvl(int lvl) => lvl >= m_UpgradeValues.Count;
         }
 
         //Add Slots:

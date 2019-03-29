@@ -57,7 +57,8 @@ namespace clicker.general
             TimeMultiplayerController.Init();
 
             //Инициализация автоматического добывания
-            AutoCraftItemsController.Init(0, 5, 1, 3);
+            DataTableWorkers.Workers workersData = DataTableWorkers.GetWorkersData(DataManager.Instance.PlayerAccount.Age);
+            AutoCraftItemsController.Init(workersData.MaxWorkers, workersData.MaxWorkerLvl);
 
             //Инициализация боя
             Manager_Battle.Init(DataManager.Instance.PlayerAccount.HP, DataManager.Instance.PlayerAccount.Age, DataManager.Instance.PlayerAccount.Level);
@@ -197,6 +198,7 @@ namespace clicker.general
         void ReloadLevel()
         {
             Manager_Battle.SelectedWeaponManager.UnscribeFromGlobalEvents();
+            Manager_Battle.UnscribeFromGlobalevents();
             UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
         }
     } 

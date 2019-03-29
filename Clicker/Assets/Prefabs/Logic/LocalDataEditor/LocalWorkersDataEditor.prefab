@@ -48,4 +48,6 @@ MonoBehaviour:
     MaxWorkers: 5
     MaxWorkerLvl: 3
     BaseTickPeriod: 1
-    LevelDelta: 0
+    LevelDelta: 0.1
+    BaseBuyPrice: 10
+    BaseUpgradePrice: 5

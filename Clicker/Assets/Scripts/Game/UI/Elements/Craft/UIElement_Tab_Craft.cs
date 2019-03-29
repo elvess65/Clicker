@@ -110,7 +110,7 @@ namespace clicker.general.ui.windows
                 //Если нельзя 
                 if (!GameManager.Instance.AutoCraftItemsController.AddItemToProcessing(type))
                 {
-                    Debug.LogError("CANNT PROCESS ITEM. MAX ITEMS PROCESSED");
+                    Debug.LogError("CANNT PROCESS ITEM");
                     PlayAutoCraftAnimation_Error(type);
                 }
                 else //Если можно

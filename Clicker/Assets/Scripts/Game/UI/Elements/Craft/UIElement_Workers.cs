@@ -19,6 +19,9 @@ namespace clicker.general.ui
         public GameObject UpgradeWorkerParent;
         public GameObject ButtonsParent;
 
+        private Color m_InitColorAddWorkerPrice;
+        private Color m_InitColorUpgradeWorkerPrice;
+
         public void Init()
         {
             UpdateState();
@@ -31,18 +34,15 @@ namespace clicker.general.ui
         {
             //Общее состояние
             int occuipitedWorkers = GameManager.Instance.AutoCraftItemsController.OccupitedWorkers;
-            int workersAmount = GameManager.Instance.AutoCraftItemsController.WorkersAmount;
+            int workersAmount = DataManager.Instance.PlayerAccount.WorkersAmount;
+            int workersLvl = DataManager.Instance.PlayerAccount.WorkersLvl;
             bool canAddWorker = GameManager.Instance.AutoCraftItemsController.CanAddWorker();
             bool canUpgradeWorker = GameManager.Instance.AutoCraftItemsController.CanUpgradeWorker();
 
-            //TODO 
-            //Get cost
-
             //Значения
-            int addWorkerPrice = 100;
-            int upgradeWorkerPrice = 10;
+            int addWorkerPrice = datatables.DataTableWorkers.GetPriceForBuy(DataManager.Instance.PlayerAccount.Age, workersAmount);
+            int upgradeWorkerPrice = datatables.DataTableWorkers.GetPriceForUpgrade(DataManager.Instance.PlayerAccount.Age, DataManager.Instance.PlayerAccount.WorkersLvl);
             float tickPeriod = GameManager.Instance.AutoCraftItemsController.TickPeriod;
-            int lvl = GameManager.Instance.AutoCraftItemsController.WorkersLvl;
 
             //Активные объекты
             ButtonsParent.gameObject.SetActive(!(!canAddWorker && !canUpgradeWorker));
@@ -52,7 +52,7 @@ namespace clicker.general.ui
             //UI
             UpdateUI_WorkersState(occuipitedWorkers, workersAmount, !canAddWorker);
             UpdateUI_WorkresSpeed(tickPeriod);
-            UpdateUI_WorkersLvl(lvl, !canUpgradeWorker);
+            UpdateUI_WorkersLvl(workersLvl, !canUpgradeWorker);
             UpdateUI_AddWorkerPrice(addWorkerPrice);
             UpdateUI_UpgradeWorkerPrice(upgradeWorkerPrice);
         }
@@ -79,35 +79,41 @@ namespace clicker.general.ui
 
         void UpdateUI_AddWorkerPrice(int price)
         {
-            //TODO 
-            //Colorize
+            if (m_InitColorAddWorkerPrice.a < 0.3f)
+                m_InitColorAddWorkerPrice = Text_AddWorkerPrice.color;
 
             Text_AddWorkerPrice.text = price.ToString();
+
+            Colorize(price, m_InitColorAddWorkerPrice, Text_AddWorkerPrice);
         }
 
         void UpdateUI_UpgradeWorkerPrice(int price)
         {
-            //TODO 
-            //Colorize
+            if (m_InitColorUpgradeWorkerPrice.a < 0.3f)
+                m_InitColorUpgradeWorkerPrice = Text_UpgradeWorkerPrice.color;
 
             Text_UpgradeWorkerPrice.text = price.ToString();
+
+            Colorize(price, m_InitColorUpgradeWorkerPrice, Text_UpgradeWorkerPrice);
         }
 
 
         void Button_AddWorker_PressHandler()
         {
-            Debug.Log("Add worker");
-
             GameManager.Instance.AutoCraftItemsController.AddWorker();
             UpdateState();
         }
 
         void Button_UpgradeWorker_PressHandler()
         {
-            Debug.Log("Upgrade worker");
-
             GameManager.Instance.AutoCraftItemsController.UpgradeWorker();
             UpdateState();
+        }
+
+
+        void Colorize(int price, Color initColor, Text text)
+        {
+            text.color = DataManager.Instance.PlayerAccount.Coins < price ? Color.red : initColor;
         }
     }
 }

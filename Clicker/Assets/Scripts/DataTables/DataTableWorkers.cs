@@ -17,7 +17,7 @@ namespace clicker.datatables
             for (int i = 0; i < data.Length; i++)
             {
                 //Создать предмет
-                Workers item = new Workers(data[i].AgeType, data[i].MaxWorkers, data[i].MaxWorkerLvl, data[i].BaseTickPeriod, data[i].LevelDelta);
+                Workers item = new Workers(data[i].AgeType, data[i].MaxWorkers, data[i].MaxWorkerLvl, data[i].BaseTickPeriod, data[i].LevelDelta, data[i].BaseBuyPrice, data[i].BaseUpgradePrice);
 
                 m_Workers.Add(data[i].AgeType, item);
             }
@@ -44,29 +44,67 @@ namespace clicker.datatables
             return 1;
         }
 
+        public static int GetPriceForBuy(DataTableLevels.AgeTypes ageType, int workersAmount)
+        {
+            if (m_Workers.ContainsKey(ageType))
+            {
+                int basePrice = m_Workers[ageType].BaseBuyPrice;
+
+                return basePrice + basePrice * workersAmount;
+            }
+
+            return 0;
+        }
+
+        public static int GetPriceForUpgrade(DataTableLevels.AgeTypes ageType, int workersLvl)
+        {
+            if (m_Workers.ContainsKey(ageType))
+            {
+                int basePrice = m_Workers[ageType].BaseUpgradePrice;
+
+                return basePrice * workersLvl;
+            }
+
+            return 0;
+        }
 
         #region Data Structures
         public class Workers
         {
+            //Base
             private DataTableLevels.AgeTypes m_AgeType;
             private int m_MaxWorkers;
+            //Level
             private int m_MaxWorkerLvl;
             private float m_BaseTickPeriod;
             private float m_LevelDelta;
+            //Prices
+            private int m_BaseBuyPrice;
+            private int m_BaseUpgradePrice;
 
+            //Base
             public DataTableLevels.AgeTypes AgeType => m_AgeType;
             public int MaxWorkers => m_MaxWorkers;
+            //Level
             public int MaxWorkerLvl => m_MaxWorkerLvl;
             public float BaseTickPeriod => m_BaseTickPeriod;
             public float LevelDelta => m_LevelDelta;
+            //Prices
+            public int BaseBuyPrice => m_BaseBuyPrice;
+            public int BaseUpgradePrice => m_BaseUpgradePrice;
 
-            public Workers(DataTableLevels.AgeTypes ageType, int maxWorkers, int maxWorkerLvl, float baseTickPeriod, float levelDelta)
+            public Workers(DataTableLevels.AgeTypes ageType, int maxWorkers, int maxWorkerLvl, float baseTickPeriod, float levelDelta, int baseBuyPrice, int baseUpgradePrice)
             {
+                //Base
                 m_AgeType = ageType;
                 m_MaxWorkers = maxWorkers;
+                //Level
                 m_MaxWorkerLvl = maxWorkerLvl;
                 m_BaseTickPeriod = baseTickPeriod;
                 m_LevelDelta = levelDelta;
+                //Prices
+                m_BaseBuyPrice = baseBuyPrice;
+                m_BaseUpgradePrice = baseUpgradePrice;
             }
 
             public override string ToString()

@@ -21,6 +21,10 @@ namespace clicker.general.ui.windows
         public Text Text_Button_Population;
         [Header("Tab Content")]
         public UIElement_Tab_Craft[] Tabs;
+        [Header("Other")]
+        public RectTransform CoinsParent;
+
+        private UIElement_Coins m_LocalCoins;
 
         protected override void Init()
         {
@@ -32,11 +36,22 @@ namespace clicker.general.ui.windows
                 Button_TabFood.onClick.AddListener(Button_TabFood_PressHandler);
                 Button_TabPopulation.onClick.AddListener(Button_TabPopulation_PressHandler);
 
+                Text_Main.text = "Craft";
                 Text_Button_TabWeapons.text = "Weapons";
                 Text_Button_TabMaterials.text = "Materials";
                 Text_Button_Ammo.text = "Ammo";
                 Text_Button_Food.text = "Food";
                 Text_Button_Population.text = "Population";
+
+                m_LocalCoins = GameManager.Instance.Manager_UI.CreateUI_Coins(CoinsParent, DataManager.Instance.PlayerAccount.Coins, false);
+                RectTransform coinsRectTransform = m_LocalCoins.GetComponent<RectTransform>();
+                coinsRectTransform.pivot = new Vector2(0.5f, 0.5f);
+                coinsRectTransform.anchorMin = Vector2.zero;
+                coinsRectTransform.anchorMax = Vector2.one;
+                coinsRectTransform.offsetMin = Vector2.zero;
+                coinsRectTransform.offsetMax = Vector2.zero;
+
+                DataManager.Instance.PlayerAccount.OnCoinsValueChanged += m_LocalCoins.UpdateAmount;
 
                 Button_TabWeapons.onClick.Invoke();
             }
@@ -48,8 +63,7 @@ namespace clicker.general.ui.windows
         {
             base.Hide();
 
-            foreach (UIElement_Tab_Craft tab in Tabs)
-                tab.DisposeOnWindowClose();
+            Dispose();
         }
 
 
@@ -87,6 +101,14 @@ namespace clicker.general.ui.windows
         void Button_TabPopulation_PressHandler()
         {
             InitTab(DataTableItems.ItemFilterTypes.Population);
+        }
+
+        void Dispose()
+        {
+            DataManager.Instance.PlayerAccount.OnCoinsValueChanged -= m_LocalCoins.UpdateAmount;
+
+            foreach (UIElement_Tab_Craft tab in Tabs)
+                tab.DisposeOnWindowClose();
         }
     }
 }

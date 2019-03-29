@@ -148,7 +148,6 @@ namespace clicker.battle.level
         void PickReward_Handler(int reward)
         {
             DataManager.Instance.PlayerAccount.IncrementCoins(reward);
-            GameManager.Instance.Manager_UI.UIElement_Coins.UpdateAmount(DataManager.Instance.PlayerAccount.Coins);
         }
 
         /// <summary>

@@ -19,20 +19,15 @@ namespace clicker.items
         private int m_MaxPossibleWorkers;
         private Dictionary<ItemTypes, PeriodicManager> m_ProcessedItems;
 
-        public int WorkersAmount { get; private set; }
         public float TickPeriod { get; private set; }
-        public int WorkersLvl { get; private set; }
         public int OccupitedWorkers => m_ProcessedItems.Count;
 
 
-        public void Init(int workersAmount, int maxPossibleWorkers, int lvl, int maxPossibleLvl)
+        public void Init(int maxPossibleWorkers, int maxPossibleLvl)
         {
             m_ProcessedItems = new Dictionary<ItemTypes, PeriodicManager>();
             m_MaxPossibleWorkers = maxPossibleWorkers;
-            WorkersLvl = lvl;
             m_MaxPossibleLvl = maxPossibleLvl;
-
-            WorkersAmount = workersAmount;
 
             SetTickPeriod();
         }
@@ -42,7 +37,7 @@ namespace clicker.items
             PeriodicManager period = null;
             if (!m_ProcessedItems.ContainsKey(itemType))
             {
-                if (m_ProcessedItems.Count == WorkersAmount)
+                if (m_ProcessedItems.Count == DataManager.Instance.PlayerAccount.WorkersAmount)
                 {
                     Debug.LogError("CANNT PROCESS ITEM. MAX ITEMS PROCESSED");
                     return false;
@@ -111,46 +106,49 @@ namespace clicker.items
 
         public void AddWorker()
         {
-            //TODO 
-            //Get cost
-            //Compare cost with gold
-
             if (!CanAddWorker())
                 return;
 
-            WorkersAmount = Mathf.Clamp(WorkersAmount + 1, 0, m_MaxPossibleWorkers);
+            int price = datatables.DataTableWorkers.GetPriceForBuy(DataManager.Instance.PlayerAccount.Age, DataManager.Instance.PlayerAccount.WorkersAmount);
+            if (DataManager.Instance.PlayerAccount.Coins < price)
+            {
+                Debug.LogError("Not enough resources to add worker");
+                return;
+            }
+
+            DataManager.Instance.PlayerAccount.AddWorker();
+            DataManager.Instance.PlayerAccount.DecrementCoins(price);
         }
 
         public void UpgradeWorker()
         {
-            //TODO 
-            //Get cost
-            //Compare cost with gold
-
             if (!CanUpgradeWorker())
                 return;
 
-            WorkersLvl = Mathf.Clamp(WorkersLvl + 1, 0, m_MaxPossibleWorkers);
+            int price = datatables.DataTableWorkers.GetPriceForUpgrade(DataManager.Instance.PlayerAccount.Age, DataManager.Instance.PlayerAccount.WorkersLvl);
+            if (DataManager.Instance.PlayerAccount.Coins < price)
+            {
+                Debug.LogError("Not enough resources to upgrade worker");
+                return;
+            }
+
+            DataManager.Instance.PlayerAccount.UpgradeWorker();
+            DataManager.Instance.PlayerAccount.DecrementCoins(price);
+
             SetTickPeriod();
 
             foreach (PeriodicManager periodic in m_ProcessedItems.Values)
                 periodic.SetPeriod(TickPeriod);
         }
 
-        public bool CanAddWorker()
-        {
-            return WorkersAmount < m_MaxPossibleWorkers;
-        }
+        public bool CanAddWorker() => DataManager.Instance.PlayerAccount.WorkersAmount < m_MaxPossibleWorkers;
 
-        public bool CanUpgradeWorker()
-        {
-            return WorkersAmount > 0 && WorkersLvl < m_MaxPossibleLvl;
-        }
+        public bool CanUpgradeWorker() =>DataManager.Instance.PlayerAccount.WorkersAmount > 0 && DataManager.Instance.PlayerAccount.WorkersLvl < m_MaxPossibleLvl;
 
 
         void SetTickPeriod()
         {
-            TickPeriod = datatables.DataTableWorkers.GetTickPeriodForLvl(DataManager.Instance.PlayerAccount.Age, WorkersLvl);
+            TickPeriod = datatables.DataTableWorkers.GetTickPeriodForLvl(DataManager.Instance.PlayerAccount.Age, DataManager.Instance.PlayerAccount.WorkersLvl);
         }
     }
 }

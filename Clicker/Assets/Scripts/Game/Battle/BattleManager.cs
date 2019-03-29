@@ -39,7 +39,9 @@ namespace clicker.battle
             PopulationManager.Init();
 
             //UI собранной награды
-            GameManager.Instance.Manager_UI.CreateUI_Coins(GameManager.Instance.Manager_UI.UIParent_LeftTop, DataManager.Instance.PlayerAccount.Coins);
+            GameManager.Instance.Manager_UI.CreateUI_Coins(GameManager.Instance.Manager_UI.UIParent_LeftTop, DataManager.Instance.PlayerAccount.Coins, true);
+
+            SubscribeForGlobalEvent();
 
             //Инициализация ввода для атаки
             GameManager.Instance.Manager_Input.OnInput += InputHandler;
@@ -52,6 +54,16 @@ namespace clicker.battle
             //m_LevelController.StartSpawn();
         }
 
+        public void UnscribeFromGlobalevents()
+        {
+            DataManager.Instance.PlayerAccount.OnCoinsValueChanged -= GameManager.Instance.Manager_UI.UIElement_Coins.UpdateAmount;
+        }
+
+
+        void SubscribeForGlobalEvent()
+        {
+            DataManager.Instance.PlayerAccount.OnCoinsValueChanged += GameManager.Instance.Manager_UI.UIElement_Coins.UpdateAmount;
+        }
 
         void LevelFinishedHandler()
         {

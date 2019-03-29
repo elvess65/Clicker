@@ -22,11 +22,16 @@ namespace clicker.datatables
     [System.Serializable]
     public struct WorkersData
     {
+        [Header("Base")]
         public DataTableLevels.AgeTypes AgeType;
         public int MaxWorkers;
+        [Header("Level")]
         public int MaxWorkerLvl;
         public float BaseTickPeriod;
         public float LevelDelta;
+        [Header("Prices")]
+        public int BaseBuyPrice;
+        public int BaseUpgradePrice;
 
         public override string ToString()
         {
