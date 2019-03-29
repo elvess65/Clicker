@@ -2,6 +2,7 @@
 using clicker.datatables;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using static clicker.account.Account.AccountUpgrades;
 
 namespace clicker.general.ui.windows
@@ -10,6 +11,7 @@ namespace clicker.general.ui.windows
                                                                                         where T1 : SelectedItemsManager
     {
         public RectTransform SlotsParent;
+        public ScrollRect ItemsScrollRect;
 
         protected T m_SlotsController;
 
@@ -89,7 +91,9 @@ namespace clicker.general.ui.windows
 
 
         void PointerDown_Handler(PointerEventData eventData, DataTableItems.ItemTypes type)
-        {    
+        {
+            Debug.Log(ItemsScrollRect.gameObject.name);
+            ItemsScrollRect.OnBeginDrag(eventData);
         }
 
         void Drag_Handler(PointerEventData eventData, DataTableItems.ItemTypes type)
@@ -100,11 +104,15 @@ namespace clicker.general.ui.windows
                 m_ItemDragIcon.Init(type);
             }
 
+            ItemsScrollRect.OnDrag(eventData);
+
             m_ItemDragIcon.transform.position = eventData.position;
         }
 
         void PointerUp_Handler(PointerEventData eventData, DataTableItems.ItemTypes type)
         {
+            ItemsScrollRect.OnEndDrag(eventData);
+
             if (m_ItemDragIcon != null)
                 Destroy(m_ItemDragIcon.gameObject);
 
