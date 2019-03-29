@@ -3670,6 +3670,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIElement - Craft - Content - Population
       objectReference: {fileID: 0}
+    - target: {fileID: 6549180870956759818, guid: 9bbb225712d0e5e408756907c77758d1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6549180871170022403, guid: 9bbb225712d0e5e408756907c77758d1,
         type: 3}
       propertyPath: m_AnchoredPosition.x

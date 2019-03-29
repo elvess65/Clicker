@@ -42,6 +42,8 @@ namespace clicker.general.ui
         /// <param name="progress">Прогресс предмета</param>
         public void SetItem(DataTableItems.ItemTypes type, int amount, float progress, int bagSize)
         {
+            Image_Icon.sprite = GameManager.Instance.AssetsLibrary.GetSprite_Item(type);
+
             if (type == DataTableItems.ItemTypes.Max)
             {
                 Text_ItemName.text = string.Empty;

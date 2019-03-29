@@ -11,10 +11,21 @@ namespace clicker.initScene
 
         void Start()
         {
-            DataManager.Instance.OnInitializationFinished += InitializationFinishedHandler;
+            if (DataManager.Instance.IsInitialized)
+                LoadLevel();
+            else
+                DataManager.Instance.OnInitializationFinished += InitializationFinishedHandler;
         }
 
         void InitializationFinishedHandler()
+        {
+            if (DataManager.Instance.IsInitialized)
+                return;
+
+            LoadLevel();
+        }
+
+        void LoadLevel()
         {
             StartCoroutine(Wait());
         }

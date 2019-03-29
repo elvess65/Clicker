@@ -12,6 +12,7 @@ namespace clicker.general
         public System.Action OnInitializationFinished;
 
         public Account PlayerAccount { get; private set; }
+        public bool IsInitialized { get; private set; }
 
         private iItemsDataLoader m_ItemsDataLoader;
         private iWeaponsDataLoader m_WeaponsDataLoader;
@@ -109,6 +110,8 @@ namespace clicker.general
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Water, 50);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Meat, 50);
             PlayerAccount.Inventory.AddItem(DataTableItems.ItemTypes.Fire, 50);
+
+            IsInitialized = true;
 
             OnInitializationFinished?.Invoke();
 

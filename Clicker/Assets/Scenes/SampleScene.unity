@@ -1155,6 +1155,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CoinRewardPrefab: {fileID: 4386061501918422069, guid: 318f9d16edca057489346e6ac48367c7,
     type: 3}
+  ItemDragIconPrefab: {fileID: 5811923890429918086, guid: 62c06c56c6d0f854a9872001dc0b4726,
+    type: 3}
   Enemies:
   - Type: 0
     Prefab: {fileID: 1507970207600899247, guid: 3243c739270b97b4b828f00538e2e5fd,
@@ -1171,6 +1173,45 @@ MonoBehaviour:
   - Type: 4
     Prefab: {fileID: 4937277638157532496, guid: a90b5fb3133b71741ac7ecfc68009dc1,
       type: 3}
+  ItemSprites:
+  - Type: 0
+    Sprite: {fileID: 21300000, guid: deed3cee4e3becb45b20773ad25b04c8, type: 3}
+  - Type: 1
+    Sprite: {fileID: 21300000, guid: c11fa297dd331de418654209c490f7e6, type: 3}
+  - Type: 2
+    Sprite: {fileID: 21300000, guid: 14a2710916f32c9479082b1bc6a5cb5b, type: 3}
+  - Type: 3
+    Sprite: {fileID: 21300000, guid: 8c5b79707e8ddf9449a3f42ede0a06f3, type: 3}
+  - Type: 4
+    Sprite: {fileID: 21300000, guid: 07cbc85522bad3e4c8191650d309c93f, type: 3}
+  - Type: 5
+    Sprite: {fileID: 21300000, guid: ffee00b407527d74cbf43c311ab0b445, type: 3}
+  - Type: 6
+    Sprite: {fileID: 21300000, guid: e4386372199d99d42a889ab304fd1467, type: 3}
+  - Type: 7
+    Sprite: {fileID: 21300000, guid: b4872dcff3a17a240a530f8c43714669, type: 3}
+  - Type: 8
+    Sprite: {fileID: 21300000, guid: f5300ba0e99563148877a5ce96e560f1, type: 3}
+  - Type: 9
+    Sprite: {fileID: 21300000, guid: 0032519810930c94598ca9e2a3298215, type: 3}
+  - Type: 10
+    Sprite: {fileID: 21300000, guid: 511a5dd4adef00a42b644f23da49e63f, type: 3}
+  - Type: 11
+    Sprite: {fileID: 21300000, guid: 26de841f6d53c6a4da359d956be2c4f4, type: 3}
+  - Type: 12
+    Sprite: {fileID: 21300000, guid: 89a4ce80a98242b42a126844f8333a64, type: 3}
+  - Type: 13
+    Sprite: {fileID: 21300000, guid: 136ee8ea5a5a08f4cb8c023990b939f6, type: 3}
+  - Type: 14
+    Sprite: {fileID: 21300000, guid: 8732f00bfd0ef134f9bd9e437628ba39, type: 3}
+  - Type: 15
+    Sprite: {fileID: 21300000, guid: 905aefa8652570842be8659ac40217a5, type: 3}
+  - Type: 16
+    Sprite: {fileID: 21300000, guid: b97c352a0d60abf4489782e30580c0b7, type: 3}
+  - Type: 17
+    Sprite: {fileID: 21300000, guid: 830168f764471444d8a47b35247f811c, type: 3}
+  - Type: 18
+    Sprite: {fileID: 21300000, guid: 825eb3b41d8de03408f109667a88715a, type: 3}
 --- !u!1 &973040242
 GameObject:
   m_ObjectHideFlags: 0

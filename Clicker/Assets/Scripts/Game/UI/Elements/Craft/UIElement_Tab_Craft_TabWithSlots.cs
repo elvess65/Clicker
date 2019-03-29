@@ -13,6 +13,8 @@ namespace clicker.general.ui.windows
 
         protected T m_SlotsController;
 
+        private UIElement_ItemDragIcon m_ItemDragIcon;
+
         protected void InitializeSlots()
         {
             //Создать панель оружия
@@ -87,15 +89,25 @@ namespace clicker.general.ui.windows
 
 
         void PointerDown_Handler(PointerEventData eventData, DataTableItems.ItemTypes type)
-        {
+        {    
         }
 
         void Drag_Handler(PointerEventData eventData, DataTableItems.ItemTypes type)
         {
+            if (m_ItemDragIcon == null)
+            {
+                m_ItemDragIcon = Instantiate(GameManager.Instance.AssetsLibrary.ItemDragIconPrefab, transform);
+                m_ItemDragIcon.Init(type);
+            }
+
+            m_ItemDragIcon.transform.position = eventData.position;
         }
 
         void PointerUp_Handler(PointerEventData eventData, DataTableItems.ItemTypes type)
         {
+            if (m_ItemDragIcon != null)
+                Destroy(m_ItemDragIcon.gameObject);
+
             foreach (UIElement_ItemSlot item in m_SlotsController.ItemSlots)
             {
                 if (RectTransformUtility.RectangleContainsScreenPoint(item.ItemRectTransform, Input.mousePosition))

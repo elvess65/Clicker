@@ -55,6 +55,9 @@ namespace clicker.general.ui
             //Тип предмета
             Type = type;
 
+            //Иконка предмета
+            Image_ItemIcon.sprite = GameManager.Instance.AssetsLibrary.GetSprite_Item(type);
+
             //Имя и количество предметов
             Text_ItemName.text = type.ToString();
             SetItemAmount(amount);
