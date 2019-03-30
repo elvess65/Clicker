@@ -11,7 +11,6 @@ namespace clicker.general.ui.windows
                                                                                         where T1 : SelectedItemsManager
     {
         public RectTransform SlotsParent;
-        public ScrollRect ItemsScrollRect;
 
         protected T m_SlotsController;
 
@@ -32,6 +31,8 @@ namespace clicker.general.ui.windows
             //Задать каждому предмету во вкладке события перетягивания
             foreach (UIElement_CraftItem item in m_Items.Values)
             {
+                item.UIElement_DraggableIcon.enabled = true;
+
                 item.OnPoinerDownEvent += PointerDown_Handler;
                 item.OnDragEvent += Drag_Handler;
                 item.OnPointerUpEvent += PointerUp_Handler;
@@ -92,27 +93,22 @@ namespace clicker.general.ui.windows
 
         void PointerDown_Handler(PointerEventData eventData, DataTableItems.ItemTypes type)
         {
-            Debug.Log(ItemsScrollRect.gameObject.name);
-            ItemsScrollRect.OnBeginDrag(eventData);
-        }
-
-        void Drag_Handler(PointerEventData eventData, DataTableItems.ItemTypes type)
-        {
             if (m_ItemDragIcon == null)
             {
                 m_ItemDragIcon = Instantiate(GameManager.Instance.AssetsLibrary.ItemDragIconPrefab, transform);
                 m_ItemDragIcon.Init(type);
             }
 
-            ItemsScrollRect.OnDrag(eventData);
+            m_ItemDragIcon.transform.position = eventData.position;
+        }
 
+        void Drag_Handler(PointerEventData eventData, DataTableItems.ItemTypes type)
+        {
             m_ItemDragIcon.transform.position = eventData.position;
         }
 
         void PointerUp_Handler(PointerEventData eventData, DataTableItems.ItemTypes type)
         {
-            ItemsScrollRect.OnEndDrag(eventData);
-
             if (m_ItemDragIcon != null)
                 Destroy(m_ItemDragIcon.gameObject);
 

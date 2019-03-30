@@ -147,6 +147,7 @@ MonoBehaviour:
   RequiredItemsParent: {fileID: 3098504758650820880}
   Toggle_AutoCraft: {fileID: 8942411172249949928}
   Image_AutoCraftProgress: {fileID: 1409132798565716184}
+  UIElement_DraggableIcon: {fileID: 7613157464259367495}
 --- !u!114 &1673696172260530154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -461,6 +462,7 @@ GameObject:
   - component: {fileID: 1673696174027662792}
   - component: {fileID: 1673696174027662794}
   - component: {fileID: 1673696174027662795}
+  - component: {fileID: 7613157464259367495}
   m_Layer: 5
   m_Name: Image - Icon
   m_TagString: Untagged
@@ -524,6 +526,18 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+--- !u!114 &7613157464259367495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673696174027662793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7a1fd6f8e0024243a6c6dfe40f5ffc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7321628151943679250
 GameObject:
   m_ObjectHideFlags: 0

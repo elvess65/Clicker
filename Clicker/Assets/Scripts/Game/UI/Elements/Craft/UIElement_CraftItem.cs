@@ -10,7 +10,7 @@ namespace clicker.general.ui
     /// <summary>
     /// UI объекта, который отображает информацию о предмете
     /// </summary>
-    public class UIElement_CraftItem : UIElement_ClickableItem, IDragHandler, IPointerDownHandler, IPointerUpHandler
+    public class UIElement_CraftItem : UIElement_ClickableItem
     {
         public System.Action<DataTableItems.ItemTypes, bool> OnAutoCraftToggled;
         public System.Action<DataTableItems.ItemTypes> OnItemPress;
@@ -29,6 +29,8 @@ namespace clicker.general.ui
         [Header("Auto Craft")]
         public UIElement_Toggle Toggle_AutoCraft;
         public Image Image_AutoCraftProgress;
+        [Header("Other")]
+        public UIElement_CraftItem_DraggableIcon UIElement_DraggableIcon;
 
         private float m_CurTime;
         private float m_TotalTime = 0.2f;
@@ -97,6 +99,14 @@ namespace clicker.general.ui
                     Image_AutoCraftProgress.fillAmount = 0;
             }
 
+            if (UIElement_DraggableIcon != null)
+            {
+                UIElement_DraggableIcon.enabled = false;
+                UIElement_DraggableIcon.OnPoinerDownEvent += PointerDown_Handler;
+                UIElement_DraggableIcon.OnDragEvent += Drag_Handler;
+                UIElement_DraggableIcon.OnPointerUpEvent += PointerUp_Handler;
+            }
+
             base.Init();
         }
 
@@ -163,19 +173,19 @@ namespace clicker.general.ui
         }
 
 
-        public void OnPointerDown(PointerEventData eventData)
+        void PointerDown_Handler(PointerEventData eventData)
         {
             if (m_CanDrag)
                 OnPoinerDownEvent?.Invoke(eventData, Type);
         }
 
-        public void OnDrag(PointerEventData eventData)
+        void Drag_Handler(PointerEventData eventData)
         {
             if (m_CanDrag)
                 OnDragEvent?.Invoke(eventData, Type);
         }
 
-        public void OnPointerUp(PointerEventData eventData)
+        void PointerUp_Handler(PointerEventData eventData)
         {
             if (m_CanDrag)
                 OnPointerUpEvent?.Invoke(eventData, Type);
