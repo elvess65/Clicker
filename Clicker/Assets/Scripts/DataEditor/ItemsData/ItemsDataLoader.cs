@@ -36,6 +36,13 @@ namespace clicker.datatables
         public List<ItemFilterTypes> FilterTypes;
         public ItemDataAmountContainer[] RequiredItems;
 
+        [HideInInspector]
+        public bool FoldoutAll;
+        [HideInInspector]
+        public bool FoldoutFilters;
+        [HideInInspector]
+        public bool FoldoutRequiredItems;
+
         public override string ToString()
         {
             StringBuilder strBuilder = new StringBuilder(RequiredItems.Length * 10 + 20);
