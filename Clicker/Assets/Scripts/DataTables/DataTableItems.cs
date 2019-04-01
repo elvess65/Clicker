@@ -51,7 +51,7 @@ namespace clicker.datatables
             for (int i = 0; i < data.Length; i++)
             {
                 //Создать предмет
-                ItemCraftIgnore item = new ItemCraftIgnore(data[i].CraftItem, data[i].IgnoreItems);
+                ItemCraftIgnore item = new ItemCraftIgnore(data[i].CraftItem, data[i].IgnoreItems.ToArray());
 
                 m_IgnoreItems.Add(data[i].CraftItem, item);
             }

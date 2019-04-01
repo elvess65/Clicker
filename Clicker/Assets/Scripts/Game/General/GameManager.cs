@@ -164,7 +164,13 @@ namespace clicker.general
             for (int i = 0; i < itemData.RequiredItems.Length; i++)
             {
                 if ((hasIgnorableItemsOnCraft && !DataTableItems.ItemShouldBeIgnoredForType(type, itemData.RequiredItems[i].Type)) || !hasIgnorableItemsOnCraft)
+                {
+                    //Удалить предмет из инвентаря (предмет, который необходим для создания другого предмета)
                     DataManager.Instance.PlayerAccount.Inventory.RemoveItem(itemData.RequiredItems[i].Type, itemData.RequiredItems[i].Amount);
+
+                    //Обновить количество предметов в сумке
+                    DataManager.Instance.PlayerAccount.Inventory.BagsState.UpdateItemAmountInBag(itemData.RequiredItems[i].Type);
+                }
             }
 
             //Добавить созданный предмет

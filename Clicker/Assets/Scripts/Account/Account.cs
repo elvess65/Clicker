@@ -514,13 +514,19 @@ namespace clicker.account
                     int itemAmount = DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(item);
                     ItemFilterTypes itemBagType = DataTableItems.GetItemDataByType(item).SingleFilter;
                     int itemBagSize = GetBagSize(itemBagType);
-                    int amountInBag = UnityEngine.Mathf.Clamp(itemAmount, 0, itemBagSize);
+                    int amountInBag = GetAmountInBag(item);
 
                     //Если в сумке еще нет предмета
                     if (!m_BagState.ContainsKey(item))
                         m_BagState.Add(item, amountInBag);
                     else
                         m_BagState[item] = amountInBag;
+                }
+
+                public void UpdateItemAmountInBag(ItemTypes type)
+                {
+                    if (m_BagState.ContainsKey(type))
+                        m_BagState[type] = GetAmountInBag(type);
                 }
 
                 public void RemoveItemFromBag(ItemTypes item, bool removeAll)
@@ -541,6 +547,17 @@ namespace clicker.account
                     UnityEngine.Debug.Log("RemoveItemFromBag " + item);
                     if (m_BagState.ContainsKey(item))
                         UnityEngine.Debug.Log("Amount after removing: " + m_BagState[item]);
+                }
+
+
+                int GetAmountInBag(ItemTypes item)
+                {
+                    ItemFilterTypes itemBagType = DataTableItems.GetItemDataByType(item).SingleFilter;
+
+                    int itemAmount = DataManager.Instance.PlayerAccount.Inventory.GetItemAmount(item);
+                    int itemBagSize = GetBagSize(itemBagType);
+
+                    return UnityEngine.Mathf.Clamp(itemAmount, 0, itemBagSize);
                 }
             }
         }

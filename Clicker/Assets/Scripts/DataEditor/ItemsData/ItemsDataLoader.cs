@@ -15,12 +15,12 @@ namespace clicker.datatables
     {
         public ItemsData[] GetData(int dataParam)
         {
-            return GameObject.FindObjectOfType<LocalItemsDataEditor>().Data_Items;
+            return GameObject.FindObjectOfType<LocalItemsDataEditor>().Data_Items.ToArray();
         }
 
         public ItemsCraftIgnoreData[] GetIgnoreData(int dataParam)
         {
-            return GameObject.FindObjectOfType<LocalItemsDataEditor>().Data_CraftIgnoreItems;
+            return GameObject.FindObjectOfType<LocalItemsDataEditor>().Data_CraftIgnoreItems.ToArray();
         }
     }
 
@@ -28,7 +28,7 @@ namespace clicker.datatables
     /// Локальная структура для передачи данных в локальную структуру
     /// </summary>
     [System.Serializable]
-    public struct ItemsData
+    public class ItemsData
     {
         public ItemTypes Type;
         public int TickToCreate;
@@ -78,9 +78,12 @@ namespace clicker.datatables
     /// Локальная структура для передачи данных в локальную структуру
     /// </summary>
     [System.Serializable]
-    public struct ItemsCraftIgnoreData
+    public class ItemsCraftIgnoreData
     {
         public ItemTypes CraftItem;
-        public ItemTypes[] IgnoreItems;
+        public List<ItemTypes> IgnoreItems;
+
+        [HideInInspector]
+        public bool Foldout;
     }
 }
